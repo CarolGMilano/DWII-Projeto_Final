@@ -1,6 +1,23 @@
-<div class="mt-20 p-16">
-    <div class="flex justify-between">
+<div class="mt-20 p-12">
+    <div class="flex justify-between pb-4">
         <h2 class="font-bold text-[22px]">Minhas Solicitações</h2>
-        <button [routerLink]="['/nova-solicitacao']">Nova Solicitação</button>
+        <button href="/nova-solicitacao" class="border-2 bg-gray-500 p-2">Nova Solicitação</button>
+    </div>
+    <hr>
+    <div>
+        <table class="mt-6 w-[100%] gap-2">
+            <tr class="w-[100%] flex justify-between gap-2">
+                <th class="bg-gray-200 p-1 w-[25%]">Data/Hora</th>
+                <th class="bg-gray-200 p-1 w-[25%]">Descrição do equipamento</th>
+                <th class="bg-gray-200 p-1 w-[25%]">Estado da solicitação</th>
+                <th class="bg-gray-200 p-1 w-[25%]">Ações</th>
+            </tr>
+            <tr class="w-[100%] flex justify-between gap-2 mt-2">
+                <td class="bg-gray-200 p-1 w-[25%]"></td>
+                <td class="bg-gray-200 p-1 w-[25%]"></td>
+                <td class="bg-gray-200 p-1 w-[25%]"></td>
+                <td class="bg-gray-200 p-1 w-[25%]"></td>
+            </tr>
+        </table>
     </div>
 </div>
