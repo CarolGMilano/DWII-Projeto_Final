@@ -1,1 +1,51 @@
-<p>visualizar-orcamento works!</p>
+
+<div>
+    <h2 class="font-black">Orçamento</h2>
+    <div>
+        <label for="equipamento">Descrição do Equipamento</label>
+        <input type="text" id="equipamento" formControlName="equipamento" >
+    </div>
+    <div>
+        <label for="categoria">Categoria do Equipamento</label>
+        <input type="text" id="categoria" formControlName="categoria" >
+    </div>
+    <div>
+        <label for="defeito">Descrição do defeito</label>
+        <input type="text" id="defeito" formControlName="descricao" >
+    </div>
+    <div>
+        <h3 class="font-semibold">Valor Orçamento</h3>
+        <!-- <div>
+            @for (item of orcamento; track $index) {
+                <div>
+                    <li>orcamento.nome</li>
+                    <li>orcamento.preco</li>
+                </div>
+            }
+        </div> -->
+    </div>
+    <div>
+        <button (click)="showModal(modalAceitar)">Aprovar Serviço</button>
+        <button (click)="showModal(modalRecusar)">Rejeitar Serviço</button>
+    </div>
+
+    <dialog #modalAceitar>
+        <h5 class="font-bold">Serviço confirmado no valor de R$ </h5>
+        <button (click)="closeModal(modalAceitar)">
+            Ok
+        </button>
+    </dialog>
+
+     <dialog #modalRecusar>
+    <h5>Descreva o motivo da rejeição</h5>
+    <form #recusar="ngForm" (ngSubmit)="enviarRejeicao(modalRecusar, recusar)">
+      <textarea 
+        name="motivo" 
+        id="motivo" 
+        [(ngModel)]="justificativa" 
+        required>
+      </textarea>
+      <button type="submit" [disabled]="!recusar.valid">Confirmar</button>
+    </form>
+  </dialog>
+</div>
