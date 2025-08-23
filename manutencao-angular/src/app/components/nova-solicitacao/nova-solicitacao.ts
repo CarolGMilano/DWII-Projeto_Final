@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NovaSolicitacaoModel } from '../models/nova-solicitacao.model';
+import { NovaSolicitacaoModel } from '../../models/nova-solicitacao.model';
 
 @Component({
   selector: 'app-nova-solicitacao',

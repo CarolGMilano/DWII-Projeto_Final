@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NovaSolicitacao } from '../nova-solicitacao/nova-solicitacao';
+import { NovaSolicitacao } from '../components/nova-solicitacao/nova-solicitacao';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
