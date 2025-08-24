@@ -5,6 +5,7 @@ import { NovaSolicitacao } from './components/nova-solicitacao/nova-solicitacao'
 import { Submenu } from './components/submenu/submenu';
 import { TelaInicialCliente } from './components/tela-inicial-cliente/tela-inicial-cliente';
 import { VisualizarOrcamento } from "./components/visualizar-orcamento/visualizar-orcamento";
+import { VisualizarServico } from "./components/visualizar-servico/visualizar-servico";
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ import { VisualizarOrcamento } from "./components/visualizar-orcamento/visualiza
     Submenu,
     NovaSolicitacao,
     TelaInicialCliente,
-    VisualizarOrcamento
+    VisualizarOrcamento,
+    VisualizarServico
 ],
   templateUrl: './app.html',
   styleUrl: './app.css'
