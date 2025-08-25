@@ -23,7 +23,15 @@
 
 #### Telas de cliente
 - [] Tela de Dashboard 🟩
-  - []  
+  - [] Criar lista de solicitações 🟩
+  - [] Implementar filtro de ordenação por data/hora 🟩
+  - [] Criar o componente de histórico da solicitação 🟧
+  - [] Integrar o botão de Visualizar Solicitação com o histórico 🟩
+  - [] Implementar os botões de ação conforme estado  🟩
+  - [] Testar as validações de ação  🟩
+  - [] Implementar uma barra de pesquisa  🟩
+  - [] Preencher a lista com as informações de um JSON  🟩
+  - [] Testar filtros  🟩
 
 - [] Tela de Criar solicitação 🟧
   - []  
@@ -32,7 +40,7 @@
   - [] 
 
 #### Telas de funcionário
-- [] Tela de Dashboard
+- [] Tela de Dashboard  🟩
   - [] 
 
 - [] Visualizar detalhes da solicitação
