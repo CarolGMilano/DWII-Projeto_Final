@@ -8,8 +8,7 @@
         <p>Filtro</p>
         <div class="border-b-1 flex items-center">
             <img src="../../../public/search.png" class="w-8">
-            <input type="search" class="p-1 w-[300px]" placeholder="Pesquisar">
-            <!-- <input type="search" class="p-1 w-[300px]" placeholder="Pesquisar" [(ngModel)]="searchText"> -->
+            <input type="search" class="p-1 w-[300px]" placeholder="Pesquisar" [(ngModel)]="searchText">
         </div>
     </div>
     <div>
@@ -20,8 +19,8 @@
                 <th class="bg-gray-200 p-1 w-[25%] rounded-[7px]">Estado da solicitação</th>
                 <th class="bg-gray-200 p-1 w-[25%] rounded-[7px]">Ações</th>
             </tr>
-            <tr *ngFor="let item of data | filter:searchText:'data':selectedDate" class="w-[100%] flex justify-between gap-2 mt-2">
-                <td class="bg-gray-200 p-1 w-[25%] rounded-[7px]">{{ item.data }}</td>
+            <tr *ngFor="let item of solicitacoes | filter:searchText:'data':selectedDate" class="w-[100%] flex justify-between gap-2 mt-2">
+                <td class="bg-gray-200 p-1 w-[25%] rounded-[7px]">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
                 <td class="bg-gray-200 p-1 w-[25%] rounded-[7px]">{{ item.descricao }}</td>
                 <td class="bg-gray-200 p-1 w-[25%] rounded-[7px]">{{item.estado}}</td>
                 <td class="w-[25%] rounded-[7px]"> 
