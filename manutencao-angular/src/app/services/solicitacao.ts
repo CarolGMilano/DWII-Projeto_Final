@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
+import { NovaSolicitacao } from '../components/nova-solicitacao/nova-solicitacao';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { NovaSolicitacao } from '../../components/nova-solicitacao/nova-solicitacao';
-import { SolicitacaoModel } from '../../models/Solicitacao.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +19,7 @@ export class Solicitacao {
     return this.http.get<Solicitacao[]>(this.apiUrl)
   }
 
-  getSolicitacao(id: number): Observable<SolicitacaoModel>{
-    return this.http.get<SolicitacaoModel>(`${this.apiUrl}/${id}`);
+  getSolicitacao(id: number): Observable<Solicitacao>{
+    return this.http.get<Solicitacao>(`${this.apiUrl}/${id}`);
   }
 }
