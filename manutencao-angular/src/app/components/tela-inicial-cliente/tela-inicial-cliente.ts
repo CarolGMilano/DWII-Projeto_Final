@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FilterPipe } from '../../pipes/filter-pipe';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { MOCK_DATA_SOLICITACOES } from '../../models/mock-data-solicitacoes';
 
 @Component({
   selector: 'app-tela-inicial-cliente',
-  imports: [CommonModule, FilterPipe, FormsModule],
+  imports: [CommonModule, FilterPipe, FormsModule, RouterModule],
   templateUrl: './tela-inicial-cliente.html',
   styleUrl: './tela-inicial-cliente.css'
 })
@@ -16,6 +17,7 @@ export class TelaInicialCliente implements OnInit {
   searchText: string = '';
   dateField?: string = '';
   selectedDate?: Date;
+  filtroOrdenacao = 'recentes';
 
   constructor(private http: HttpClient) {}
 
