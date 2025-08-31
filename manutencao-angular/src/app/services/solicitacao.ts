@@ -15,7 +15,7 @@ export class Solicitacao {
     return this.http.post<NovaSolicitacao>(this.apiUrl, solicitacao)
   }
 
-  getSolicitacoes():Observable<Solicitacao[]>{
+  get Solicitacoes():Observable<Solicitacao[]>{
     return this.http.get<Solicitacao[]>(this.apiUrl)
   }
 
