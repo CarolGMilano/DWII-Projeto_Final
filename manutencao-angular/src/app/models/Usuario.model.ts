@@ -1,6 +1,8 @@
+import { TipoUsuario } from './EnumTipoUsuario.model';
+
 export interface Usuario {
-  idUsuario?: number,
-  nome: string,
-  email: string,
-  senha: string,
+  idUsuario?: number;
+  email: string;
+  senha: string;
+  tipo?: TipoUsuario;
 }
