@@ -1,32 +1,54 @@
 <div class="mt-20 p-12">
     <div class="flex justify-between pb-4">
         <h2 class="font-bold text-[22px]">Minhas Solicitações</h2>
-        <button href="/nova-solicitacao" class="bg-gray-500 p-2 rounded-[7px] hover:opacity-[85%] cursor-pointer">Nova Solicitação</button>
+        <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+            [routerLink]="['/nova-solicitacao']">
+            Nova Solicitação
+        </button>
     </div>
     <hr>
-    <div class="mt-6 w-[100%] flex justify-between items-center">
-        <p>Filtro</p>
+    <div class="mt-6 w-[100%] flex justify-between items-center text-sm">
+        <div class="flex justify-between items-center gap-4 text-gray-700">
+            <div class="flex items-center gap-4">
+                <label>Filtrar por data</label>
+                <input type="date" [(ngModel)]="selectedDate" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
+            </div>
+            <select [(ngModel)]="filtroOrdenacao" class="flex items-center bg-gray-200 text-sm pl-4 pr-4 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">
+                <option value="recentes">Mais recentes</option>
+                <option value="antigos">Mais antigos</option>
+            </select>
+        </div>
+
         <div class="border-b-1 flex items-center">
-            <img src="../../../public/search.png" class="w-8">
-            <input type="search" class="p-1 w-[300px]" placeholder="Pesquisar" [(ngModel)]="searchText">
+            <img src="../../../assets/search.png" class="w-8" />
+            <input type="search" class="p-1 w-[300px] outline-0" placeholder="Pesquisar" [(ngModel)]="searchText">
         </div>
     </div>
-    <div>
-        <table class="mt-8 w-[100%] gap-2">
-            <tr class="w-[100%] flex justify-between gap-2">
-                <th class="bg-gray-200 p-1 w-[25%] rounded-[7px]">Data/Hora</th>
-                <th class="bg-gray-200 p-1 w-[25%] rounded-[7px]">Descrição do equipamento</th>
-                <th class="bg-gray-200 p-1 w-[25%] rounded-[7px]">Estado da solicitação</th>
-                <th class="bg-gray-200 p-1 w-[25%] rounded-[7px]">Ações</th>
-            </tr>
-            <tr *ngFor="let item of solicitacoes | filter:searchText:'data':selectedDate" class="w-[100%] flex justify-between gap-2 mt-2">
-                <td class="bg-gray-200 p-1 w-[25%] rounded-[7px]">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
-                <td class="bg-gray-200 p-1 w-[25%] rounded-[7px]">{{ item.descricao }}</td>
-                <td class="bg-gray-200 p-1 w-[25%] rounded-[7px]">{{item.estado}}</td>
-                <td class="w-[25%] rounded-[7px]"> 
-                    <button class="bg-gray-500 pl-6 pr-6 pt-1 pb-1 rounded-[7px] hover:opacity-[85%] cursor-pointer">Visualizar</button>
-                </td>
-            </tr>
+
+    <div class="mt-10 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 rounded-lg">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora</th>
+                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Descrição do
+                        equipamento</th>
+                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Status</th>
+                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 bg-white">
+                @for (item of (solicitacoes | filter:searchText:'data':selectedDate); track item) {
+                <tr>
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-700">{{item.estado}}</td>
+                    <td class="w-[25%] rounded-[7px]">
+                        <button class="bg-gray-200 text-sm pl-6 pr-6 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer">
+                            Visualizar
+                        </button>
+                    </td>
+                </tr>
+                }
+            </tbody>
         </table>
     </div>
-</div>
