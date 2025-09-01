@@ -1,6 +1,7 @@
 import { Component, signal} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Menu } from './components/menu/menu';
 import { NovaSolicitacao } from './components/nova-solicitacao/nova-solicitacao';
 import { Submenu } from './components/submenu/submenu';
@@ -17,7 +18,8 @@ import { VisualizarServico } from "./components/visualizar-servico/visualizar-se
     NovaSolicitacao,
     TelaInicialCliente,
     VisualizarOrcamento,
-    VisualizarServico
+    VisualizarServico,   
+    RouterModule
 ],
   templateUrl: './app.html',
   styleUrl: './app.css'
