@@ -12,7 +12,6 @@ import { VisualizarServico } from "./components/visualizar-servico/visualizar-se
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    // FormsModule,
     Menu,
     Submenu,
     NovaSolicitacao,
