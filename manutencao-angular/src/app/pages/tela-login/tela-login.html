@@ -15,12 +15,12 @@
               }" />
 
               @if (email.invalid && (email.touched || loginForm.submitted)) {
-              @if (email.errors?.['required']) {
-                <span class="pl-2 text-red-600 text-xs">O email é obrigatório</span>
-              } @else if (email.errors?.['email']) {
-                <span class="pl-2 text-yellow-600 text-xs">O email não é válido</span>
-              }
-            } 
+                @if (email.errors?.['required']) {
+                  <span class="pl-2 text-red-600 text-xs">O email é obrigatório</span>
+                } @else if (email.errors?.['email']) {
+                  <span class="pl-2 text-yellow-600 text-xs">O email não é válido</span>
+                }
+              } 
           </div>
 
           <div class="mb-3">
@@ -56,14 +56,6 @@
               Preencha o formulário corretamente
             </div>
           </div>
-
-
-          <!--@if() {
-            <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-max rounded-md bg-gray-800 text-white text-xs px-2 py-1 opacity-0                  group-hover:opacity-100 transition-opacity duration-200"
-            >
-              Preencha o formulário corretamente
-            </div>
-          }-->
         
           <p class="mt-2 text-center text-sm/6 text-gray-500">
             Ainda não tem uma conta?
