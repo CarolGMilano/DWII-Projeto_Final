@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Solicitacao } from '../../services/solicitacao';
+import { SolicitacaoModel } from '../../models/solicitacao.model';
+import { SolicitacaoService } from '../../services/solicitacao';
 
 @Component({
   selector: 'app-visualizar-servico',
@@ -10,7 +11,7 @@ import { Solicitacao } from '../../services/solicitacao';
 export class VisualizarServico {
   id!: number;
 
-  constructor(private solicitacaoService: Solicitacao){}
+  constructor(private solicitacaoService: SolicitacaoService){}
   
   ngOnInit(): void {
     this.solicitacaoService.getSolicitacao(this.id);

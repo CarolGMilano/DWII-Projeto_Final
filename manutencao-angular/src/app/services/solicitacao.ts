@@ -19,7 +19,7 @@ export class SolicitacaoService {
   get Solicitacoes():Observable<SolicitacaoModel[]>{
     return this.http.get<SolicitacaoModel[]>(this.apiUrl)
     
-  
+  }
   getSolicitacao(id: number): Observable<SolicitacaoModel>{
     return this.http.get<SolicitacaoModel>(`${this.apiUrl}/${id}`);
   }

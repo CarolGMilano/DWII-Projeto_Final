@@ -19,7 +19,7 @@ import { VisualizarServico } from "./components/visualizar-servico/visualizar-se
     NovaSolicitacao,
     TelaInicialCliente,
     VisualizarOrcamento,
-    PagarServico
+    PagarServico,
     VisualizarServico,   
     RouterModule
 ],
