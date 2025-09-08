@@ -27,12 +27,12 @@
   - [] Criar lista de solicitações 🟩
   - [] Implementar filtro de ordenação por data/hora 🟩
   - [x] Criar o componente de histórico da solicitação 🟧
-  - [] Integrar o botão de Visualizar Solicitação com o histórico 🟩
+  - [x] Integrar o botão de Visualizar Solicitação com o histórico 🟩
   - [] Implementar os botões de ação conforme estado  🟩
   - [] Testar as validações de ação  🟩
-  - [] Implementar uma barra de pesquisa  🟩
-  - [] Preencher a lista com as informações de um JSON  🟩
-  - [] Testar filtros  🟩
+  - [x] Implementar uma barra de pesquisa  🟩
+  - [x] Preencher a lista com as informações de um JSON  🟩
+  - [x] Testar filtros  🟩
 
 - [] Tela de Criar solicitação (RF004) 🟧
   - [x] Criar componente de nova solicitação 🟧
@@ -59,7 +59,11 @@
 
 #### Telas de funcionário
 - [] Tela de Dashboard (RF011) 🟩
-  - [] 
+  - [] Criar lista de solicitações 🟩
+  - [] Implementar filtro de ordenação por data/hora 🟩
+  - [] Implementar uma barra de pesquisa  🟩
+  - [] Preencher a lista com as informações de um JSON  🟩
+  - [] Testar filtros  🟩
 
 - [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** (RF013) 🟦
   - [] Implementar "Efetuar orçamento" (RF012) 🟦
