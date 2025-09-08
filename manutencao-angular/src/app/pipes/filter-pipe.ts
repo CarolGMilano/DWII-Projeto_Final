@@ -25,14 +25,6 @@ export class FilterPipe implements PipeTransform {
       }
 
       if(hasDate) {
-        let filterDate: Date;
-
-        if (typeof selectedDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(selectedDate)) {
-          const [y, m, d] = selectedDate.split('-').map(Number);
-          filterDate = new Date(y, m - 1, d); 
-        } else {
-          filterDate = new Date(selectedDate as any);
-        }
         
         const itemDate = new Date(item?.[dateField]);
 
