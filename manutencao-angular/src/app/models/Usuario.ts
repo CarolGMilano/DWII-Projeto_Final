@@ -1,4 +1,4 @@
-import { TipoUsuario } from './EnumTipoUsuario.model';
+import { TipoUsuario } from './EnumTipoUsuario';
 
 export interface Usuario {
   idUsuario?: number;
