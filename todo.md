@@ -37,7 +37,7 @@
 - [] Tela de Criar solicitação 🟧
   - []  
 
-- [] Tela de Visualizar detalhes da solicitação (**Visão cliente**)
+- [] Tela de Visualizar detalhes da solicitação (**Visão cliente**)🟨
   - [] 
 
 #### Telas de funcionário
