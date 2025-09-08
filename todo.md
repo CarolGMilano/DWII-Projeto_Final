@@ -64,7 +64,12 @@
 
 #### Telas de funcionário
 - [] Tela de Dashboard  🟩
-  - [] Criar o formulário de categorias (modal)
+  - [] Criar lista de solicitações 🟩
+  - [] Implementar filtro de ordenação por data/hora 🟩
+  - [] Implementar uma barra de pesquisa  🟩
+  - [] Preencher a lista com as informações de um JSON  🟩
+  - [] Testar filtros  🟩
+
 
 - [] Tela de Visualizar detalhes da solicitação (**Visão funcionário**)
   - [] 
