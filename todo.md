@@ -32,7 +32,7 @@
   - [] Testar as validações de ação  🟩
   - [x] Implementar uma barra de pesquisa  🟩
   - [x] Preencher a lista com as informações de um JSON  🟩
-  - [] Testar filtros  🟩
+  - [x] Testar filtros  🟩
 
 - [] Tela de Criar solicitação 🟧
   - [x] Criar componente de nova solicitação 🟧
