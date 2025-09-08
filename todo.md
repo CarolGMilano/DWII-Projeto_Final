@@ -26,7 +26,7 @@
 - [] Tela de Dashboard 🟩
   - [] Criar lista de solicitações 🟩
   - [] Implementar filtro de ordenação por data/hora 🟩
-  - [] Criar o componente de histórico da solicitação 🟧
+  - [x] Criar o componente de histórico da solicitação 🟧
   - [] Integrar o botão de Visualizar Solicitação com o histórico 🟩
   - [] Implementar os botões de ação conforme estado  🟩
   - [] Testar as validações de ação  🟩
@@ -35,7 +35,29 @@
   - [] Testar filtros  🟩
 
 - [] Tela de Criar solicitação 🟧
-  - []  
+  - [x] Criar componente de nova solicitação 🟧
+  - [] Adicionar services de nova solicitação 🟧
+  - [x] Modificar layuot do formulario 🟧
+  - [] Adicionar combo box a categoria de equipamento 🟧
+
+- [] Tela de Mostrar orçamento 🟧
+  - [x] Criar componente de visulização 🟧
+  - [x] Modal de aprovar serviço 🟧
+  - [x] Modal de recusar serviço 🟧
+    -[x] Formulario de preenchimento com required 🟧
+  - [] Adicionar services 🟧
+
+- [] Tela de Visualizar Serviço 🟧
+  - [x] Criar lista de detalhes da solicitação e serviço🟧
+  - [x] Tabela de histórico do serviço 🟧
+  - [] Adicionar services 🟧
+
+- [] Tela de Pagar serviço
+  - [x] Dados da solicitação 🟧
+  - [x] Botão com modal de confirmar pagamento 🟧
+  - [] Adicionar services 🟧
+
+- [] Tela de Resgatar Serviço
 
 - [] Tela de Visualizar detalhes da solicitação (**Visão cliente**)🟨
   - [] 
@@ -46,6 +68,17 @@
 
 - [] Tela de Visualizar detalhes da solicitação (**Visão funcionário**)
   - [] 
+
+- Efetuar orçamento 
+
+- [] Finalizar soliciatação 🟧
+
+- [] Tela de CRUD de Categoria de Equipamentos 🟧
+  - [] Criar o componente da tela 🟧
+  - [] Implementar layout básico 🟧
+  - [] Criar a tabela/lista de categorias 🟧
+  - [] Adicionar botões de ação: adicionar, editar, deletar 🟧
+  - [] Criar o formulário de categorias (modal) 🟧
 
 - [] Tela de CRUD de Funcionários 🟦
   - [] Criar o componente da tela 🟦
