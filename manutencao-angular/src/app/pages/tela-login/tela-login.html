@@ -1,0 +1,70 @@
+<div class="flex min-h-screen bg-white">
+  <div class="flex justify-center items-center w-3/5 bg-white px-30 max-w-full">
+    <form #loginForm="ngForm" (ngSubmit)="login()">
+      <div>
+        <h2 class="text-base/7 font-semibold text-gray-900">Login</h2>
+
+        <div class="mt-5 flex-col">
+          <div class="mb-3">
+            <input id="email" type="email" [(ngModel)]="usuario.email" placeholder="E-mail" name="email" #email="ngModel" email required autocomplete="email" (input)="aoMudarInput()" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-2 focus:border-gray-400"
+            [ngClass]="{
+                'border-2 border-red-500': ((email.invalid && (email.touched || loginForm.submitted)) || ((usuarioStatus == status.Invalido) && (senha.touched || loginForm.submitted))),
+                'border-2 border-yellow-500': (email.errors?.['email']),
+                'border-2 border-green-500': email.valid && email.touched,
+                'border-1 border-gray-300': email.pristine
+              }" />
+
+              @if (email.invalid && (email.touched || loginForm.submitted)) {
+                @if (email.errors?.['required']) {
+                  <span class="pl-2 text-red-600 text-xs">O email é obrigatório</span>
+                } @else if (email.errors?.['email']) {
+                  <span class="pl-2 text-yellow-600 text-xs">O email não é válido</span>
+                }
+              } 
+          </div>
+
+          <div class="mb-3">
+            <input id="password" type="password" [(ngModel)]="usuario.senha" placeholder="Senha" name="password" #senha="ngModel" required autocomplete="current-password" minlength="4" (input)="aoMudarInput()" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-2 focus:border-gray-400"
+            [ngClass]="{
+                'border-2 border-red-500': ((senha.errors?.['required'] && (senha.touched || loginForm.submitted)) || ((usuarioStatus == status.Invalido) && (senha.touched || loginForm.submitted))),
+                'border-2 border-yellow-500': senha.errors?.['minlength'] && (senha.touched || loginForm.submitted),
+                'border-2 border-green-500': senha.valid && senha.touched,
+                'border-1 border-gray-300': senha.pristine
+              }" />
+
+              @if (senha.invalid && (senha.touched || loginForm.submitted)) {
+                @if (senha.errors?.['required']) {
+                  <span class="pl-2 text-red-600 text-xs">A senha é obrigatória</span>
+                } @else if (senha.errors?.['minlength']) {
+                  <span class="pl-2 text-yellow-600 text-xs">A senha deve ter, pelo menos, 4 digitos</span>
+                } 
+              } 
+
+              @if ((usuarioStatus == status.Invalido) && (senha.touched || loginForm.submitted)) {
+                <span class="pl-2 text-red-600 text-xs">Email ou senha incorretos. Tente novamente.</span>
+              }
+          </div>      
+        </div>
+
+        <div class="flex-col items-center justify-center pt-3">
+          <div class="relative group inline-block w-full">
+            <button type="submit" [disabled]="loginForm.invalid" class="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
+              Fazer login
+            </button>
+
+            <div class="absolute right-15 translate-x-2/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 bg-black text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-indigo-400">
+              Preencha o formulário corretamente
+            </div>
+          </div>
+        
+          <p class="mt-2 text-center text-sm/6 text-gray-500">
+            Ainda não tem uma conta?
+            <a [routerLink]="['/cadastro']" class="font-semibold text-indigo-600 hover:text-indigo-500 cursor-pointer">Registre-se agora</a>
+          </p>  
+        </div>
+      </div>
+    </form>      
+  </div>
+  
+  <div class="w-2/5 flex items-center justify-center bg-gray-200 m-3 rounded-lg">LOGO</div>
+</div>

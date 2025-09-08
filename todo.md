@@ -1,25 +1,26 @@
 ## Lista de Tarefas
 
 **Legenda:**  
-🟦 Carolina | 🟩 Ingrid | 🟧 Milena
+🟦 Carolina | 🟨 Cesar | 🟩 Ingrid | 🟧 Milena 
 
 ### Etapa 01: Front-end 
 
 > 📅 Prazo para finalização da Etapa 01: **16/09**
 
 #### Telas iniciais
-- [] Tela de Login 🟦
-  - [] Implementar layout básico 🟦
-  - [] Simular o backend com console 🟦
-  - [] Testar interações básicas 🟦
+- [x] Tela de Login 🟦
+  - [x] Implementar layout básico 🟦
+  - [x] Simular o backend com console 🟦
+  - [x] Testar interações básicas 🟦
+  - [x] Criar indicações visuais de erro no form 🟦
 
-- [] Tela de Cadastro 🟦
+- [x] Tela de Cadastro 🟦
   - [x] Criar o componente de cadastro 🟦
-  - [x] Criar o FormGroup e os FormControls 🟦
+  - [x] Refatorar form de reativo para simples 🟦
   - [x] Adicionar validações básicas (required, email, tamanho de campo) 🟦
   - [x] Simular envio para backend com console 🟦
   - [x] Testar e ajustar layout básico com Tailwind 🟦
-  - [ ] Criar indicações visuais de erro no form 🟦
+  - [x] Criar indicações visuais de erro no form 🟦
 
 #### Telas de cliente
 - [] Tela de Dashboard 🟩
@@ -36,18 +37,25 @@
 - [] Tela de Criar solicitação 🟧
   - []  
 
-- [] Tela de Visualizar detalhes da solicitação
+- [] Tela de Visualizar detalhes da solicitação (**Visão cliente**)🟨
   - [] 
 
 #### Telas de funcionário
 - [] Tela de Dashboard  🟩
+  - [] Criar o formulário de categorias (modal)
+
+- [] Tela de Visualizar detalhes da solicitação (**Visão funcionário**)
   - [] 
 
-- [] Visualizar detalhes da solicitação
-  - [] 
-
-- [] Tela de CRUD de Funcionários
-  - [] 
-
-- [] Tela de CRUD de Categorias
-  - [] 
+- [] Tela de CRUD de Funcionários 🟦
+  - [] Criar o componente da tela 🟦
+  - [] Implementar layout básico 🟦
+  - [] Criar a tabela/lista de funcionários 🟦
+  - [] Adicionar botões de ação: adicionar, editar, deletar 🟦
+  - [] Criar o formulário de funcionário (modal) 🟦
+  - [] Adicionar validações nos campos do formulário 🟦
+  - [] Criar indicações visuais de erro no form 🟦
+  - [] Implementar filtros e busca na lista de funcionários 🟦
+  - [] Implementar paginação ou scroll infinito se necessário 🟦
+  - [] Ajustes visuais 🟦
+  - [] Testar interações e fluxo de navegação 🟦
