@@ -26,7 +26,7 @@
 - [] Tela de Dashboard (RF003 e RF009) 🟩
   - [] Criar lista de solicitações 🟩
   - [] Implementar filtro de ordenação por data/hora 🟩
-  - [] Criar o componente de histórico da solicitação 🟧
+  - [x] Criar o componente de histórico da solicitação 🟧
   - [] Integrar o botão de Visualizar Solicitação com o histórico 🟩
   - [] Implementar os botões de ação conforme estado  🟩
   - [] Testar as validações de ação  🟩
@@ -35,23 +35,44 @@
   - [] Testar filtros  🟩
 
 - [] Tela de Criar solicitação (RF004) 🟧
-  - []  
+  - [x] Criar componente de nova solicitação 🟧
+  - [] Adicionar services de nova solicitação 🟧
+  - [x] Modificar layuot do formulario 🟧
+  - [] Adicionar combo box a categoria de equipamento 🟧
 
-- [] Tela de Visualizar serviço (RF005, RF006, RF007 e RF008) 🟧
-  - [] 
+- [] Tela de Visualizar orçamento (RF005, RF006 e RF007) 🟧
+  - [x] Criar componente de visulização 🟧
+  - [x] Modal de aprovar serviço 🟧
+  - [x] Modal de recusar serviço 🟧
+  - [x] Formulario de preenchimento com required 🟧
+  - [] Adicionar services 🟧
 
-- [] Tela de Realizar pagamento (RF010) 🟧
-  - [] 
+- [] Tela de Visualizar Serviço (RF008) 🟧
+  - [x] Criar lista de detalhes da solicitação e serviço🟧
+  - [x] Tabela de histórico do serviço 🟧
+  - [] Adicionar services 🟧
+
+- [] Tela de Pagar serviço (RF010) 🟧
+  - [x] Dados da solicitação 🟧
+  - [x] Botão com modal de confirmar pagamento 🟧
+  - [] Adicionar services 🟧
 
 #### Telas de funcionário
 - [] Tela de Dashboard (RF011) 🟩
-  - [] Criar o formulário de categorias - modal (RF017)
+  - [] 
 
-- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** (RF013)
-  - [] Implementar "Efetuar orçamento" (RF012)
-  - [] Implementar "Efetuar manutenção" (RF014)
-  - [] Implementar "Redirecionar manutenção" (RF015)
-  - [] Implementar "Finalizar solicitação" (RF016)
+- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** (RF013) 🟦
+  - [] Implementar "Efetuar orçamento" (RF012) 🟦
+  - [] Implementar "Efetuar manutenção" (RF014) 🟦
+  - [] Implementar "Redirecionar manutenção" (RF015) 🟦
+  - [] Implementar "Finalizar solicitação" (RF016) 🟦
+
+- [] Tela de CRUD de Categoria de Equipamentos (RF017) 🟧
+  - [] Criar o componente da tela 🟧
+  - [] Implementar layout básico 🟧
+  - [] Criar a tabela/lista de categorias 🟧
+  - [] Adicionar botões de ação: adicionar, editar, deletar 🟧
+  - [] Criar o formulário de categorias (modal) 🟧
 
 - [] Tela de CRUD de Funcionários (RF018) 🟦
   - [x] Criar o componente da tela 🟦
@@ -62,10 +83,10 @@
   - [] Adicionar validações nos campos do formulário 🟦
   - [] Criar indicações visuais de erro no form 🟦
   - [x] Implementar filtros e busca na lista de funcionários 🟦
-  - [] Implementar paginação ou scroll infinito se necessário 🟦
-  - [] Ajustes visuais 🟦
+  - [] Implementar scroll infinito 🟦
+  - [x] Ajustes visuais 🟦
   - [] Testar interações e fluxo de navegação 🟦
 
-- [] Tela de Gerar relatório
-  - [] Implementar "Relatório de receita" (RF019)
-  - [] Implementar "Relatório por categoria" (RF020)
+- [] Tela de Gerar relatório 🟨
+  - [] Implementar "Relatório de receita" (RF019) 🟨
+  - [] Implementar "Relatório por categoria" (RF020) 🟨
