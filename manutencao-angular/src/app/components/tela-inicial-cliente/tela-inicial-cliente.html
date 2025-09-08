@@ -50,24 +50,7 @@
                             [routerLink]="['/visualizar-servico/:id']">
                             Visualizar
                         </button>
-                        <button
-                            *ngSwitchCase="'ORÇADA'"
-                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/visualizar-orcamento/:id']">
-                            Aprovar/Rejeitar Serviço
-                        </button>
-                        <button
-                            *ngSwitchCase="'REJEITADA'"
-                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/']">
-                            Resgatar Serviço
-                        </button>
-                        <button
-                            *ngSwitchCase="'ARRUMADA'"
-                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/pagar-servico/:id']">
-                            Pagar Serviço
-                        </button>
+                        
                     </td>
                 </tr>
                 }
