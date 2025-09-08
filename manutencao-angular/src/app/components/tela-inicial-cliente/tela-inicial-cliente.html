@@ -11,9 +11,11 @@
         <div class="flex justify-between items-center gap-4 text-gray-700">
             <div class="flex items-center gap-4">
                 <label>Filtrar por data</label>
-                <input type="date" [(ngModel)]="selectedDate" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
+                <input type="date" [(ngModel)]="selectedDate"
+                    class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
             </div>
-            <select [(ngModel)]="filtroOrdenacao" class="flex items-center bg-gray-200 text-sm pl-4 pr-4 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">
+            <select [(ngModel)]="filtroOrdenacao"
+                class="flex items-center bg-gray-200 text-sm pl-4 pr-4 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">
                 <option value="recentes">Mais recentes</option>
                 <option value="antigos">Mais antigos</option>
             </select>
@@ -42,9 +44,29 @@
                     <td class="px-4 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{item.estado}}</td>
-                    <td class="w-[25%] rounded-[7px]">
-                        <button class="bg-gray-200 text-sm pl-6 pr-6 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer">
+                    <td [ngSwitch]="item.estado" class="w-[25%] rounded-[7px]">
+                        <button
+                            class="bg-gray-200 w-[30%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                            [routerLink]="['/visualizar-servico/:id']">
                             Visualizar
+                        </button>
+                        <button
+                            *ngSwitchCase="'ORÇADA'"
+                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                            [routerLink]="['/visualizar-orcamento/:id']">
+                            Aprovar/Rejeitar Serviço
+                        </button>
+                        <button
+                            *ngSwitchCase="'REJEITADA'"
+                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                            [routerLink]="['/']">
+                            Resgatar Serviço
+                        </button>
+                        <button
+                            *ngSwitchCase="'ARRUMADA'"
+                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                            [routerLink]="['/pagar-servico/:id']">
+                            Pagar Serviço
                         </button>
                     </td>
                 </tr>
