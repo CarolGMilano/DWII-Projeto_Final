@@ -1,10 +1,11 @@
 export interface SolicitacaoModel {
-  id?: number;
-  equipamento: string;
-  categoria: string;
-  descricao: string;
+  id: number;
+  equipamento: '';
+  categoria: '';
+  descricao: '';
   data: Date;
-  estado: string;
+  estado: '';
   descricaoPreco?: Array<{ descricao: string; preco: string }>;
-  preco?: string;
+  preco?: '';
+  pago: false;
 }

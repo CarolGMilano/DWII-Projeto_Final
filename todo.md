@@ -36,28 +36,35 @@
 
 - [] Tela de Criar solicitação (RF004) 🟧
   - [x] Criar componente de nova solicitação 🟧
-  - [] Adicionar services de nova solicitação 🟧
+  - [x] Adicionar services de nova solicitação 🟧
   - [x] Modificar layuot do formulario 🟧
-  - [] Adicionar combo box a categoria de equipamento 🟧
+  - [x] Adicionar combo box a categoria de equipamento 🟧
 
 - [] Tela de Visualizar orçamento (RF005, RF006 e RF007) 🟧
   - [x] Criar componente de visulização 🟧
   - [x] Modal de aprovar serviço 🟧
   - [x] Modal de recusar serviço 🟧
-  - [x] Formulario de preenchimento com required 🟧
-  - [] Adicionar services 🟧
+    -[x] Formulario de preenchimento com required 🟧
+  - [] Adicionar services 🟧 -- em andamento (falta envio da justificativa de rejeição)
+
 
 - [] Tela de Visualizar Serviço (RF008) 🟧
   - [x] Criar lista de detalhes da solicitação e serviço🟧
   - [x] Tabela de histórico do serviço 🟧
-  - [] Adicionar services 🟧
+  - [] Adicionar services 🟧 -- em andamento (faltando o histórico)
 
 - [] Tela de Pagar serviço (RF010) 🟧
   - [x] Dados da solicitação 🟧
   - [x] Botão com modal de confirmar pagamento 🟧
-  - [] Adicionar services 🟧
+  - [] Adicionar services 🟧 -- em andamento
 
 #### Telas de funcionário
+
+- [] Tela de Visualizar detalhes da solicitação (**Visão funcionário**)
+  - [] 
+
+- [] Efetuar orçamento 🟧
+
 - [] Tela de Dashboard (RF011) 🟩
   - [] Criar lista de solicitações 🟩
   - [] Implementar filtro de ordenação por data/hora 🟩

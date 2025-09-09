@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EnderecoService } from './endereco.service';
+import { EnderecoService } from './endereco';
 
 describe('Endereco', () => {
   let service: EnderecoService;

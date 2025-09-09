@@ -15,8 +15,7 @@ export const routes: Routes = [
     { path: 'tela-inicial-funcionario', component: TelaInicialFuncionario },
     { path: 'nova-solicitacao', component: NovaSolicitacao },
     { path: 'visualizar-orcamento/:id', component: VisualizarOrcamento},
-    { path: 'visualizar-servico/:id', component: VisualizarServico}, 
-    { path: 'pagar-servico/:id', component: PagarServico},
-    
-    { path: 'funcionarios', component: TelaFuncionarios },
+    { path: 'visualizar-servico/:id', component: VisualizarServico},
+    { path: 'pagar-servico/:id', component: PagarServico}
+    { path: 'funcionarios', component: TelaFuncionarios }
 ];
