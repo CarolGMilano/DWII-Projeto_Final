@@ -36,26 +36,26 @@
 
 - [] Tela de Criar solicitação 🟧
   - [x] Criar componente de nova solicitação 🟧
-  - [] Adicionar services de nova solicitação 🟧
+  - [x] Adicionar services de nova solicitação 🟧
   - [x] Modificar layuot do formulario 🟧
-  - [] Adicionar combo box a categoria de equipamento 🟧
+  - [x] Adicionar combo box a categoria de equipamento 🟧
 
 - [] Tela de Mostrar orçamento 🟧
   - [x] Criar componente de visulização 🟧
   - [x] Modal de aprovar serviço 🟧
   - [x] Modal de recusar serviço 🟧
     -[x] Formulario de preenchimento com required 🟧
-  - [] Adicionar services 🟧
+  - [] Adicionar services 🟧 -- em andamento (falta envio da justificativa de rejeição)
 
 - [] Tela de Visualizar Serviço 🟧
   - [x] Criar lista de detalhes da solicitação e serviço🟧
   - [x] Tabela de histórico do serviço 🟧
-  - [] Adicionar services 🟧
+  - [] Adicionar services 🟧 -- em andamento (faltando o histórico)
 
 - [] Tela de Pagar serviço
   - [x] Dados da solicitação 🟧
   - [x] Botão com modal de confirmar pagamento 🟧
-  - [] Adicionar services 🟧
+  - [] Adicionar services 🟧 -- em andamento
 
 - [] Tela de Resgatar Serviço
 
@@ -69,7 +69,7 @@
 - [] Tela de Visualizar detalhes da solicitação (**Visão funcionário**)
   - [] 
 
-- Efetuar orçamento 
+- [] Efetuar orçamento 🟧
 
 - [] Finalizar soliciatação 🟧
 
