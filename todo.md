@@ -44,9 +44,8 @@
   - [x] Criar componente de visulização 🟧
   - [x] Modal de aprovar serviço 🟧
   - [x] Modal de recusar serviço 🟧
-    -[x] Formulario de preenchimento com required 🟧
+  - [x] Formulario de preenchimento com required 🟧
   - [] Adicionar services 🟧 -- em andamento (falta envio da justificativa de rejeição)
-
 
 - [] Tela de Visualizar Serviço (RF008) 🟧
   - [x] Criar lista de detalhes da solicitação e serviço🟧
@@ -59,24 +58,19 @@
   - [] Adicionar services 🟧 -- em andamento
 
 #### Telas de funcionário
-
-- [] Tela de Visualizar detalhes da solicitação (**Visão funcionário**)
-  - [] 
-
-- [] Efetuar orçamento 🟧
-
-- [] Tela de Dashboard (RF011) 🟩
+- [] Tela de Dashboard (RF011 e RF013) 🟩
   - [] Criar lista de solicitações 🟩
   - [] Implementar filtro de ordenação por data/hora 🟩
   - [] Implementar uma barra de pesquisa  🟩
   - [] Preencher a lista com as informações de um JSON  🟩
   - [] Testar filtros  🟩
 
-- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** (RF013) 🟦
-  - [] Implementar "Efetuar orçamento" (RF012) 🟦
+- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** 🟦
   - [] Implementar "Efetuar manutenção" (RF014) 🟦
   - [] Implementar "Redirecionar manutenção" (RF015) 🟦
   - [] Implementar "Finalizar solicitação" (RF016) 🟦
+
+- [] Tela de Efetuar orçamento (RF012) 🟧
 
 - [] Tela de CRUD de Categoria de Equipamentos (RF017) 🟧
   - [] Criar o componente da tela 🟧
