@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterPipe implements PipeTransform {
 
-  transform(items: any[], searchText: string, dateField: string = 'data', selectedDate?: Date): any[] {
+  transform(items: any[], searchText: string, dateField: string = 'data', selectedDate?: string | Date): any[] {
     if (!items) return [];
 
     const hasDate = !!selectedDate;
@@ -25,16 +25,25 @@ export class FilterPipe implements PipeTransform {
       }
 
       if(hasDate) {
+        let filterDate: Date;
+
+        if (typeof selectedDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(selectedDate)) {
+          const [y, m, d] = selectedDate.split('-').map(Number);
+          filterDate = new Date(y, m - 1, d); 
+        } else {
+          filterDate = new Date(selectedDate as any);
+        }
+        
         const itemDate = new Date(item?.[dateField]);
 
         if (isNaN(itemDate.getTime())) return false;
 
         const sameDay = 
-          itemDate.getFullYear === selectedDate.getFullYear &&
-          itemDate.getMonth === selectedDate.getMonth &&
-          itemDate.getDate === selectedDate.getDate;
+          itemDate.getFullYear() === filterDate.getFullYear() &&
+          itemDate.getMonth() === filterDate.getMonth() &&
+          itemDate.getDate() === filterDate.getDate();
 
-        matchesDate = sameDay
+        matchesDate = sameDay;
       }
 
       return matchesText && matchesDate;

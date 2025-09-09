@@ -1,8 +1,8 @@
-export * from './Usuario.model';
-export * from './Cliente.model';
-export * from './Endereco.model';
-export * from './Funcionario.model';
+export * from './Usuario';
+export * from './Cliente';
+export * from './Endereco';
+export * from './Funcionario';
 
-export * from './EnumTipoUsuario.model';
-export * from './EnumUsuarioStatus.model';
-export * from './EnumCepStatus.model';
+export * from './EnumTipoUsuario';
+export * from './EnumUsuarioStatus';
+export * from './EnumCepStatus';
