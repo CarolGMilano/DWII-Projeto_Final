@@ -27,45 +27,50 @@
   - [] Criar lista de solicitações 🟩
   - [] Implementar filtro de ordenação por data/hora 🟩
   - [x] Criar o componente de histórico da solicitação 🟧
-  - [] Integrar o botão de Visualizar Solicitação com o histórico 🟩
+  - [x] Integrar o botão de Visualizar Solicitação com o histórico 🟩
   - [] Implementar os botões de ação conforme estado  🟩
   - [] Testar as validações de ação  🟩
-  - [] Implementar uma barra de pesquisa  🟩
-  - [] Preencher a lista com as informações de um JSON  🟩
-  - [] Testar filtros  🟩
+  - [x] Implementar uma barra de pesquisa  🟩
+  - [x] Preencher a lista com as informações de um JSON  🟩
+  - [x] Testar filtros  🟩
 
 - [] Tela de Criar solicitação (RF004) 🟧
   - [x] Criar componente de nova solicitação 🟧
-  - [] Adicionar services de nova solicitação 🟧
+  - [x] Adicionar services de nova solicitação 🟧
   - [x] Modificar layuot do formulario 🟧
-  - [] Adicionar combo box a categoria de equipamento 🟧
+  - [x] Adicionar combo box a categoria de equipamento 🟧
 
 - [] Tela de Visualizar orçamento (RF005, RF006 e RF007) 🟧
   - [x] Criar componente de visulização 🟧
   - [x] Modal de aprovar serviço 🟧
   - [x] Modal de recusar serviço 🟧
   - [x] Formulario de preenchimento com required 🟧
-  - [] Adicionar services 🟧
+  - [] Adicionar services 🟧 -- em andamento (falta envio da justificativa de rejeição)
 
 - [] Tela de Visualizar Serviço (RF008) 🟧
   - [x] Criar lista de detalhes da solicitação e serviço🟧
   - [x] Tabela de histórico do serviço 🟧
-  - [] Adicionar services 🟧
+  - [] Adicionar services 🟧 -- em andamento (faltando o histórico)
 
 - [] Tela de Pagar serviço (RF010) 🟧
   - [x] Dados da solicitação 🟧
   - [x] Botão com modal de confirmar pagamento 🟧
-  - [] Adicionar services 🟧
+  - [] Adicionar services 🟧 -- em andamento
 
 #### Telas de funcionário
-- [] Tela de Dashboard (RF011) 🟩
-  - [] 
+- [] Tela de Dashboard (RF011 e RF013) 🟩
+  - [] Criar lista de solicitações 🟩
+  - [] Implementar filtro de ordenação por data/hora 🟩
+  - [] Implementar uma barra de pesquisa  🟩
+  - [] Preencher a lista com as informações de um JSON  🟩
+  - [] Testar filtros  🟩
 
-- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** (RF013) 🟦
-  - [] Implementar "Efetuar orçamento" (RF012) 🟦
+- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** 🟦
   - [] Implementar "Efetuar manutenção" (RF014) 🟦
   - [] Implementar "Redirecionar manutenção" (RF015) 🟦
   - [] Implementar "Finalizar solicitação" (RF016) 🟦
+
+- [] Tela de Efetuar orçamento (RF012) 🟧
 
 - [] Tela de CRUD de Categoria de Equipamentos (RF017) 🟧
   - [] Criar o componente da tela 🟧
