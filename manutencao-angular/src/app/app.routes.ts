@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { TelaCadastro, TelaLogin, TelaFuncionarios } from './pages/index';
+import { TelaCadastro, TelaLogin, TelaFuncionarios, GerarRelatorio } from './pages/index';
 import { TelaInicialCliente } from './components/tela-inicial-cliente/tela-inicial-cliente';
 import { TelaInicialFuncionario } from './components/tela-inicial-funcionario/tela-inicial-funcionario';
 import { NovaSolicitacao } from './components/nova-solicitacao/nova-solicitacao';
@@ -15,7 +15,8 @@ export const routes: Routes = [
     { path: 'tela-inicial-funcionario', component: TelaInicialFuncionario },
     { path: 'nova-solicitacao', component: NovaSolicitacao },
     { path: 'visualizar-orcamento/:id', component: VisualizarOrcamento},
+    { path: 'gerar-relatorio', component: GerarRelatorio },
     { path: 'visualizar-servico/:id', component: VisualizarServico},
-    { path: 'pagar-servico/:id', component: PagarServico}
+    { path: 'pagar-servico/:id', component: PagarServico},
     { path: 'funcionarios', component: TelaFuncionarios }
 ];
