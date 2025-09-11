@@ -45,17 +45,17 @@
   - [x] Modal de aprovar serviço 🟧
   - [x] Modal de recusar serviço 🟧
   - [x] Formulario de preenchimento com required 🟧
-  - [] Adicionar services 🟧 -- em andamento (falta envio da justificativa de rejeição)
+  - [x] Adicionar services 🟧 -- em andamento (falta envio da justificativa de rejeição)
 
 - [] Tela de Visualizar Serviço (RF008) 🟧
   - [x] Criar lista de detalhes da solicitação e serviço🟧
   - [x] Tabela de histórico do serviço 🟧
-  - [] Adicionar services 🟧 -- em andamento (faltando o histórico)
+  - [x] Adicionar services 🟧 -- em andamento (faltando o histórico)
 
 - [] Tela de Pagar serviço (RF010) 🟧
   - [x] Dados da solicitação 🟧
   - [x] Botão com modal de confirmar pagamento 🟧
-  - [] Adicionar services 🟧 -- em andamento
+  - [x] Adicionar services 🟧 -- em andamento
 
 #### Telas de funcionário
 - [] Tela de Dashboard (RF011 e RF013) 🟩
