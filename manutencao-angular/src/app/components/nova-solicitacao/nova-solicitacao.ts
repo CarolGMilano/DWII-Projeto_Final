@@ -1,8 +1,9 @@
 import { Component, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NovaSolicitacaoModel } from '../../models/nova-solicitacao.model';
+import { NovaSolicitacaoModel } from '../../models/NovaSolicitacao';
 import { SolicitacaoService } from '../../services';
-
+import { Categoria } from '../../models/Categoria';
+import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 
 @Component({
   selector: 'app-nova-solicitacao',
@@ -10,12 +11,12 @@ import { SolicitacaoService } from '../../services';
   templateUrl: './nova-solicitacao.html',
   styleUrl: './nova-solicitacao.css'
 })
+
 export class NovaSolicitacao implements OnInit{
   @Output() onSubmit = new EventEmitter<NovaSolicitacaoModel>();
 
-  // categorias : Categoria[] = [];
+  categorias : Categoria[] = [];
 
-  categorias: { id: number; nome: string }[] = [];  
   private solicitacaoService =  inject(SolicitacaoService);
 
   ngOnInit(): void {
@@ -28,11 +29,32 @@ export class NovaSolicitacao implements OnInit{
   criarSolicitacao =  new FormGroup({
     equipamento: new FormControl('', Validators.required),
     categoria: new FormControl('', Validators.required),
-    descricao: new FormControl('', Validators.required),
+    descricao: new FormControl('', Validators.required)
   });
 
-  enviarSolicitacao(){
-  
-    this.onSubmit.emit(this.criarSolicitacao.value as NovaSolicitacaoModel)
+  enviarSolicitacao() {
+    const rawValue = this.criarSolicitacao.getRawValue();
+    let categoriaEncontrada: Categoria | undefined;
+
+    this.categorias.forEach(cat => {
+      if(cat.nome === rawValue.categoria){
+        categoriaEncontrada = cat;
+      };
+    });
+
+    if (!categoriaEncontrada) {
+      console.error('Categoria não encontrada:', rawValue.categoria);
+      return;
+    }
+    
+    const novaSolicitacao: NovaSolicitacaoModel = {
+      equipamento: rawValue.equipamento ?? '',
+      categoria: categoriaEncontrada,
+      descricao: rawValue.descricao ?? '',
+      estado: EstadoSolicitacao.ABERTA
+    };
+
+    this.onSubmit.emit(novaSolicitacao);
   }
+
 }

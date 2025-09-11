@@ -54,14 +54,18 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
-        <!-- @for (item of items; track $index) {
-          <tr>
-            <td class="px-4 py-2 text-sm text-gray-700">24/08/2025 14:30</td>
-            <td class="px-4 py-2 text-sm text-gray-700">- (Sistema)</td>
-            <td class="px-4 py-2 text-sm text-gray-700">ABERTA</td>
-            <td class="px-4 py-2 text-sm text-gray-700">Cliente registrou serviço</td>
-          </tr>
-        } -->
+      @for (passo of historico; track passo.idSolicitacao) {
+        <tr>
+        <!-- <td class="px-4 py-2 text-sm text-gray-700">24/08/2025 14:30</td>
+          <td class="px-4 py-2 text-sm text-gray-700">- (Sistema)</td>
+          <td class="px-4 py-2 text-sm text-gray-700">ABERTA</td>
+          <td class="px-4 py-2 text-sm text-gray-700">Cliente registrou serviço</td> -->
+          <td class="px-4 py-2 text-sm text-gray-700">{{passo.dataHora}}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">{{passo.funcionario}}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">{{passo.estado}}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">{{passo.observacao}}</td>
+        </tr>
+      } @end     
       </tbody>
     </table>
   </div>

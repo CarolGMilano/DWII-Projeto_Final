@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { SolicitacaoService } from '../../services';
-import { SolicitacaoModel } from '../../models/solicitacao.model';
+import { SolicitacaoModel } from '../../models/Solicitacao';
 import { ActivatedRoute } from '@angular/router';
+import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 
 @Component({
   selector: 'app-pagar-servico',
@@ -22,11 +23,17 @@ export class PagarServico implements OnInit{
       next: (res) => this.solicitacao = res,
       error: (err) => console.error('Erro ao buscar solicitação:', err)
     });
+
+    this.dadosService.atualizarStatus(id, EstadoSolicitacao.PAGA).subscribe({
+      next: (res) => this.solicitacao = res,
+      error: (err) => console.error('Erro ao atualizar status:', err)
+    });
   }
 
   showModal(modal: HTMLDialogElement) {
     modal.showModal();
   }
+
   closeModal(modal: HTMLDialogElement) {
     modal.close();
   }

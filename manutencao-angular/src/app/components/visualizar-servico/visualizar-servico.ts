@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { SolicitacaoModel } from '../../models/solicitacao.model';
+import { SolicitacaoModel } from '../../models/Solicitacao';
 import { SolicitacaoService } from '../../services';
 import { ActivatedRoute } from '@angular/router';
+import { HistoricoSolicitacao } from '../../models/HistoricoSolicitacao';
 
 @Component({
   selector: 'app-visualizar-servico',
@@ -14,6 +15,7 @@ export class VisualizarServico  implements OnInit{
   id!: number;
 
   solicitacao! : SolicitacaoModel;
+  historico!: HistoricoSolicitacao[];
 
   private dadosService = inject(SolicitacaoService);
   private route = inject(ActivatedRoute);
@@ -25,5 +27,11 @@ export class VisualizarServico  implements OnInit{
       next: (res) => this.solicitacao = res,
       error: (err) => console.error('Erro ao buscar solicitação:', err)
     });
+
+    this.dadosService.getHistorico(id).subscribe({
+      next: (res) => this.historico = res,
+      error: (err) => console.error('Erro ao buscar histórico:', err)
+    });
+
   }
 }
