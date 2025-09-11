@@ -1,9 +1,11 @@
 import { NgFor } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {  ReactiveFormsModule, NgForm, FormsModule } from "@angular/forms";
-import { SolicitacaoModel } from '../../models/solicitacao.model';
+import { SolicitacaoModel } from '../../models/Solicitacao';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SolicitacaoService } from '../../services';
+import { OrcamentoModel } from '../../models/Orcamento';
+import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 
 @Component({
   selector: 'app-visualizar-orcamento',
@@ -14,9 +16,11 @@ import { SolicitacaoService } from '../../services';
 export class VisualizarOrcamento implements OnInit{
   
   solicitacao! : SolicitacaoModel;
+  orcamento!: OrcamentoModel;
 
   private dadosService = inject(SolicitacaoService);
   private route = inject(ActivatedRoute);
+  justificativa = '';
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
@@ -26,8 +30,6 @@ export class VisualizarOrcamento implements OnInit{
       error: (err) => console.error('Erro ao buscar solicitação:', err)
     });
   }
-
-  justificativa = '';
 
   showModal(modal: HTMLDialogElement) {
     modal.showModal();
@@ -39,21 +41,22 @@ export class VisualizarOrcamento implements OnInit{
 
   //finalizar ainda justificativa de rej por conta do back
   enviarRejeicao(modal: HTMLDialogElement, form: NgForm) {
-    const payload = {
-      id: this.solicitacao.id,
-      justificativa: this.justificativa
-    };
+    if (!this.justificativa.trim()) {
+      alert('Por favor, informe o motivo da rejeição.');
+      return;
+    }
 
-    this.dadosService.atualizarStatus(this.solicitacao.id, 'REJEITADA').subscribe({
+    this.dadosService.atualizarStatus(this.solicitacao.id, EstadoSolicitacao.REJEITADA, this.justificativa).subscribe({
       next: (res) => {
         this.solicitacao = res;
+        modal.close();
       },
-      error: (err) => console.error('Erro ao aprovar solicitação:', err)
+      error: (err) => console.error('Erro ao rejeitar solicitação:', err)
     });
   }
 
   enviarAprovacao() : void {
-    this.dadosService.atualizarStatus(this.solicitacao.id, 'APROVADA').subscribe({
+    this.dadosService.atualizarStatus(this.solicitacao.id, EstadoSolicitacao.APROVADA).subscribe({
       next: (res) => {
         this.solicitacao = res;
       },
