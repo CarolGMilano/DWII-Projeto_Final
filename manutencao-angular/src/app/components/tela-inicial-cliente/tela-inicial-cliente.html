@@ -14,15 +14,17 @@
                 <input type="date" [(ngModel)]="selectedDate"
                     class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
             </div>
-            <select [(ngModel)]="filtroOrdenacao"
-                class="flex items-center bg-gray-200 text-sm pl-4 pr-4 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">
-                <option value="recentes">Mais recentes</option>
-                <option value="antigos">Mais antigos</option>
-            </select>
+            <div class="flex items-center bg-gray-200 pt-0.5 pb-0.5 pl-2 pr-2 rounded-md outline-0 cursor-pointer">
+                <select [(ngModel)]="filtroOrdenacao"
+                    class="flex items-center text-sm w-32 cursor-pointer outline-0">
+                    <option value="desc">Mais recentes</option>
+                    <option value="asc">Mais antigos</option>
+                </select>
+            </div>
         </div>
 
         <div class="border-b-1 flex items-center">
-            <img src="../../../assets/search.png" class="w-8" />
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px;">search</mat-icon>
             <input type="search" class="p-1 w-[300px] outline-0" placeholder="Pesquisar" [(ngModel)]="searchText">
         </div>
     </div>
@@ -39,7 +41,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-                @for (item of (solicitacoes | filter:searchText:'data':selectedDate); track item) {
+                @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao); track item) {
                 <tr>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ item.descricao }}</td>

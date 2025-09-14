@@ -9,6 +9,7 @@ import { TelaInicialCliente } from './components/tela-inicial-cliente/tela-inici
 import { VisualizarOrcamento } from "./components/visualizar-orcamento/visualizar-orcamento";
 import { PagarServico } from "./components/pagar-servico/pagar-servico";
 import { VisualizarServico } from "./components/visualizar-servico/visualizar-servico";
+import { MatIconModule } from '@angular/material/icon';
 import { TelaFuncionarios } from "./pages";
 import { TelaCategorias } from "./pages/tela-categorias/tela-categorias";
 
@@ -16,6 +17,7 @@ import { TelaCategorias } from "./pages/tela-categorias/tela-categorias";
   selector: 'app-root',
   imports: [
     RouterOutlet,
+    MatIconModule,
     Menu,
     Submenu,
     NovaSolicitacao,
