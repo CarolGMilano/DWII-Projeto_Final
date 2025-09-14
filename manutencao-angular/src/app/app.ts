@@ -9,6 +9,8 @@ import { TelaInicialCliente } from './components/tela-inicial-cliente/tela-inici
 import { VisualizarOrcamento } from "./components/visualizar-orcamento/visualizar-orcamento";
 import { PagarServico } from "./components/pagar-servico/pagar-servico";
 import { VisualizarServico } from "./components/visualizar-servico/visualizar-servico";
+import { TelaFuncionarios } from "./pages";
+import { TelaCategorias } from "./pages/tela-categorias/tela-categorias";
 
 @Component({
   selector: 'app-root',
@@ -20,8 +22,10 @@ import { VisualizarServico } from "./components/visualizar-servico/visualizar-se
     TelaInicialCliente,
     VisualizarOrcamento,
     PagarServico,
-    VisualizarServico,   
-    RouterModule
+    VisualizarServico,
+    RouterModule,
+    TelaFuncionarios,
+    TelaCategorias
 ],
   templateUrl: './app.html',
   styleUrl: './app.css'
