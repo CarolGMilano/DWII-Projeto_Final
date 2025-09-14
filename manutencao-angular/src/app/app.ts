@@ -9,11 +9,13 @@ import { TelaInicialCliente } from './components/tela-inicial-cliente/tela-inici
 import { VisualizarOrcamento } from "./components/visualizar-orcamento/visualizar-orcamento";
 import { PagarServico } from "./components/pagar-servico/pagar-servico";
 import { VisualizarServico } from "./components/visualizar-servico/visualizar-servico";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
+    MatIconModule,
     Menu,
     Submenu,
     NovaSolicitacao,
