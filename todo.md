@@ -72,12 +72,12 @@
 
 - [] Tela de Efetuar orçamento (RF012) 🟧
 
-- [] Tela de CRUD de Categoria de Equipamentos (RF017) 🟧
-  - [] Criar o componente da tela 🟧
-  - [] Implementar layout básico 🟧
-  - [] Criar a tabela/lista de categorias 🟧
-  - [] Adicionar botões de ação: adicionar, editar, deletar 🟧
-  - [] Criar o formulário de categorias (modal) 🟧
+- [x] Tela de CRUD de Categoria de Equipamentos (RF017) 🟧
+  - [x] Criar o componente da tela 🟧
+  - [x] Implementar layout básico 🟧
+  - [x] Criar a tabela/lista de categorias 🟧
+  - [x] Adicionar botões de ação: adicionar, editar, deletar 🟧
+  - [x] Criar o formulário de categorias (modal) 🟧
 
 - [] Tela de CRUD de Funcionários (RF018) 🟦
   - [x] Criar o componente da tela 🟦

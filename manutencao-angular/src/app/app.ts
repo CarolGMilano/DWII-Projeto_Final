@@ -10,6 +10,8 @@ import { VisualizarOrcamento } from "./components/visualizar-orcamento/visualiza
 import { PagarServico } from "./components/pagar-servico/pagar-servico";
 import { VisualizarServico } from "./components/visualizar-servico/visualizar-servico";
 import { MatIconModule } from '@angular/material/icon';
+import { TelaFuncionarios } from "./pages";
+import { TelaCategorias } from "./pages/tela-categorias/tela-categorias";
 
 @Component({
   selector: 'app-root',
@@ -22,8 +24,10 @@ import { MatIconModule } from '@angular/material/icon';
     TelaInicialCliente,
     VisualizarOrcamento,
     PagarServico,
-    VisualizarServico,   
-    RouterModule
+    VisualizarServico,
+    RouterModule,
+    TelaFuncionarios,
+    TelaCategorias
 ],
   templateUrl: './app.html',
   styleUrl: './app.css'
