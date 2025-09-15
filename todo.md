@@ -58,6 +58,9 @@
   - [x] Botão com modal de confirmar pagamento 🟧
   - [x] Adicionar services 🟧 -- em andamento
 
+- [] Tela de Resgatar Serviço (RF009)
+  - [] 
+
 #### Telas de funcionário
 - [] Tela de Dashboard (RF011 e RF013) 🟩
   - [] Criar lista de solicitações abertas 🟩
