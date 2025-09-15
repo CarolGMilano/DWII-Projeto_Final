@@ -1,0 +1,18 @@
+<div class="w-full h-full flex flex-col">
+  <div class="bg-gray-50 pl-4 py-2">
+    <h2 class="font-bold text-lg">MENU PRINCIPAL</h2>
+  </div>
+
+  <nav class="pl-8 mt-6 flex flex-col gap-2">
+    @if (usuarioLogado.usuario.tipo === TipoUsuario.CLIENTE) {
+      <a [routerLink]="['/tela-inicial-cliente']" class="hover:bg-gray-300 rounded px-2 py-1">Solicitações</a>
+    }
+
+    @if (usuarioLogado.usuario.tipo === TipoUsuario.FUNCIONARIO) {
+      <a [routerLink]="['/tela-inicial-funcionario']" class="hover:bg-gray-300 rounded px-2 py-1">Solicitações abertas</a>
+      <a [routerLink]="['/tela-categorias']" class="hover:bg-gray-300 rounded px-2 py-1">Categorias</a>
+      <a [routerLink]="['/funcionarios']" class="hover:bg-gray-300 rounded px-2 py-1">Funcionários</a>
+      <a [routerLink]="['/gerar-relatorio']" class="hover:bg-gray-300 rounded px-2 py-1">Relatórios</a>
+    }
+  </nav>
+</div>
