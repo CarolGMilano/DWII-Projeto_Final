@@ -34,8 +34,7 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora</th>
-                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Descrição do
-                        equipamento</th>
+                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Descrição do equipamento</th>
                     <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Status</th>
                     <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Ações</th>
                 </tr>
@@ -46,7 +45,7 @@
                     <td class="px-4 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
                     <td class="px-4 py-2 text-sm text-gray-700">{{item.estado}}</td>
-                    <td [ngSwitch]="item.estado" class="w-[25%] rounded-[7px]">
+                    <td [ngSwitch]="item.estado" class="w-[25%] py-2 rounded-[7px]">
                         <button
                             class="bg-gray-200 w-[30%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
                             [routerLink]="['/visualizar-servico/:id']">

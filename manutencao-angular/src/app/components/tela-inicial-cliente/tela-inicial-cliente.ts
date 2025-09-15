@@ -18,7 +18,7 @@ export class TelaInicialCliente implements OnInit {
   searchText: string = '';
   dateField?: string = '';
   selectedDate?: Date;
-  filtroOrdenacao: 'asc' | 'desc' = 'desc';
+  filtroOrdenacao: 'desc' | 'asc' = 'asc';
 
   constructor(private http: HttpClient) {}
 
