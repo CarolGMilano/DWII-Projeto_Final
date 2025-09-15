@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { Funcionario } from '../../models';
-import { FuncionarioS } from '../../services';
+import { Funcionario, TipoUsuario, Usuario } from '../../models';
+import { FuncionarioService } from '../../services';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 
@@ -13,11 +13,18 @@ import { FormsModule, NgForm } from '@angular/forms';
 export class TelaFuncionarios implements OnInit {
   @ViewChild('formFuncionario') formFuncionario! : NgForm;
 
+  readonly funcionarioService = inject(FuncionarioService);
+
   funcionarios: Funcionario[] = [];
 
-  funcionario: Funcionario = {
+  usuario: Usuario = {
     email: '',
     senha: '',
+    tipo: TipoUsuario.FUNCIONARIO
+  }
+
+  funcionario: Funcionario = {
+    usuario: this.usuario,
     nome: '',
     dataNascimento: new Date()
   };
@@ -29,16 +36,17 @@ export class TelaFuncionarios implements OnInit {
 
   modoFormulario: 'nenhum' | 'adicionar' | 'editar' = 'nenhum';
 
-  readonly funcionarioService = inject(FuncionarioS);
-
   ngOnInit(): void {
     this.funcionarios = this.listarTodos();
   }
 
   abrirAdicionar() {
     this.funcionario = {
-      email: '',
-      senha: '',
+      usuario: {
+        email: '',
+        senha: '',
+        tipo: TipoUsuario.FUNCIONARIO
+      },
       nome: '',
       dataNascimento: new Date()
     };
@@ -60,7 +68,7 @@ export class TelaFuncionarios implements OnInit {
   cancelar() {
     if(this.modoFormulario == 'adicionar' || this.modoFormulario == 'editar'){
       this.mostrarFormulario = false;
-       this.formFuncionario.reset();
+      //this.formFuncionario.reset();
     } else {
       this.mostrarPopupExclusao = false;
     }
@@ -97,7 +105,7 @@ export class TelaFuncionarios implements OnInit {
   }
 
   excluir(){
-    this.funcionarioService.remover(this.funcionario.idUsuario!);
+    this.funcionarioService.remover(this.funcionario.idFuncionario!);
 
     this.funcionarios = this.listarTodos();
     this.mostrarPopupExclusao = false;

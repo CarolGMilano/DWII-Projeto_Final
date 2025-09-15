@@ -58,6 +58,9 @@
   - [x] Botão com modal de confirmar pagamento 🟧
   - [x] Adicionar services 🟧 -- em andamento
 
+- [] Tela de Resgatar Serviço (RF009)
+  - [] 
+
 #### Telas de funcionário
 - [] Tela de Dashboard (RF011 e RF013) 🟩
   - [] Criar lista de solicitações abertas 🟩
@@ -71,10 +74,10 @@
   - [] Implementar escala de cores 🟩
   - [] Implementar os botões de ação conforme estado 🟩
 
-- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** 🟦
-  - [] Implementar "Efetuar manutenção" (RF014) 🟦
-  - [] Implementar "Redirecionar manutenção" (RF015) 🟦
-  - [] Implementar "Finalizar solicitação" (RF016) 🟦
+- [x] Tela de Visualizar detalhes da solicitação - **Visão funcionário** 🟦
+  - [x] Implementar "Efetuar manutenção" (RF014) 🟦
+  - [x] Implementar "Redirecionar manutenção" (RF015) 🟦
+  - [x] Implementar "Finalizar solicitação" (RF016) 🟦
 
 - [] Tela de Efetuar orçamento (RF012) 🟧
 
