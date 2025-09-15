@@ -11,6 +11,9 @@ import { PagarServico } from "./components/pagar-servico/pagar-servico";
 import { VisualizarServico } from "./components/visualizar-servico/visualizar-servico";
 import { ClienteService, FuncionarioService } from './services';
 import { Cliente, Funcionario, TipoUsuario } from './models';
+import { MatIconModule } from '@angular/material/icon';
+import { TelaFuncionarios } from "./pages";
+import { TelaCategorias } from "./pages/tela-categorias/tela-categorias";
 
   const clientesFake: Cliente[] = [
     {
@@ -129,20 +132,24 @@ import { Cliente, Funcionario, TipoUsuario } from './models';
       nome: 'João Melo',
       dataNascimento: new Date(1984, 6, 15)
     }
+    
   ];
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
+    MatIconModule,
     Menu,
     Submenu,
     NovaSolicitacao,
     TelaInicialCliente,
     VisualizarOrcamento,
     PagarServico,
-    VisualizarServico,   
-    RouterModule
+    VisualizarServico,
+    RouterModule,
+    TelaFuncionarios,
+    TelaCategorias
 ],
   templateUrl: './app.html',
   styleUrl: './app.css'

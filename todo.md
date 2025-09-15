@@ -24,11 +24,12 @@
 
 #### Telas de cliente
 - [] Tela de Dashboard (RF003 e RF009) 🟩
-  - [] Criar lista de solicitações 🟩
-  - [] Implementar filtro de ordenação por data/hora 🟩
+  - [x] Criar lista de solicitações 🟩
+  - [x] Implementar filtro de ordenação por mais recentes e mais antigos 🟩
+  - [x] Implementar filtro por data/hora 🟩
   - [x] Criar o componente de histórico da solicitação 🟧
   - [x] Integrar o botão de Visualizar Solicitação com o histórico 🟩
-  - [] Implementar os botões de ação conforme estado  🟩
+  - [x] Implementar os botões de ação conforme estado  🟩
   - [] Testar as validações de ação  🟩
   - [x] Implementar uma barra de pesquisa  🟩
   - [x] Preencher a lista com as informações de um JSON  🟩
@@ -59,25 +60,30 @@
 
 #### Telas de funcionário
 - [] Tela de Dashboard (RF011 e RF013) 🟩
-  - [] Criar lista de solicitações 🟩
+  - [] Criar lista de solicitações abertas 🟩
+  - [] Criar lista de todas as solicitações 🟩
   - [] Implementar filtro de ordenação por data/hora 🟩
-  - [] Implementar uma barra de pesquisa  🟩
-  - [] Preencher a lista com as informações de um JSON  🟩
-  - [] Testar filtros  🟩
+  - [] Implementar filtro por período 🟩
+  - [] Implementar uma barra de pesquisa 🟩
+  - [] Preencher a lista com as informações de um JSON 🟩
+  - [] Testar filtros 🟩
+  - [] Implementar solicitações redirecionadas 🟩
+  - [] Implementar escala de cores 🟩
+  - [] Implementar os botões de ação conforme estado 🟩
 
-- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** 🟦
-  - [] Implementar "Efetuar manutenção" (RF014) 🟦
-  - [] Implementar "Redirecionar manutenção" (RF015) 🟦
-  - [] Implementar "Finalizar solicitação" (RF016) 🟦
+- [x] Tela de Visualizar detalhes da solicitação - **Visão funcionário** 🟦
+  - [x] Implementar "Efetuar manutenção" (RF014) 🟦
+  - [x] Implementar "Redirecionar manutenção" (RF015) 🟦
+  - [x] Implementar "Finalizar solicitação" (RF016) 🟦
 
 - [] Tela de Efetuar orçamento (RF012) 🟧
 
-- [] Tela de CRUD de Categoria de Equipamentos (RF017) 🟧
-  - [] Criar o componente da tela 🟧
-  - [] Implementar layout básico 🟧
-  - [] Criar a tabela/lista de categorias 🟧
-  - [] Adicionar botões de ação: adicionar, editar, deletar 🟧
-  - [] Criar o formulário de categorias (modal) 🟧
+- [x] Tela de CRUD de Categoria de Equipamentos (RF017) 🟧
+  - [x] Criar o componente da tela 🟧
+  - [x] Implementar layout básico 🟧
+  - [x] Criar a tabela/lista de categorias 🟧
+  - [x] Adicionar botões de ação: adicionar, editar, deletar 🟧
+  - [x] Criar o formulário de categorias (modal) 🟧
 
 - [] Tela de CRUD de Funcionários (RF018) 🟦
   - [x] Criar o componente da tela 🟦
@@ -95,3 +101,19 @@
 - [] Tela de Gerar relatório 🟨
   - [] Implementar "Relatório de receita" (RF019) 🟨
   - [] Implementar "Relatório por categoria" (RF020) 🟨
+ 
+#### Outros 
+- [] Menu 
+  - [] Criar logo do sistema
+  - [] Criar nome comercial
+ 
+- [] Submenu lateral 🟩
+  - [] Integrar rotas  🟩
+  - [] Implementar opções de acesso de acordo com o perfil (Cliente e Funcionário) 🟩
+  - [] Botão de logout
+    
+- [] Dados de teste
+  - [] Arquivo JSON com 20+ solicitações 🟩
+  - [] Arquivo JSON com 2 funcionários (Maria e Mário)
+  - [] Arquivo JSON com 4 clientes (João, José, Joana, Joaquina)
+  - [] Arquivo JSON com 5 categorias (Notebook, Desktop, Impressora, Mouse, Teclado)

@@ -6,6 +6,7 @@ import { NovaSolicitacao } from './components/nova-solicitacao/nova-solicitacao'
 import { VisualizarOrcamento } from './components/visualizar-orcamento/visualizar-orcamento';
 import { PagarServico } from './components/pagar-servico/pagar-servico';
 import { VisualizarServico } from './components/visualizar-servico/visualizar-servico';
+import { TelaCategorias } from './pages/tela-categorias/tela-categorias';
 
 export const routes: Routes = [
     { path: '', component: TelaLogin, pathMatch: 'full'},
@@ -19,6 +20,7 @@ export const routes: Routes = [
     
     { path: 'tela-inicial-funcionario', component: TelaInicialFuncionario },
     { path: 'funcionarios', component: TelaFuncionarios },
+    { path: 'tela-categorias', component: TelaCategorias },
     { path: 'visualizar-detalhes/:id', component: TelaVisualizarDetalhes },
     { path: 'gerar-relatorio', component: GerarRelatorio },
 ];

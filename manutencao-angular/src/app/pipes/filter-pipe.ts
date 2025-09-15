@@ -3,18 +3,19 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'filter'
 })
+
 export class FilterPipe implements PipeTransform {
 
-  transform(items: any[], searchText: string, dateField: string = 'data', selectedDate?: string | Date): any[] {
+  transform(items: any[], searchText: string, dateField: string = 'data', selectedDate?: string | Date, selectedOrder: 'desc' | 'asc' = 'asc'): any[] {
     if (!items) return [];
 
     const hasDate = !!selectedDate;
 
-    if (!searchText && !hasDate) return items;
+    if (!searchText && !hasDate && !selectedOrder) return items;
 
     searchText = searchText ? searchText.toLowerCase() : '';
     
-    return items.filter(item => {
+    let filtered = items.filter(item => {
       let matchesText = true;
       let matchesDate = true;
 
@@ -48,5 +49,16 @@ export class FilterPipe implements PipeTransform {
 
       return matchesText && matchesDate;
     });
+
+    if(dateField) {
+      filtered = filtered.sort((a, b) => {
+        const dateA = new Date(a[dateField]).getTime();
+        const dateB = new Date(b[dateField]).getTime();
+        
+        return selectedOrder === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+    }
+
+    return filtered;
   }
 }
