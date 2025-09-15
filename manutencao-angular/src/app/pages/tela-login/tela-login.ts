@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Usuario, TipoUsuario, UsuarioStatus } from '../../models'
+import { Component, inject, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Usuario, TipoUsuario, UsuarioStatus, Cliente, Funcionario } from '../../models'
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { LoginService } from '../../services';
 
 const usuariosFake: Usuario[] = [
   { email: 'cliente@teste.com', senha: '1234', tipo: TipoUsuario.CLIENTE },
@@ -17,11 +18,14 @@ const usuariosFake: Usuario[] = [
 })
 
 export class TelaLogin {
+  @ViewChild('formLogin') formLogin! : NgForm;
+
   private router = inject(Router);
+  readonly loginService = inject(LoginService);
 
   usuario: Usuario = {
     email: '',
-    senha: '',
+    senha: ''
   }
 
   usuarioStatus: UsuarioStatus = UsuarioStatus.Nenhum;
@@ -32,22 +36,19 @@ export class TelaLogin {
   }
 
   login(){
-    const usuarioLogado = usuariosFake.find(
-      usuario => usuario.email === this.usuario.email && usuario.senha === this.usuario.senha
-    );
+    if (!this.formLogin.form.valid) return;
 
-    if (usuarioLogado) {
-      if (usuarioLogado.tipo === TipoUsuario.CLIENTE) {
+    let usuarioEncontrado: Cliente | Funcionario | null = this.loginService.login(this.usuario.email, this.usuario.senha);
+
+    if (usuarioEncontrado != null) {
+      if (usuarioEncontrado.usuario.tipo === TipoUsuario.CLIENTE) {
         this.router.navigate(['/tela-inicial-cliente']);
         this.usuarioStatus = UsuarioStatus.Valido;
-      } else if (usuarioLogado.tipo === TipoUsuario.FUNCIONARIO) {
-        console.log("Tela Funcionário");
+      } else if (usuarioEncontrado.usuario.tipo === TipoUsuario.FUNCIONARIO) {
+        this.router.navigate(['/tela-inicial-funcionario']);
         this.usuarioStatus = UsuarioStatus.Valido;
-
-        //this.router.navigate(['/tela-inicial-funcionario']);
       }
     } else {
-      console.error('Usuário ou senha inválidos');
       this.usuarioStatus = UsuarioStatus.Invalido;
     }
   }

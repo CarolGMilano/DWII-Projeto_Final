@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CepStatus, Cliente, Endereco, TipoUsuario } from '../../models';
-import { EnderecoService } from '../../services';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CepStatus, Cliente, Endereco, TipoUsuario, Usuario } from '../../models';
+import { EnderecoService, ClienteService } from '../../services';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tela-cadastro',
@@ -13,15 +13,18 @@ import { RouterLink } from '@angular/router';
 })
 
 export class TelaCadastro {
+  @ViewChild('formCadastro') formCadastro! : NgForm;
+  
   readonly _jsonEnderecoService = inject(EnderecoService);
+  readonly clienteService = inject(ClienteService);
+  private router = inject(Router);
 
-  cliente: Cliente = {
+  clientes: Cliente[] = [];
+
+  usuario: Usuario = {
     email: '',
     senha: '',
-    tipo: TipoUsuario.CLIENTE,
-    nome: '',
-    cpf: '',
-    telefone: '',
+    tipo: TipoUsuario.CLIENTE
   };
 
   endereco: Endereco = {
@@ -31,7 +34,15 @@ export class TelaCadastro {
     bairro: '',
     cidade: '',
     estado: '',
-  }
+  };
+
+  cliente: Cliente = {
+    usuario: this.usuario,
+    nome: '',
+    cpf: '',
+    telefone: '',
+    endereco: this.endereco
+  };
 
   cepStatus: CepStatus = CepStatus.Vazio;
   status = CepStatus;
@@ -142,8 +153,10 @@ export class TelaCadastro {
       this.cepStatus = CepStatus.Incompleto;
     }
   }
+  
+  salvar(): void{
+    if (!this.formCadastro.form.valid) return;
 
-  cadastrar(){
     const cpfFormatado = this.removeNaoNumericos(this.cliente.cpf);
     const telefoneFormatado = this.removeNaoNumericos(this.cliente.telefone);
     const cepFormatado = this.removeNaoNumericos(this.endereco.cep);
@@ -152,23 +165,28 @@ export class TelaCadastro {
     const senhaAleatoria = Math.random().toString(36).slice(-4);
 
     const cliente: Cliente = {
-      email: this.cliente.email,
-      senha: senhaAleatoria,
-      tipo: this.cliente.tipo,
+      usuario: {
+        email: this.cliente.usuario.email,
+        senha: senhaAleatoria,
+        tipo: this.cliente.usuario.tipo
+      },
       nome: this.cliente.nome,
       cpf: cpfFormatado,
-      telefone: telefoneFormatado
+      telefone: telefoneFormatado,
+      endereco: {
+        cep: cepFormatado,
+        logradouro: this.cliente.endereco.logradouro,
+        numero: this.cliente.endereco.numero,
+        bairro: this.cliente.endereco.bairro,
+        cidade: this.cliente.endereco.cidade,
+        estado: this.cliente.endereco.estado,
+      }
     }
 
-    const endereco: Endereco = {
-      cep: cepFormatado,
-      logradouro: this.endereco.logradouro,
-      numero: this.endereco.numero,
-      bairro: this.endereco.bairro,
-      cidade: this.endereco.cidade,
-      estado: this.endereco.estado,
-    }
+    this.clienteService.inserir(cliente);
+    
+    this.router.navigate(['']);
 
-    console.log(cliente, endereco);
+    console.log(cliente);
   }
 }
