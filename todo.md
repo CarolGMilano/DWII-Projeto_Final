@@ -23,14 +23,14 @@
   - [x] Criar indicações visuais de erro no form 🟦
 
 #### Telas de cliente
-- [] Tela de Dashboard (RF003 e RF009) 🟩
+- [x] Tela de Dashboard (RF003 e RF009) 🟩
   - [x] Criar lista de solicitações 🟩
   - [x] Implementar filtro de ordenação por mais recentes e mais antigos 🟩
   - [x] Implementar filtro por data/hora 🟩
   - [x] Criar o componente de histórico da solicitação 🟧
   - [x] Integrar o botão de Visualizar Solicitação com o histórico 🟩
   - [x] Implementar os botões de ação conforme estado  🟩
-  - [] Testar as validações de ação  🟩
+  - [x] Testar as validações de ação  🟩
   - [x] Implementar uma barra de pesquisa  🟩
   - [x] Preencher a lista com as informações de um JSON  🟩
   - [x] Testar filtros  🟩
@@ -62,9 +62,9 @@
 - [] Tela de Dashboard (RF011 e RF013) 🟩
   - [] Criar lista de solicitações abertas 🟩
   - [] Criar lista de todas as solicitações 🟩
-  - [] Implementar filtro de ordenação por data/hora 🟩
+  - [x] Implementar filtro de ordenação por data/hora 🟩
   - [] Implementar filtro por período 🟩
-  - [] Implementar uma barra de pesquisa 🟩
+  - [x] Implementar uma barra de pesquisa 🟩
   - [] Preencher a lista com as informações de um JSON 🟩
   - [] Testar filtros 🟩
   - [] Implementar solicitações redirecionadas 🟩
