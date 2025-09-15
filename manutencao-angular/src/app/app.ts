@@ -2,18 +2,9 @@ import { Component, inject, signal} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { Menu } from './components/menu/menu';
-import { NovaSolicitacao } from './components/nova-solicitacao/nova-solicitacao';
-import { Submenu } from './components/submenu/submenu';
-import { TelaInicialCliente } from './components/tela-inicial-cliente/tela-inicial-cliente';
-import { VisualizarOrcamento } from "./components/visualizar-orcamento/visualizar-orcamento";
-import { PagarServico } from "./components/pagar-servico/pagar-servico";
-import { VisualizarServico } from "./components/visualizar-servico/visualizar-servico";
 import { ClienteService, FuncionarioService } from './services';
 import { Cliente, Funcionario, TipoUsuario } from './models';
 import { MatIconModule } from '@angular/material/icon';
-import { TelaFuncionarios } from "./pages";
-import { TelaCategorias } from "./pages/tela-categorias/tela-categorias";
 
   const clientesFake: Cliente[] = [
     {
@@ -140,16 +131,7 @@ import { TelaCategorias } from "./pages/tela-categorias/tela-categorias";
   imports: [
     RouterOutlet,
     MatIconModule,
-    Menu,
-    Submenu,
-    NovaSolicitacao,
-    TelaInicialCliente,
-    VisualizarOrcamento,
-    PagarServico,
-    VisualizarServico,
     RouterModule,
-    TelaFuncionarios,
-    TelaCategorias
 ],
   templateUrl: './app.html',
   styleUrl: './app.css'
