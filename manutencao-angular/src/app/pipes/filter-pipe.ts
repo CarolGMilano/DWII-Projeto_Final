@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 export class FilterPipe implements PipeTransform {
 
-  transform(items: any[], searchText: string, dateField: string = 'data', selectedDate?: string | Date, selectedOrder: 'asc' | 'desc' = 'desc'): any[] {
+  transform(items: any[], searchText: string, dateField: string = 'data', selectedDate?: string | Date, selectedOrder: 'desc' | 'asc' = 'asc'): any[] {
     if (!items) return [];
 
     const hasDate = !!selectedDate;
