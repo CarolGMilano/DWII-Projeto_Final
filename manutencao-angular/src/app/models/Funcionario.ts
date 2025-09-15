@@ -1,6 +1,8 @@
 import { Usuario } from "./Usuario";
 
-export interface Funcionario extends Usuario {
-  nome: string,
-  dataNascimento: Date
+export interface Funcionario {
+  idFuncionario?: number; //Opcional, pois o ID vem do banco
+  usuario: Usuario;
+  nome: string;
+  dataNascimento: Date;
 }
