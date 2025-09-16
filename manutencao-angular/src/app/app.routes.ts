@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { TelaCadastro, TelaLogin, TelaFuncionarios, GerarRelatorio, TelaVisualizarDetalhes } from './pages/index';
-import { TelaInicialCliente } from './components/tela-inicial-cliente/tela-inicial-cliente';
-import { TelaInicialFuncionario } from './components/tela-inicial-funcionario/tela-inicial-funcionario';
+import { TelaInicialCliente } from './pages/tela-inicial-cliente/tela-inicial-cliente';
+import { TelaInicialFuncionario } from './pages/tela-inicial-funcionario/tela-inicial-funcionario';
 import { NovaSolicitacao } from './components/nova-solicitacao/nova-solicitacao';
 import { VisualizarOrcamento } from './components/visualizar-orcamento/visualizar-orcamento';
 import { PagarServico } from './components/pagar-servico/pagar-servico';
