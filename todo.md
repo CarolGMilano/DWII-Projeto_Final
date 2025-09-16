@@ -58,18 +58,26 @@
   - [x] Botão com modal de confirmar pagamento 🟧
   - [x] Adicionar services 🟧 -- em andamento
 
+- [] Tela de Resgatar Serviço (RF009)
+  - [] 
+
 #### Telas de funcionário
 - [] Tela de Dashboard (RF011 e RF013) 🟩
-  - [] Criar lista de solicitações 🟩
+  - [] Criar lista de solicitações abertas 🟩
+  - [] Criar lista de todas as solicitações 🟩
   - [] Implementar filtro de ordenação por data/hora 🟩
-  - [] Implementar uma barra de pesquisa  🟩
-  - [] Preencher a lista com as informações de um JSON  🟩
-  - [] Testar filtros  🟩
+  - [] Implementar filtro por período 🟩
+  - [] Implementar uma barra de pesquisa 🟩
+  - [] Preencher a lista com as informações de um JSON 🟩
+  - [] Testar filtros 🟩
+  - [] Implementar solicitações redirecionadas 🟩
+  - [] Implementar escala de cores 🟩
+  - [] Implementar os botões de ação conforme estado 🟩
 
-- [] Tela de Visualizar detalhes da solicitação - **Visão funcionário** 🟦
-  - [] Implementar "Efetuar manutenção" (RF014) 🟦
-  - [] Implementar "Redirecionar manutenção" (RF015) 🟦
-  - [] Implementar "Finalizar solicitação" (RF016) 🟦
+- [x] Tela de Visualizar detalhes da solicitação - **Visão funcionário** 🟦
+  - [x] Implementar "Efetuar manutenção" (RF014) 🟦
+  - [x] Implementar "Redirecionar manutenção" (RF015) 🟦
+  - [x] Implementar "Finalizar solicitação" (RF016) 🟦
 
 - [] Tela de Efetuar orçamento (RF012) 🟧
 
@@ -96,3 +104,19 @@
 - [] Tela de Gerar relatório 🟨
   - [] Implementar "Relatório de receita" (RF019) 🟨
   - [] Implementar "Relatório por categoria" (RF020) 🟨
+ 
+#### Outros 
+- [] Menu 
+  - [] Criar logo do sistema
+  - [] Criar nome comercial
+ 
+- [] Submenu lateral 🟩
+  - [] Integrar rotas  🟩
+  - [] Implementar opções de acesso de acordo com o perfil (Cliente e Funcionário) 🟩
+  - [] Botão de logout
+    
+- [] Dados de teste
+  - [] Arquivo JSON com 20+ solicitações 🟩
+  - [] Arquivo JSON com 2 funcionários (Maria e Mário)
+  - [] Arquivo JSON com 4 clientes (João, José, Joana, Joaquina)
+  - [] Arquivo JSON com 5 categorias (Notebook, Desktop, Impressora, Mouse, Teclado)

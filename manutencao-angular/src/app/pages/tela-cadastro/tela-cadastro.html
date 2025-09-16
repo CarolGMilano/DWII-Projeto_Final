@@ -2,7 +2,7 @@
   <div class="w-2/5 flex items-center justify-center bg-gray-200 m-3 rounded-lg">LOGO</div>
 
   <div class="flex justify-center items-center w-3/5 bg-white px-30 max-w-full">
-    <form #cadastroForm="ngForm" (ngSubmit)="cadastrar()">
+    <form #formCadastro="ngForm" (ngSubmit)="salvar()">
       <div>
         <h2 class="text-base/7 font-semibold text-gray-900">Cadastro</h2>
 
@@ -10,12 +10,12 @@
             <div class="col-span-6 mt-1.5">
               <input id="nome" placeholder="Nome" type="text" name="nome" [(ngModel)]="cliente.nome" #nome="ngModel" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-2 focus:border-gray-400"
               [ngClass]="{
-                'border-2 border-red-500': nome.errors?.['required'] && (nome.touched || cadastroForm.submitted),
+                'border-2 border-red-500': nome.errors?.['required'] && (nome.touched || formCadastro.submitted),
                 'border-2 border-green-500': nome.valid && nome.touched,
                 'border-1 border-gray-300': nome.pristine
               }" />
 
-              @if (nome.errors?.['required'] && (nome.touched || cadastroForm.submitted)) {
+              @if (nome.errors?.['required'] && (nome.touched || formCadastro.submitted)) {
                 <span class="pl-2 text-red-600 text-xs">O nome é obrigatório</span>
               } 
             </div>
@@ -24,13 +24,13 @@
               <!-- Dentro dos () vai o evento que você quer "escutar" pra executar a função escolhida. -->  
               <input id="cpf" placeholder="CPF" type="text" name="cpf" autocomplete="family-name" (input)="mascaraCPF()" [(ngModel)]="cliente.cpf" maxlength="14" pattern="^\d{3}\.\d{3}\.\d{3}-\d{2}$" (keypress)="somenteNumeros($event)" #cpf="ngModel" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
               [ngClass]="{
-                'border-2 border-red-500': cpf.errors?.['required'] && (cpf.touched || cadastroForm.submitted),
+                'border-2 border-red-500': cpf.errors?.['required'] && (cpf.touched || formCadastro.submitted),
                 'border-2 border-yellow-500': cpf.errors?.['pattern'],
                 'border-2 border-green-500': cpf.valid && cpf.touched,
                 'border-1 border-gray-300': cpf.pristine
               }" />
 
-              @if (cpf.errors?.['required'] && (cpf.touched || cadastroForm.submitted)) {
+              @if (cpf.errors?.['required'] && (cpf.touched || formCadastro.submitted)) {
                 <span class="pl-2 text-red-600 text-xs">O CPF é obrigatório</span>
               } @else if (cpf.errors?.['pattern']) {
                 <span class="pl-2 text-yellow-600 text-xs">O CPF está incompleto ou inválido</span>
@@ -40,13 +40,13 @@
             <div class="col-span-3 mt-1.5">
               <input id="telefone" placeholder="Telefone" type="text" name="telefone" autocomplete="tel" (input)="mascaraTelefone()" [(ngModel)]="cliente.telefone" maxlength="15" (keypress)="somenteNumeros($event)" #telefone="ngModel" pattern="^\(\d{2}\)\s?\d{5}-\d{4}$" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
               [ngClass]="{
-                'border-2 border-red-500': telefone.errors?.['required'] && (telefone.touched || cadastroForm.submitted),
+                'border-2 border-red-500': telefone.errors?.['required'] && (telefone.touched || formCadastro.submitted),
                 'border-2 border-yellow-500': telefone.errors?.['pattern'],
                 'border-2 border-green-500': telefone.valid && telefone.touched,
                 'border-1 border-gray-300': telefone.pristine
               }" />
 
-              @if (telefone.errors?.['required'] && (telefone.touched || cadastroForm.submitted)) {
+              @if (telefone.errors?.['required'] && (telefone.touched || formCadastro.submitted)) {
                 <span class="pl-2 text-red-600 text-xs">O telefone é obrigatório</span>
               } @else if (telefone.errors?.['pattern']) {
                 <span class="pl-2 text-yellow-600 text-xs">O telefone está inválido ou incompleto</span>
@@ -54,16 +54,16 @@
             </div>
 
             <div class="col-span-6 mt-1.5">
-              <input id="email" placeholder="Email" type="email" name="email" autocomplete="email" [(ngModel)]="cliente.email" #email="ngModel" email required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
+              <input id="email" placeholder="Email" type="email" name="email" autocomplete="email" [(ngModel)]="cliente.usuario.email" #email="ngModel" email required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
               [ngClass]="{
-                'border-2 border-red-500': (email.invalid && (email.touched || cadastroForm.submitted)),
+                'border-2 border-red-500': (email.invalid && (email.touched || formCadastro.submitted)),
                 'border-2 border-yellow-500': (email.errors?.['email']),
                 'border-2 border-green-500': email.valid && email.touched,
                 'border-1 border-gray-300': email.pristine
               }"
             />
 
-            @if (email.invalid && (email.touched || cadastroForm.submitted)) {
+            @if (email.invalid && (email.touched || formCadastro.submitted)) {
               @if (email.errors?.['required']) {
                 <span class="pl-2 text-red-600 text-xs">O email é obrigatório</span>
               } @else if (email.errors?.['email']) {
@@ -73,24 +73,24 @@
             </div>
 
             <div class="mt-4 col-span-2">
-              <input id="cep" placeholder="CEP" type="text" name="cep" autocomplete="postal-code" [(ngModel)]="endereco.cep" (ngModelChange)="validaCEP($event)" (input)="mascaraCEP()" maxlength="9" (keypress)="somenteNumeros($event)" #cep="ngModel" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
+              <input id="cep" placeholder="CEP" type="text" name="cep" autocomplete="postal-code" [(ngModel)]="cliente.endereco.cep" (ngModelChange)="validaCEP($event)" (input)="mascaraCEP()" maxlength="9" (keypress)="somenteNumeros($event)" #cep="ngModel" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
               [ngClass]="{
-                'border-2 border-purple-500': cepStatus == status.ProblemaAPI && (cep.touched || cadastroForm.submitted),
-                'border-2 border-red-500': (cepStatus == status.Invalido && (cep.touched || cadastroForm.submitted)) || (cepStatus == status.Vazio && (cep.touched || cadastroForm.submitted)),
-                'border-2 border-yellow-500': cepStatus == status.Incompleto && (cep.touched || cadastroForm.submitted),
+                'border-2 border-purple-500': cepStatus == status.ProblemaAPI && (cep.touched || formCadastro.submitted),
+                'border-2 border-red-500': (cepStatus == status.Invalido && (cep.touched || formCadastro.submitted)) || (cepStatus == status.Vazio && (cep.touched || formCadastro.submitted)),
+                'border-2 border-yellow-500': cepStatus == status.Incompleto && (cep.touched || formCadastro.submitted),
                 'border-2 border-green-500': cepStatus == status.Valido,
                 'border-1 border-gray-300': cep.pristine
               }" />
 
-              @if(cepStatus === status.Incompleto && (cep.touched || cadastroForm.submitted)) {
+              @if(cepStatus === status.Incompleto && (cep.touched || formCadastro.submitted)) {
                 <span class="pl-2 text-yellow-600 text-xs">O CEP está incompleto</span>
               }
 
-              @if (cepStatus === status.Invalido && (cep.touched || cadastroForm.submitted)) {
+              @if (cepStatus === status.Invalido && (cep.touched || formCadastro.submitted)) {
                 <span class="pl-2 text-red-600 text-xs">O CEP não encontrado</span>
               }
 
-              @if (cep.invalid && (cep.touched || cadastroForm.submitted)) {              
+              @if (cep.invalid && (cep.touched || formCadastro.submitted)) {              
                 @if(cep.errors?.['required']) {
                   <span class="pl-2 text-red-600 text-xs">O CEP é obrigatório</span>
                 } @else if (cepStatus === status.ProblemaAPI) {
@@ -107,25 +107,25 @@
             </div>
 
             <div class="col-span-1 mt-1.5">
-              <input id="numero" placeholder="Nº" name="numero" autocomplete="address-line1" [(ngModel)]="endereco.numero" (keypress)="somenteNumeros($event)" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+              <input id="numero" placeholder="Nº" name="numero" autocomplete="address-line1" [(ngModel)]="cliente.endereco.numero" (keypress)="somenteNumeros($event)" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
             </div>
 
             <div class="col-span-2 mt-1.5">
-              <input id="bairro" placeholder="Bairro" type="text" name="bairro" autocomplete="address-level2" [(ngModel)]="endereco.bairro" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
+              <input id="bairro" placeholder="Bairro" type="text" name="bairro" autocomplete="address-level2" [(ngModel)]="cliente.endereco.bairro" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
               [ngClass]="{
                 'bg-green-100': cepStatus == status.Valido
               }" />
             </div>
 
             <div class="col-span-2 mt-1.5">
-              <input id="cidade" placeholder="Cidade" type="text" name="cidade" autocomplete="address-level2" [(ngModel)]="endereco.cidade" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
+              <input id="cidade" placeholder="Cidade" type="text" name="cidade" autocomplete="address-level2" [(ngModel)]="cliente.endereco.cidade" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
               [ngClass]="{
                 'bg-green-100': cepStatus == status.Valido
               }" />
             </div>
 
             <div class="col-span-2 mt-1.5">
-              <input id="estado" placeholder="Estado" type="text" name="estado" autocomplete="address-level1" [(ngModel)]="endereco.estado" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
+              <input id="estado" placeholder="Estado" type="text" name="estado" autocomplete="address-level1" [(ngModel)]="cliente.endereco.estado" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
               [ngClass]="{
                 'bg-green-100': cepStatus == status.Valido
               }" />
@@ -135,7 +135,7 @@
 
       <div class="flex-col items-center justify-center pt-5">
           <div class="relative group inline-block w-full">
-            <button type="submit" [disabled]="cadastroForm.invalid" class="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
+            <button type="submit" [disabled]="!formCadastro.valid" class="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
               Cadastrar
             </button>
 

@@ -1,5 +1,5 @@
 export interface Endereco {
-  idEndereco?: number;
+  idEndereco?: number; //Opcional, pois o ID vem do banco
   cep: string;
   logradouro: string;
   numero?: string;
