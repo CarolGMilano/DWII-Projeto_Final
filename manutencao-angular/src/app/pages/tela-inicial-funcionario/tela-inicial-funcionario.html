@@ -7,7 +7,7 @@
                 Nova Solicitação
             </button>
             <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer ml-4"
-                [routerLink]="['/nova-solicitacao']">
+                [routerLink]="['/tela-lista-solicitacoes']">
                 Lista de Solicitações
             </button>
         </div>
@@ -16,10 +16,11 @@
     <div class="mt-6 w-[100%] flex justify-between items-center text-sm">
         <div class="flex justify-between items-center gap-4 text-gray-700">
             <div class="flex items-center gap-4">
-                <label>Filtrar por data</label>
+                <label>Filtrar por data:</label>
                 <input type="date" [(ngModel)]="selectedDate"
                     class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
             </div>
+            <label class="pl-6">Ordenar:</label>
             <div class="flex items-center bg-gray-200 pt-0.5 pb-0.5 pl-2 pr-2 rounded-md outline-0 cursor-pointer">
                 <select [(ngModel)]="filtroOrdenacao"
                     class="flex items-center text-sm w-32 cursor-pointer outline-0">
@@ -65,3 +66,4 @@
             </tbody>
         </table>
     </div>
+</div>
