@@ -39,8 +39,8 @@
         <table class="min-w-full divide-y divide-gray-200 rounded-lg">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-1 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora de                        abertura</th>
-                    <th scope="col" class="px-6 py-2 text-left text-sm font-semibold text-gray-900">Descrição doequipamento</th>
+                    <th scope="col" class="px-1 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora de abertura</th>
+                    <th scope="col" class="px-6 py-2 text-left text-sm font-semibold text-gray-900">Descrição do equipamento</th>
                     <th scope="col" class="px-6 py-2 text-left text-sm font-semibold text-gray-900">Cliente</th>
                     <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Status</th>
                     <th scope="col" class="px-1 py-2 text-left text-sm font-semibold text-gray-900">Ações</th>
@@ -63,11 +63,30 @@
                             <div *ngSwitchCase="'FINALIZADA'" class="w-2 h-2 rounded-[100%] bg-green-400"></div>
                             {{item.estado}}
                         </td>
-                        <td class="w-[20%] py-2 rounded-[7px]">
+                        <td [ngSwitch]="item.estado" class="w-[20%] py-2 rounded-[7px]">
                             <button
+                                *ngSwitchCase="'ABERTA'"
                                 class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
                                 [routerLink]="['/efetuar-orçamento/:id']">
                                 Efetuar Orçamento
+                            </button>
+                            <button
+                                *ngSwitchCase="'APROVADA'"
+                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/efetuar-manutencao/:id']">
+                                Efetuar Manutenção
+                            </button>
+                            <button
+                                *ngSwitchCase="'REDIRECIONADA'"
+                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/efetuar-manutencao/:id']">
+                                Efetuar Manutenção
+                            </button>
+                            <button
+                                *ngSwitchCase="'PAGA'"
+                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/finalizar-solicitacao/id']">
+                                Finalizar Solicitação
                             </button>
                         </td>
                     </tr>
