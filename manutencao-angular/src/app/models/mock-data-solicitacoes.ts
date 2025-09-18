@@ -8,5 +8,7 @@ export const MOCK_DATA_SOLICITACOES = [
     { id: '7', equipamento: '', categoria: 'Celular', descricao: 'Bateria com defeito', data: '2025-06-28T11:00:00', estado: 'REJEITADA'},
     { id: '8', equipamento: '', categoria: 'Fone de ouvido', descricao: 'Problemas na conexão bluetooth', data: '2025-04-02T14:50:00', estado: 'APROVADA'},
     { id: '9', equipamento: '', categoria: 'Tablet', descricao: 'Problemas de carregamento', data: '2025-07-11T15:30:00', estado: 'APROVADA'},
-    { id: '10', equipamento: '', categoria: 'Tablet', descricao: 'Falha no botão de ligar/desligar', data: '2025-07-11T10:40:00', estado: 'ARRUMADA'}
+    { id: '10', equipamento: '', categoria: 'Tablet', descricao: 'Falha no botão de ligar/desligar', data: '2025-07-11T10:40:00', estado: 'ARRUMADA'},
+    { id: '11', equipamento: '', categoria: 'Tablet', descricao: 'Bateria com defeito', data: '2025-07-11T10:40:00', estado: 'ABERTA'},
+    { id: '12', equipamento: '', categoria: 'Tablet', descricao: 'Falha no botão de ligar/desligar', data: '2025-07-11T10:40:00', estado: 'ABERTA'}
 ]

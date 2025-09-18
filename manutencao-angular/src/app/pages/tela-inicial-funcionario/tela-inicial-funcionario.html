@@ -1,10 +1,16 @@
 <div class="p-12">
     <div class="flex justify-between pb-4">
         <h2 class="font-bold text-[22px]">Solicitações Abertas</h2>
-        <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-            [routerLink]="['/nova-solicitacao']">
-            Nova Solicitação
-        </button>
+        <div>
+            <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer ml-4"
+                [routerLink]="['/nova-solicitacao']">
+                Nova Solicitação
+            </button>
+            <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer ml-4"
+                [routerLink]="['/nova-solicitacao']">
+                Lista de Solicitações
+            </button>
+        </div>
     </div>
     <hr>
     <div class="mt-6 w-[100%] flex justify-between items-center text-sm">
@@ -41,18 +47,20 @@
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
                 @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao); track item) {
-                <tr>
-                    <td class="px-1 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td class="px-6 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
-                    <td class="px-6 py-2 text-sm text-gray-700">Nome do cliente</td>
-                    <td class="w-[20%] py-2 rounded-[7px]">
-                        <button
-                            class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/efetuar-orçamento/:id']">
-                            Efetuar Orçamento
-                        </button>
-                    </td>
-                </tr>
+                    @if (item.estado?.toLowerCase() === 'aberta') {
+                        <tr>
+                            <td class="px-1 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td class="px-6 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
+                            <td class="px-6 py-2 text-sm text-gray-700">Nome do cliente</td>
+                            <td class="w-[20%] py-2 rounded-[7px]">
+                                <button
+                                    class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                    [routerLink]="['/efetuar-orçamento/:id']">
+                                    Efetuar Orçamento
+                                </button>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
