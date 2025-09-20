@@ -58,9 +58,6 @@
   - [x] Botão com modal de confirmar pagamento 🟧
   - [x] Adicionar services 🟧 -- em andamento
 
-- [] Tela de Resgatar Serviço (RF009)
-  - [] 
-
 #### Telas de funcionário
 - [] Tela de Dashboard (RF011 e RF013) 🟩
   - [] Criar lista de solicitações abertas 🟩
@@ -94,16 +91,16 @@
   - [x] Criar a tabela/lista de funcionários 🟦
   - [x] Adicionar botões de ação: adicionar, editar, deletar 🟦
   - [x] Criar o formulário de funcionário (modal) 🟦
-  - [] Adicionar validações nos campos do formulário 🟦
+  - [x] Adicionar validações nos campos do formulário 🟦
   - [] Criar indicações visuais de erro no form 🟦
   - [x] Implementar filtros e busca na lista de funcionários 🟦
-  - [] Implementar scroll infinito 🟦
+  - [x] Implementar scroll infinito 🟦
   - [x] Ajustes visuais 🟦
-  - [] Testar interações e fluxo de navegação 🟦
+  - [x] Testar interações e fluxo de navegação 🟦
 
-- [] Tela de Gerar relatório 🟨
-  - [] Implementar "Relatório de receita" (RF019) 🟨
-  - [] Implementar "Relatório por categoria" (RF020) 🟨
+- [x] Tela de Gerar relatório 🟨
+  - [x] Implementar "Relatório de receita" (RF019) 🟨
+  - [x] Implementar "Relatório por categoria" (RF020) 🟨
  
 #### Outros 
 - [] Menu 
