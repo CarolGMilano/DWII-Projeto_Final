@@ -26,14 +26,14 @@ export const EstadoSolicitacaoLabel = {
 };
 
 export const EstadoSolicitacaoCor = {
-  [EstadoSolicitacaoT.ABERTA]: 'bg-gray-300 text-gray-800',
-  [EstadoSolicitacaoT.ORCADA]: 'bg-yellow-800 text-white',
-  [EstadoSolicitacaoT.APROVADA]: 'bg-yellow-300 text-black',
-  [EstadoSolicitacaoT.REJEITADA]: 'bg-red-500 text-white',
-  [EstadoSolicitacaoT.REDIRECIONADA]: 'bg-purple-500 text-white',
-  [EstadoSolicitacaoT.ARRUMADA]: 'bg-blue-500 text-white',
-  [EstadoSolicitacaoT.PAGA]: 'bg-orange-500 text-white',
-  [EstadoSolicitacaoT.FINALIZADA]: 'bg-green-500 text-white',
+  [EstadoSolicitacaoT.ABERTA]: '#B7B7B7',
+  [EstadoSolicitacaoT.ORCADA]: '#AB886D',
+  [EstadoSolicitacaoT.APROVADA]: '#DED473',
+  [EstadoSolicitacaoT.REJEITADA]: '#BD574E',
+  [EstadoSolicitacaoT.REDIRECIONADA]: '#BFA2DB',
+  [EstadoSolicitacaoT.ARRUMADA]: '#89A8B2',
+  [EstadoSolicitacaoT.PAGA]: '#F5B17B',
+  [EstadoSolicitacaoT.FINALIZADA]: '#96A78D',
 };
 
 export interface ServicoT {

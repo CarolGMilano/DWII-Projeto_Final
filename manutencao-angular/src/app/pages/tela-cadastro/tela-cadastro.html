@@ -135,13 +135,14 @@
 
       <div class="flex-col items-center justify-center pt-5">
           <div class="relative group inline-block w-full">
-            <button type="submit" [disabled]="!formCadastro.valid" class="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
+            <button type="submit" [disabled]="!formCadastro.valid" class="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
               Cadastrar
             </button>
-
-            <div class="absolute left-100 translate-x-1/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 bg-black text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-indigo-400">
-              Preencha o formulário corretamente
-            </div>
+            @if (!formCadastro.valid) {
+              <div class="absolute left-100 translate-x-1/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 bg-black text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-indigo-400">
+                Preencha o formulário corretamente
+              </div>
+            }
           </div>
 
         <p class="mt-2 text-center text-sm/6 text-gray-500">
