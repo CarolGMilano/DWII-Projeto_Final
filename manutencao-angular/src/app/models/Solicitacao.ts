@@ -5,10 +5,9 @@ import { OrcamentoModel } from "./Orcamento";
 
 export interface SolicitacaoModel extends NovaSolicitacaoModel {
   id: number
-  descricaoPreco?: Array<{ descricao: string; preco: string }>;
-  precoTotal?: string;
+  descricaoPreco?: Array<{ descricao: string; preco: number }>;
+  precoTotal?: number;
   pago: false;
   data:Data;
-  // orcamento?: OrcamentoModel;
   rejOrcamento?: string;
 }

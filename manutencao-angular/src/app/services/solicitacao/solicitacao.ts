@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { SolicitacaoModel } from '../../models/Solicitacao';
 import { NovaSolicitacao } from '../../components/nova-solicitacao/nova-solicitacao';
-import { OrcamentoModel } from '../../models/Orcamento';
 import { Categoria } from '../../models/Categoria';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 import { HistoricoSolicitacao } from '../../models/HistoricoSolicitacao';
@@ -11,6 +10,7 @@ import { HistoricoSolicitacao } from '../../models/HistoricoSolicitacao';
 @Injectable({
   providedIn: 'root'
 })
+
 export class SolicitacaoService {
   private apiUrl = '';
 
@@ -46,6 +46,16 @@ export class SolicitacaoService {
   pagarServico(id:number): Observable<SolicitacaoModel>{
    return this.http.put<SolicitacaoModel>(`${this.apiUrl}/${id}`, {
       pago: true
+    });
+  }
+
+  enviarOrcamento(id: number, precoTotal: number, descricaoPreco: {descricao: string; preco: number} ): Observable<SolicitacaoModel> {
+    this.atualizarStatus(id, EstadoSolicitacao.ORCADA);
+    
+    return this.http.put<SolicitacaoModel>(`${this.apiUrl}/${id}/orcamento`, {
+      precoTotal: precoTotal,
+      descricaoPreco : descricaoPreco
+      
     });
   }
 
