@@ -8,6 +8,7 @@ import { PagarServico } from './components/pagar-servico/pagar-servico';
 import { VisualizarServico } from './components/visualizar-servico/visualizar-servico';
 import { TelaCategorias } from './pages/tela-categorias/tela-categorias';
 import { ClienteFuncionarioLayout } from './layout';
+import { RealizarOrcamento } from './components/realizar-orcamento/realizar-orcamento';
 
 export const routes: Routes = [
   { path: '', component: TelaLogin, pathMatch: 'full'},
@@ -22,8 +23,8 @@ export const routes: Routes = [
       { path: 'visualizar-orcamento/:id', component: VisualizarOrcamento},
       { path: 'visualizar-servico/:id', component: VisualizarServico},
       { path: 'pagar-servico/:id', component: PagarServico},
-      
       { path: 'tela-inicial-funcionario', component: TelaInicialFuncionario },
+      { path: 'realizar-orcamento/:id', component: RealizarOrcamento },
       { path: 'funcionarios', component: TelaFuncionarios },
       { path: 'tela-categorias', component: TelaCategorias },
       { path: 'visualizar-detalhes/:id', component: TelaVisualizarDetalhes },
