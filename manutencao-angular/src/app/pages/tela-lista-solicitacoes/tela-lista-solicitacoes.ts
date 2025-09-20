@@ -17,8 +17,10 @@ export class TelaListaSolicitacoes implements OnInit {
   solicitacoes = MOCK_DATA_SOLICITACOES;
   searchText: string = '';
   dateField?: string = '';
-  selectedDate?: Date;
+  selectedDate?: Date | string;
   filtroOrdenacao: 'desc' | 'asc' = 'asc';
+  startDate?: Date;
+  endDate?: Date;
 
   constructor(private http: HttpClient) {}
 
@@ -26,5 +28,22 @@ export class TelaListaSolicitacoes implements OnInit {
       this.http.get<any[]>('models/mock-data-solicitacoes.json').subscribe(data => {
         this.solicitacoes = data;
       });
+  }
+
+  filtrarHoje() {
+    const hoje = new Date();
+    const yyyy = hoje.getFullYear();
+    const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoje.getDate()).padStart(2, '0');
+
+    this.selectedDate = `${yyyy}-${mm}-${dd}`; 
+    this.startDate = undefined;
+    this.endDate = undefined;
+  }
+
+  limparFiltroData() {
+    this.selectedDate = undefined;
+    this.startDate = undefined;
+    this.endDate = undefined;
   }
 }

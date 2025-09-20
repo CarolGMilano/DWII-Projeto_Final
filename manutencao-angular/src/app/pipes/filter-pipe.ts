@@ -6,12 +6,21 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 export class FilterPipe implements PipeTransform {
 
-  transform(items: any[], searchText: string, dateField: string = 'data', selectedDate?: string | Date, selectedOrder: 'desc' | 'asc' = 'asc'): any[] {
+  transform(
+    items: any[], 
+    searchText: string, 
+    dateField: string = 'data', 
+    selectedDate?: string | Date, 
+    selectedOrder: 'desc' | 'asc' = 'asc',
+    startDate?: string | Date,
+    endDate?: string | Date
+  ): any[] {
     if (!items) return [];
 
     const hasDate = !!selectedDate;
+    const hasRange = !!startDate && !!endDate;
 
-    if (!searchText && !hasDate && !selectedOrder) return items;
+    if (!searchText && !hasDate && !hasRange && !selectedOrder) return items;
 
     searchText = searchText ? searchText.toLowerCase() : '';
     
@@ -47,7 +56,18 @@ export class FilterPipe implements PipeTransform {
         matchesDate = sameDay;
       }
 
+      if (hasRange) {
+        const start = new Date(startDate as any);
+        const end = new Date(endDate as any);
+        const itemDate = new Date(item?.[dateField]);
+
+        if (isNaN(itemDate.getTime())) return false;
+
+        matchesDate = itemDate >= start && itemDate <= end;
+      }
+
       return matchesText && matchesDate;
+
     });
 
     if(dateField) {

@@ -13,12 +13,12 @@
         <div class="flex justify-between items-center gap-4 text-gray-700">
             <div class="flex items-center gap-2">
                 <label class="pr-2">Filtrar por período:</label>
-                <input type="date" [(ngModel)]="selectedDate" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
+                <input type="date" [(ngModel)]="startDate" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
                 <p>à</p>
-                <input type="date" [(ngModel)]="selectedDate" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
+                <input type="date" [(ngModel)]="endDate" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
                 <label class="ml-6">Data:</label>
-                <button class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">Hoje</button>
-                <button class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">Todas</button>
+                <button (click)="filtrarHoje()" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">Hoje</button>
+                <button (click)="limparFiltroData()" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">Todas</button>
             </div>
             <label class="pl-6">Ordenar:</label>
             <div class="flex items-center bg-gray-200 pt-0.5 pb-0.5 pl-2 pr-2 rounded-md outline-0 cursor-pointer">
@@ -47,7 +47,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-                @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao); track item) {
+                @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao:startDate:endDate); track item) {
                     <tr>
                         <td class="px-1 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
                         <td class="px-6 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
