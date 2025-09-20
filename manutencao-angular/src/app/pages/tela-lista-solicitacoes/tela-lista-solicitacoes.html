@@ -1,1 +1,97 @@
-<p>tela-lista-solicitacoes works!</p>
+<div class="p-12">
+    <div class="flex justify-between pb-4">
+        <h2 class="font-bold text-[22px]">Lista de Solicitações</h2>
+        <div>
+            <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer ml-4"
+                [routerLink]="['/tela-inicial-funcionario']">
+                Retornar
+            </button>
+        </div>
+    </div>
+    <hr>
+    <div class="mt-6 w-[100%] flex justify-between items-center text-sm">
+        <div class="flex justify-between items-center gap-4 text-gray-700">
+            <div class="flex items-center gap-2">
+                <label class="pr-2">Filtrar por período:</label>
+                <input type="date" [(ngModel)]="startDate" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
+                <p>à</p>
+                <input type="date" [(ngModel)]="endDate" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
+                <label class="ml-6">Data:</label>
+                <button (click)="filtrarHoje()" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">Hoje</button>
+                <button (click)="limparFiltroData()" class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0">Todas</button>
+            </div>
+            <label class="pl-6">Ordenar:</label>
+            <div class="flex items-center bg-gray-200 pt-0.5 pb-0.5 pl-2 pr-2 rounded-md outline-0 cursor-pointer">
+                <select [(ngModel)]="filtroOrdenacao" class="flex items-center text-sm w-32 cursor-pointer outline-0">
+                    <option value="desc">Mais recentes</option>
+                    <option value="asc">Mais antigos</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="border-b-1 flex items-center">
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px;">search</mat-icon>
+            <input type="search" class="p-1 w-[300px] outline-0" placeholder="Pesquisar" [(ngModel)]="searchText">
+        </div>
+    </div>
+
+    <div class="mt-10 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 rounded-lg">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="px-1 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora de abertura</th>
+                    <th scope="col" class="px-6 py-2 text-left text-sm font-semibold text-gray-900">Descrição do equipamento</th>
+                    <th scope="col" class="px-6 py-2 text-left text-sm font-semibold text-gray-900">Cliente</th>
+                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Status</th>
+                    <th scope="col" class="px-1 py-2 text-left text-sm font-semibold text-gray-900">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 bg-white">
+                @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao:startDate:endDate); track item) {
+                    <tr>
+                        <td class="px-1 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td class="px-6 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
+                        <td class="px-6 py-2 text-sm text-gray-700">Nome do cliente</td>
+                        <td [ngSwitch]="item.estado" class="px-4 py-4 text-sm text-gray-700 flex items-center gap-2">
+                            <div *ngSwitchCase="'ABERTA'" class="w-2 h-2 rounded-[100%] bg-gray-400"></div>
+                            <div *ngSwitchCase="'ORÇADA'" class="w-2 h-2 rounded-[100%] bg-stone-600"></div>
+                            <div *ngSwitchCase="'REJEITADA'" class="w-2 h-2 rounded-[100%] bg-red-400"></div>
+                            <div *ngSwitchCase="'APROVADA'" class="w-2 h-2 rounded-[100%] bg-yellow-400"></div>
+                            <div *ngSwitchCase="'REDIRECIONADA'" class="w-2 h-2 rounded-[100%] bg-purple-400"></div>
+                            <div *ngSwitchCase="'ARRUMADA'" class="w-2 h-2 rounded-[100%] bg-blue-400"></div>
+                            <div *ngSwitchCase="'PAGA'" class="w-2 h-2 rounded-[100%] bg-orange-400"></div>
+                            <div *ngSwitchCase="'FINALIZADA'" class="w-2 h-2 rounded-[100%] bg-green-400"></div>
+                            {{item.estado}}
+                        </td>
+                        <td [ngSwitch]="item.estado" class="w-[20%] py-2 rounded-[7px]">
+                            <button
+                                *ngSwitchCase="'ABERTA'"
+                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/efetuar-orçamento/:id']">
+                                Efetuar Orçamento
+                            </button>
+                            <button
+                                *ngSwitchCase="'APROVADA'"
+                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/efetuar-manutencao/:id']">
+                                Efetuar Manutenção
+                            </button>
+                            <button
+                                *ngSwitchCase="'REDIRECIONADA'"
+                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/efetuar-manutencao/:id']">
+                                Efetuar Manutenção
+                            </button>
+                            <button
+                                *ngSwitchCase="'PAGA'"
+                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/finalizar-solicitacao/id']">
+                                Finalizar Solicitação
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

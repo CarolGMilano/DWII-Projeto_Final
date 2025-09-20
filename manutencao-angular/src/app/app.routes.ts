@@ -8,6 +8,7 @@ import { PagarServico } from './components/pagar-servico/pagar-servico';
 import { VisualizarServico } from './components/visualizar-servico/visualizar-servico';
 import { TelaCategorias } from './pages/tela-categorias/tela-categorias';
 import { ClienteFuncionarioLayout } from './layout';
+import { TelaListaSolicitacoes } from './pages/tela-lista-solicitacoes/tela-lista-solicitacoes';
 import { RealizarOrcamento } from './components/realizar-orcamento/realizar-orcamento';
 
 export const routes: Routes = [
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: 'visualizar-servico/:id', component: VisualizarServico},
       { path: 'pagar-servico/:id', component: PagarServico},
       { path: 'tela-inicial-funcionario', component: TelaInicialFuncionario },
+      { path: 'tela-lista-solicitacoes', component: TelaListaSolicitacoes },
       { path: 'realizar-orcamento/:id', component: RealizarOrcamento },
       { path: 'funcionarios', component: TelaFuncionarios },
       { path: 'tela-categorias', component: TelaCategorias },
