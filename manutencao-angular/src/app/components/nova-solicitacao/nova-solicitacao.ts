@@ -4,10 +4,12 @@ import { NovaSolicitacaoModel } from '../../models/NovaSolicitacao';
 import { SolicitacaoService } from '../../services';
 import { Categoria } from '../../models/Categoria';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
+import { MatIconModule } from '@angular/material/icon';
+import { VoltarTela } from '../voltar-tela/voltar-tela';
 
 @Component({
   selector: 'app-nova-solicitacao',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatIconModule, VoltarTela],
   templateUrl: './nova-solicitacao.html',
   styleUrl: './nova-solicitacao.css'
 })
