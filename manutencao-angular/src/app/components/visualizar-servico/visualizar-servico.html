@@ -1,44 +1,62 @@
-
-<div class="mt-20 p-12">
+<div class="p-12 h-full">
   <div class="px-4 sm:px-0">
     <h3 class="text-base font-semibold text-gray-900">Dados da Solicitação</h3>
     <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">Detalhes da solicitação.</p>
   </div>
+
   <div class="mt-6 border-t border-gray-100">
       <dl class="divide-y divide-gray-100">
           <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt class="text-sm/6 font-medium text-gray-900">Número da solicitação</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.id}}</dd>
+              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  1024
+                  <!--{{solicitacao.id}} -->
+              </dd>
           </div>
   
           <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt class="text-sm/6 font-medium text-gray-900">Data/Hora</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.data}}</dd>
+              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  <!-- Dado fictício -->
+                  22/09/2025 10:15
+                  <!--{{solicitacao.data}} -->
+              </dd>
           </div>
   
           <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt class="text-sm/6 font-medium text-gray-900">Categoria</dt>
-              <dd class="text-sm text-gray-700 sm:col-span-2">{{solicitacao.categoria}}</dd>
+              <dd class="text-sm text-gray-700 sm:col-span-2">
+                  Impressora
+                  <!--{{solicitacao.categoria}} -->
+              </dd>
           </div>
   
           <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt class="text-sm/6 font-medium text-gray-900">Descrição do Equipamento</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.equipamento}}</dd>
+              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  Impressora HP
+                  <!--{{solicitacao.equipamento}} -->
+              </dd>
           </div>
   
           <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">Defeito do defeito</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.descricao}}</dd>
+              <dt class="text-sm/6 font-medium text-gray-900">Defeito Reportado</dt>
+              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  Não imprime páginas
+                  <!--{{solicitacao.descricao}} -->
+              </dd>
           </div>
   
           <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt class="text-sm/6 font-medium text-gray-900">Status</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.estado}}</dd>
+              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                  ABERTA
+                  <!--{{solicitacao.estado}} -->
+              </dd>
           </div>
       </dl>
   </div>
-  
-  <div class="px-4 sm:px-0">
+  <div class="px-4 sm:px-0 mt-6">
     <h3 class="text-base font-semibold text-gray-900">Histórico da Solicitação</h3>
     <p class="mt-1 max-w-2xl text-sm text-gray-500">Todos os passos e alterações feitas no serviço.</p>
   </div>
@@ -54,18 +72,34 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
-      @for (passo of historico; track passo.idSolicitacao) {
         <tr>
-        <!-- <td class="px-4 py-2 text-sm text-gray-700">24/08/2025 14:30</td>
+          <td class="px-4 py-2 text-sm text-gray-700">22/09/2025 10:15</td>
           <td class="px-4 py-2 text-sm text-gray-700">- (Sistema)</td>
           <td class="px-4 py-2 text-sm text-gray-700">ABERTA</td>
-          <td class="px-4 py-2 text-sm text-gray-700">Cliente registrou serviço</td> -->
-          <td class="px-4 py-2 text-sm text-gray-700">{{passo.dataHora}}</td>
-          <td class="px-4 py-2 text-sm text-gray-700">{{passo.funcionario}}</td>
-          <td class="px-4 py-2 text-sm text-gray-700">{{passo.estado}}</td>
-          <td class="px-4 py-2 text-sm text-gray-700">{{passo.observacao}}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">Cliente registrou serviço</td>
         </tr>
-      } @end     
+        <tr>
+          <td class="px-4 py-2 text-sm text-gray-700">22/09/2025 11:00</td>
+          <td class="px-4 py-2 text-sm text-gray-700">João Silva</td>
+          <td class="px-4 py-2 text-sm text-gray-700">EM ANDAMENTO</td>
+          <td class="px-4 py-2 text-sm text-gray-700">Técnico iniciou análise do equipamento</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-2 text-sm text-gray-700">22/09/2025 13:30</td>
+          <td class="px-4 py-2 text-sm text-gray-700">João Silva</td>
+          <td class="px-4 py-2 text-sm text-gray-700">CONCLUÍDA</td>
+          <td class="px-4 py-2 text-sm text-gray-700">Orçamento finalizado</td>
+        </tr>
+        <!--
+        @for (passo of historico; track passo.idSolicitacao) {
+          <tr>
+            <td class="px-4 py-2 text-sm text-gray-700">{{passo.dataHora}}</td>
+            <td class="px-4 py-2 text-sm text-gray-700">{{passo.funcionario}}</td>
+            <td class="px-4 py-2 text-sm text-gray-700">{{passo.estado}}</td>
+            <td class="px-4 py-2 text-sm text-gray-700">{{passo.observacao}}</td>
+          </tr>
+        } @end
+        -->
       </tbody>
     </table>
   </div>
