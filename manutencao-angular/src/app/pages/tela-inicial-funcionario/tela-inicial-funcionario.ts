@@ -20,11 +20,11 @@ export class TelaInicialFuncionario implements OnInit {
   selectedDate?: Date;
   filtroOrdenacao: 'desc' | 'asc' = 'asc';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-      this.http.get<any[]>('models/mock-data-solicitacoes.json').subscribe(data => {
-        this.solicitacoes = data;
-      });
+    this.http.get<any[]>('models/mock-data-solicitacoes.json').subscribe(data => {
+      this.solicitacoes = data;
+    });
   }
 }
