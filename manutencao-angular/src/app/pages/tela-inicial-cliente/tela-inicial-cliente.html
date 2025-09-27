@@ -16,8 +16,7 @@
             </div>
             <label class="pl-6">Ordenar:</label>
             <div class="flex items-center bg-gray-200 pt-0.5 pb-0.5 pl-2 pr-2 rounded-md outline-0 cursor-pointer">
-                <select [(ngModel)]="filtroOrdenacao"
-                    class="flex items-center text-sm w-32 cursor-pointer outline-0">
+                <select [(ngModel)]="filtroOrdenacao" class="flex items-center text-sm w-32 cursor-pointer outline-0">
                     <option value="desc">Mais recentes</option>
                     <option value="asc">Mais antigos</option>
                 </select>
@@ -35,7 +34,8 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora</th>
-                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Descrição do equipamento</th>
+                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Descrição do
+                        equipamento</th>
                     <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Status</th>
                     <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Ações</th>
                 </tr>
@@ -52,20 +52,17 @@
                             [routerLink]="['/visualizar-servico/:id']">
                             Visualizar
                         </button>
-                        <button
-                            *ngSwitchCase="'ORÇADA'"
+                        <button *ngSwitchCase="'ORÇADA'"
                             class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
                             [routerLink]="['/visualizar-orcamento/:id']">
                             Aprovar/Rejeitar Serviço
                         </button>
-                        <button
-                            *ngSwitchCase="'REJEITADA'"
+                        <button *ngSwitchCase="'REJEITADA'"
                             class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
                             [routerLink]="['/']">
                             Resgatar Serviço
                         </button>
-                        <button
-                            *ngSwitchCase="'ARRUMADA'"
+                        <button *ngSwitchCase="'ARRUMADA'"
                             class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
                             [routerLink]="['/pagar-servico/:id']">
                             Pagar Serviço
