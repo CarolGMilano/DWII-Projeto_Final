@@ -3,6 +3,11 @@
 **Legenda:**  
 🟦 Carolina | 🟨 Cesar | 🟩 Ingrid | 🟧 Milena 
 
+### Sumário 📑
+
+- [Etapa 01: Front-end](#etapa-01-front-end)
+- [Etapa 02: Back-end](#etapa-02-back-end)
+
 ### Etapa 01: Front-end 
 
 > 📅 Prazo para finalização da Etapa 01: **16/09**
@@ -117,3 +122,5 @@
   - [] Arquivo JSON com 2 funcionários (Maria e Mário)
   - [] Arquivo JSON com 4 clientes (João, José, Joana, Joaquina)
   - [] Arquivo JSON com 5 categorias (Notebook, Desktop, Impressora, Mouse, Teclado)
+
+### Etapa 02: Back-end 

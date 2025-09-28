@@ -1,8 +1,8 @@
-<div class="flex flex-col gap-5 shadow-lg px-10 py-10 bg-white rounded-lg h-full">
-  <div class="flex flex-col gap-6">
+<div class="flex flex-col gap-10 shadow-lg px-10 py-10 bg-white rounded-lg h-full">
+  <div class="flex flex-col gap-10">
     <h2 class="text-gray-800 font-bold text-4xl">Funcionários</h2>
   
-    <div class="flex min-w-2/3 place-content-between mb-5">
+    <div class="flex min-w-2/3 place-content-between">
       <div class="relative w-100">
         <div class="absolute left-3 top-4.5 -translate-y-1/2 pointer-events-none">
           <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <div class="mt-10 overflow-x-auto max-h-132 rounded-[10px] overflow-y-auto">
+  <div class=" overflow-x-auto max-h-132 overflow-y-auto">
     <table class="w-full table-fixed">
       <thead class=" border-b border-gray-200">
         <tr>
@@ -136,7 +136,7 @@
               <div class="col-span-6 mt-1.5">
                 <input id="data" placeholder="Data" type="date" name="data" [(ngModel)]="funcionario.dataNascimento" #data="ngModel" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
                 [ngClass]="{
-                'border-red-500 border-1': data.errors?.['required'] && (data.touched || formFuncionario.submitted),
+                'border-red-500 border-1': data.invalid && (data.touched || formFuncionario.submitted),
                 'border-green-500 border-2': data.valid && data.dirty,
                 'border-1 border-gray-300': data.pristine
                 }" />
@@ -161,18 +161,18 @@
 
   @if(mostrarPopupExclusao) {
     <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-      <div class="flex flex-col gap-8 items-center p-7 bg-white rounded-lg shadow-xl w-full max-w-md">
-        <svg width="70" height="70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="flex flex-col gap-6 items-center p-5 bg-white rounded-lg shadow-xl w-full max-w-md">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 9V11M12 15H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 16L13.7321 4C12.9623 2.66667 11.0378 2.66667 10.268 4L3.33978 16C2.56998 17.3333 3.53223 19 5.07183 19Z" stroke="#C70003" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
 
         <div class="flex flex-col gap-2 text-center">
-          <p class="text-lg font-bold text-gray-900">Tem certeza de que deseja excluir?</p>
-          <p class="text-base text-gray-900">Esta ação é <span class="font-bold">permanente</span> e <span class="font-bold">não poderá ser desfeita</span>. Todas as informações do funcionário serão removidas do sistema.</p>
+          <p class="text-base font-bold text-gray-900">Tem certeza de que deseja excluir?</p>
+          <p class="text-sm text-gray-900">Esta ação é <span class="font-bold">permanente</span> e <span class="font-bold">não poderá ser desfeita</span>. Todas as informações do funcionário serão removidas do sistema.</p>
 
           <div class="flex gap-10 justify-center items-center mt-4">
-            <button type="button" class="bg-[#C70003] px-10 py-3 rounded-full text-white font-semibold text-base hover:bg-red-400 hover:cursor-pointer" (click)="excluir()">Excluir</button>
-            <button type="button" class="bg-white px-10 py-3 rounded-full border-1 text-[#C70003] text-base font-semibold hover:bg-[#C70003] hover:text-white hover:cursor-pointer hover:text-red-800" (click)="cancelar()">Cancelar</button>
+            <button type="button" class="rounded-md px-8 py-2 text-sm font-base bg-[#C70003] text-white hover:bg-red-400 hover:cursor-pointer" (click)="excluir()">Excluir</button>
+            <button type="button" class="rounded-md px-8 py-2 text-sm font-base text-black hover:bg-gray-100 hover:cursor-pointer hover:text-gray-600" (click)="cancelar()">Cancelar</button>
           </div>
         </div>
       </div>
