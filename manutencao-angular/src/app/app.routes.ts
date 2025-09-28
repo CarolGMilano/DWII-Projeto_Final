@@ -24,6 +24,7 @@ export const routes: Routes = [
       { path: 'visualizar-orcamento/:id', component: VisualizarOrcamento},
       { path: 'visualizar-servico/:id', component: VisualizarServico},
       { path: 'pagar-servico/:id', component: PagarServico},
+
       { path: 'tela-inicial-funcionario', component: TelaInicialFuncionario },
       { path: 'tela-lista-solicitacoes', component: TelaListaSolicitacoes },
       { path: 'realizar-orcamento/:id', component: RealizarOrcamento },

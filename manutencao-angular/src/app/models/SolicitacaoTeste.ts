@@ -77,8 +77,8 @@ export interface SolicitacaoDetalhe {
   descricao: string;
   status: EstadoSolicitacaoT;
   historico: HistoricoT[];
-  orcamento?: OrcamentoT;
-  manutencao?: ManutencaoT;
-  funcionario?: Funcionario;
+  orcamento: OrcamentoT | null;
+  manutencao: ManutencaoT | null;
+  funcionario: Funcionario | null;
   cliente: ClienteResumo;
 }

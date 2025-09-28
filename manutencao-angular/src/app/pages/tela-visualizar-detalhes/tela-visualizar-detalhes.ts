@@ -12,6 +12,7 @@ import {
   HistoricoT, 
   Funcionario 
 } from "../../models";
+
 import { ClienteService, FuncionarioService, SolicitacaoFakeService } from '../../services';
 
 @Component({
@@ -50,6 +51,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       valorTotal: 350, 
       aprovada: false
     },
+    manutencao: null,
     funcionario: this.funcionarioService.buscarPorId(1)!,
     cliente: this.clienteService.buscarPorId(1)!
   }
@@ -72,6 +74,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       aprovada: false, 
       msgRejei: 'Cliente não aprovou' 
     },
+    manutencao: null,
     funcionario: this.funcionarioService.buscarPorId(2)!,
     cliente: this.clienteService.buscarPorId(2)!
   };
@@ -94,6 +97,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       valorTotal: 320,
       aprovada: true
     },
+    manutencao: null,
     funcionario: this.funcionarioService.buscarPorId(2)!,
     cliente: this.clienteService.buscarPorId(3)!
   };
@@ -116,6 +120,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       valorTotal: 400,
       aprovada: true
     },
+    manutencao: null,
     funcionario: this.funcionarioService.buscarPorId(1)!,
     cliente: this.clienteService.buscarPorId(4)!
   };
@@ -143,6 +148,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       valorTotal: 1070,
       aprovada: true
     },
+    manutencao: null,
     funcionario: this.funcionarioService.buscarPorId(2)!,
     cliente: this.clienteService.buscarPorId(5)!
   };
@@ -244,10 +250,10 @@ export class TelaVisualizarDetalhes implements OnInit {
   }
 
   salvarRedirecionamento(){
-    if(this.funcionarioDestinoSelecionado === -1) return;
+    if(Number(this.funcionarioDestinoSelecionado) === -1) return;
 
     let solicitacao: SolicitacaoDetalhe = this.solicitacaoFakeService.buscarPorId(this.id);
-    let funcionarioDestinoS: Funcionario | undefined = this.funcionarioService.buscarPorId(Number(this.funcionarioDestinoSelecionado));
+    let funcionarioDestinoS: Funcionario = this.funcionarioService.buscarPorId(Number(this.funcionarioDestinoSelecionado))!;
 
     console.log(this.funcionarioDestinoSelecionado);
     console.log(funcionarioDestinoS);
