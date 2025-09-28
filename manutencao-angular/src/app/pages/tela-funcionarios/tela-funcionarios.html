@@ -136,7 +136,7 @@
               <div class="col-span-6 mt-1.5">
                 <input id="data" placeholder="Data" type="date" name="data" [(ngModel)]="funcionario.dataNascimento" #data="ngModel" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
                 [ngClass]="{
-                'border-red-500 border-1': data.errors?.['required'] && (data.touched || formFuncionario.submitted),
+                'border-red-500 border-1': data.invalid && (data.touched || formFuncionario.submitted),
                 'border-green-500 border-2': data.valid && data.dirty,
                 'border-1 border-gray-300': data.pristine
                 }" />
