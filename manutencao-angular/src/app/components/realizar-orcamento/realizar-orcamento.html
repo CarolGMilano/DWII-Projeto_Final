@@ -3,7 +3,7 @@
       <img src="" alt="" [routerLink]="['/tela-inicial-funcionario']" class="h-12 w-auto cursor-pointer">
     </div>
     <div class="px-4 sm:px-0">
-        <h2 class="font-bold">Orçamento</h2>
+        <h2 class="font-semibold">Orçamento</h2>
             <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">Detalhes do equipamento e defeito informado.</p>
     </div>
     @if (solicitacao) {
@@ -27,7 +27,7 @@
         </div>
     }
     <div>
-        <h2 class="font-bold">Itens do Orçamento</h2>
+        <h2 class="font-semibold">Itens do Orçamento</h2>
         <form [formGroup]="orcamentoForm" (ngSubmit)="enviarOrcamento()">
             <div formArrayName="itens">
                 @for (item of itens.controls; track item; let i = $index) {
@@ -47,10 +47,9 @@
                 </button>
             </div>
 
-            <div class="mt-4 font-bold">
+            <div class="mt-4 font-semibold">
                 Total: R$ {{ orcamentoForm.get('precoTotal')?.value }}
             </div>
-
             <button type="submit" [disabled]="orcamentoForm.invalid" class="bg-green-600 text-white px-4 py-2 mt-2 cursor-pointer">
                 Salvar Orçamento
             </button>

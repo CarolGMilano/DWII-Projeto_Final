@@ -2,14 +2,14 @@ import { NgFor } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import {  ReactiveFormsModule, NgForm, FormsModule } from "@angular/forms";
 import { SolicitacaoModel } from '../../models/Solicitacao';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 import { SolicitacaoService } from '../../services';
 import { OrcamentoModel } from '../../models/Orcamento';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 
 @Component({
   selector: 'app-visualizar-orcamento',
-  imports: [FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, RouterLink],
   templateUrl: './visualizar-orcamento.html',
   styleUrl: './visualizar-orcamento.css'
 })
@@ -20,6 +20,8 @@ export class VisualizarOrcamento implements OnInit{
 
   private dadosService = inject(SolicitacaoService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   justificativa = '';
 
   ngOnInit(): void {
@@ -37,6 +39,7 @@ export class VisualizarOrcamento implements OnInit{
 
   closeModal(modal: HTMLDialogElement) {
     modal.close();
+    this.router.navigate(['/visualizar-orcamento/:id']);
   }
 
   //finalizar ainda justificativa de rej por conta do back

@@ -6,6 +6,7 @@ import { NovaSolicitacao } from '../../components/nova-solicitacao/nova-solicita
 import { Categoria } from '../../models/Categoria';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 import { HistoricoSolicitacao } from '../../models/HistoricoSolicitacao';
+import { NovaSolicitacaoModel } from '../../models/NovaSolicitacao';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class SolicitacaoService {
     return this.http.get<Categoria[]>(this.apiUrl + '/categorias');
   }
 
-  postSolicitacao(solicitacao: NovaSolicitacao):Observable<NovaSolicitacao>{
-    return this.http.post<NovaSolicitacao>(this.apiUrl, solicitacao)
+  postSolicitacao(solicitacao: NovaSolicitacaoModel):Observable<NovaSolicitacaoModel>{
+    return this.http.post<NovaSolicitacaoModel>(this.apiUrl, solicitacao)
   }
 
   getSolicitacoes():Observable<SolicitacaoModel[]>{
