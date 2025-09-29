@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { SolicitacaoService } from '../../services';
 import { SolicitacaoModel } from '../../models/Solicitacao';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 
 @Component({
@@ -15,6 +15,7 @@ export class PagarServico implements OnInit{
 
   private dadosService = inject(SolicitacaoService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
@@ -36,6 +37,7 @@ export class PagarServico implements OnInit{
 
   closeModal(modal: HTMLDialogElement) {
     modal.close();
+    this.router.navigate(['/tela-inicial-cliente']);
   }
    
 }

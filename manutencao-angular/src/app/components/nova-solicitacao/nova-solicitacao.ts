@@ -1,34 +1,37 @@
-import { Component, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NovaSolicitacaoModel } from '../../models/NovaSolicitacao';
 import { SolicitacaoService } from '../../services';
 import { Categoria } from '../../models/Categoria';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 import { MatIconModule } from '@angular/material/icon';
 import { VoltarTela } from '../voltar-tela/voltar-tela';
+import { Router, RouterLink } from '@angular/router';
+import { CategoriaService } from '../../services/categoria/categoria';
 
 @Component({
   selector: 'app-nova-solicitacao',
-  imports: [ReactiveFormsModule, MatIconModule, VoltarTela],
+  imports: [ReactiveFormsModule, MatIconModule, VoltarTela, RouterLink],
   templateUrl: './nova-solicitacao.html',
   styleUrl: './nova-solicitacao.css'
 })
-
-export class NovaSolicitacao implements OnInit{
+export class NovaSolicitacao implements OnInit {
   @Output() onSubmit = new EventEmitter<NovaSolicitacaoModel>();
 
-  categorias : Categoria[] = [];
+  categorias: Categoria[] = []; 
 
-  private solicitacaoService =  inject(SolicitacaoService);
+  private categoriaService = inject(CategoriaService);
+  private solicitacaoService = inject(SolicitacaoService);
+  private router = inject(Router); 
 
   ngOnInit(): void {
-    this.solicitacaoService.categorias.subscribe({
+    this.categoriaService.categorias.subscribe({
       next: (dados) => this.categorias = dados,
       error: (err) => console.error('Erro ao carregar categorias:', err)
     });
   }
 
-  criarSolicitacao =  new FormGroup({
+  criarSolicitacao = new FormGroup({
     equipamento: new FormControl('', Validators.required),
     categoria: new FormControl('', Validators.required),
     descricao: new FormControl('', Validators.required)
@@ -39,16 +42,16 @@ export class NovaSolicitacao implements OnInit{
     let categoriaEncontrada: Categoria | undefined;
 
     this.categorias.forEach(cat => {
-      if(cat.nome === rawValue.categoria){
+      if (cat.nome === rawValue.categoria) {
         categoriaEncontrada = cat;
-      };
+      }
     });
 
     if (!categoriaEncontrada) {
       console.error('Categoria não encontrada:', rawValue.categoria);
       return;
     }
-    
+
     const novaSolicitacao: NovaSolicitacaoModel = {
       equipamento: rawValue.equipamento ?? '',
       categoria: categoriaEncontrada,
@@ -56,7 +59,18 @@ export class NovaSolicitacao implements OnInit{
       estado: EstadoSolicitacao.ABERTA
     };
 
-    this.onSubmit.emit(novaSolicitacao);
-  }
+    this.solicitacaoService.postSolicitacao(novaSolicitacao).subscribe({
+      next: (resposta) => {
+        console.log('Solicitação criada com sucesso:', resposta);
 
+        this.onSubmit.emit(resposta);
+        this.router.navigate(['/tela-inicial-cliente']);
+      },
+      error: (err) => {
+        console.error('Erro ao criar solicitação:', err);
+        alert('Erro ao criar solicitação. Tente novamente.');
+      },
+    });
+
+  }
 }
