@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { 
+  SharedModule,
   SolicitacaoDetalhe, 
   EstadoSolicitacaoT, 
   EstadoSolicitacaoLabel, 
@@ -11,13 +12,13 @@ import {
   ManutencaoT, 
   HistoricoT, 
   Funcionario 
-} from "../../models";
+} from "../../shared";
 
 import { ClienteService, FuncionarioService, SolicitacaoFakeService } from '../../services';
 
 @Component({
   selector: 'app-tela-visualizar-detalhes',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, SharedModule],
   templateUrl: './tela-visualizar-detalhes.html',
   styleUrl: './tela-visualizar-detalhes.css'
 })

@@ -86,9 +86,9 @@
               <div class="col-span-6 mt-1.5">
                 <input id="nome" placeholder="Nome" type="text" name="nome" [(ngModel)]="funcionario.nome" #nome="ngModel" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
                 [ngClass]="{
-                'border-1 border-red-500': nome.errors?.['required'] && (nome.touched || formFuncionario.submitted),
-                'border-2 border-green-500': nome.valid && nome.touched,
-                'border-1 border-gray-300': nome.pristine
+                'border-red-500': nome.errors?.['required'] && (nome.touched || formFuncionario.submitted),
+                'border-green-500': nome.valid && nome.touched,
+                'border-gray-300': nome.pristine
                 }" />
 
                 @if (nome.errors?.['required'] && (nome.touched || formFuncionario.submitted)) {
@@ -99,10 +99,10 @@
               <div class="col-span-6 mt-1.5">
                 <input id="email" placeholder="E-mail" autocomplete="email" type="email" name="email" [(ngModel)]="funcionario.usuario.email" #email="ngModel" email required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
                 [ngClass]="{
-                'border-1 border-red-500': (email.invalid && (email.touched || formFuncionario.submitted)),
-                'border-1 border-yellow-500': (email.errors?.['email']),
-                'border-2 border-green-500': email.valid && email.touched,
-                'border-1 border-gray-300': email.pristine
+                'border-red-500': (email.invalid && (email.touched || formFuncionario.submitted)),
+                'border-yellow-500': (email.errors?.['email']),
+                'border-green-500': email.valid && email.touched,
+                'border-gray-300': email.pristine
                   }"
                 />
 
@@ -119,9 +119,9 @@
                 <input id="senha" placeholder="Senha" type="text" name="senha" [(ngModel)]="funcionario.usuario.senha" #senha="ngModel" minlength="4" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
                 [ngClass]="{
                 'border-1 border-red-500': ((senha.errors?.['required'] && (senha.touched || formFuncionario.submitted) && (senha.touched || formFuncionario.submitted))),
-                'border-1 border-yellow-500': senha.errors?.['minlength'] && (senha.touched || formFuncionario.submitted),
-                'border-2 border-green-500': senha.valid && senha.touched,
-                'border-1 border-gray-300': senha.pristine
+                'border-yellow-500': senha.errors?.['minlength'] && (senha.touched || formFuncionario.submitted),
+                'border-green-500': senha.valid && senha.touched,
+                'border-gray-300': senha.pristine
                 }" />
 
                 @if (senha.invalid && (senha.touched || formFuncionario.submitted)) {
@@ -134,12 +134,20 @@
               </div>
         
               <div class="col-span-6 mt-1.5">
-                <input id="data" placeholder="Data" type="date" name="data" [(ngModel)]="funcionario.dataNascimento" #data="ngModel" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
-                [ngClass]="{
-                'border-red-500 border-1': data.invalid && (data.touched || formFuncionario.submitted),
-                'border-green-500 border-2': data.valid && data.dirty,
-                'border-1 border-gray-300': data.pristine
-                }" />
+                <input 
+                  id="data" 
+                  placeholder="Data" 
+                  type="date" 
+                  name="data" 
+                  [(ngModel)]="funcionario.dataNascimento" 
+                  #data="ngModel" 
+                  required 
+                  class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-1 border-gray-400 outline-none focus:border-gray-800"
+                  [ngClass]="{
+                  'border-red-500 border-1': data.invalid && (data.touched || formFuncionario.submitted),
+                  'border-green-500 border-2': data.valid && data.dirty,
+                  'border-gray-300': data.pristine
+                  }" />
 
                 @if (data.invalid && (data.touched || formFuncionario.submitted)) {
                   @if (data.errors?.['required']) {
@@ -152,7 +160,16 @@
       
           <div class="mt-6 flex items-center justify-end gap-x-6">
             <button type="button" (click)="cancelar()" class="py-1.5 px-4 rounded-md flex items-center justify-center group bg-white text-black font-normal text-base hover:bg-gray-200 hover:text-gray-800 hover:cursor-pointer">Cancelar</button>
-            <button type="submit" [disabled]="formFuncionario.invalid" class="py-1.5 px-4 rounded-md flex items-center justify-center group bg-gray-800 text-white font-normal text-base hover:bg-gray-700 hover:cursor-pointer">Salvar</button>
+
+            <div class="relative group inline-block">
+              <button type="submit" [disabled]="!formFuncionario.valid" class="py-1.5 px-4 rounded-md flex items-center justify-center group bg-gray-800 text-white font-normal text-base hover:bg-gray-700 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed">Salvar</button>
+
+              @if (!formFuncionario.valid) {
+                <div class="absolute left-2 translate-x-1/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 bg-black text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-indigo-400">
+                  Preencha o formulário corretamente
+                </div>
+              }
+            </div>
           </div>
         </form>
       </div>

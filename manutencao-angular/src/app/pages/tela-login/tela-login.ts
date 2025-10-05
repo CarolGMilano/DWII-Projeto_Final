@@ -1,14 +1,10 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-import { Usuario, TipoUsuario, UsuarioStatus, Cliente, Funcionario } from '../../models'
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { LoginService } from '../../services';
+import { FormsModule, NgForm } from '@angular/forms';
 
-const usuariosFake: Usuario[] = [
-  { email: 'cliente@teste.com', senha: '1234', tipo: TipoUsuario.CLIENTE },
-  { email: 'funcionario@teste.com', senha: '1234', tipo: TipoUsuario.FUNCIONARIO }
-];
+import { SharedModule, Usuario, TipoUsuario, UsuarioStatus, Cliente, Funcionario } from '../../shared'
+import { LoginService } from '../../services';
 
 @Component({
   selector: 'app-tela-login',

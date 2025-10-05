@@ -1,8 +1,9 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { Funcionario, TipoUsuario, Usuario } from '../../models';
-import { FuncionarioService } from '../../services';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+
+import { SharedModule, Funcionario, TipoUsuario, Usuario } from '../../shared';
+import { FuncionarioService } from '../../services';
 
 @Component({
   selector: 'app-tela-funcionarios',
