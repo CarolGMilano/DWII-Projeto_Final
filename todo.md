@@ -1,7 +1,7 @@
 ## Lista de Tarefas
 
 **Legenda:**  
-🟦 Carolina | 🟨 Cesar | 🟩 Ingrid | 🟧 Milena 
+🟦 Carolina | 🟩 Ingrid | 🟧 Milena 
 
 ### Sumário 📑
 
@@ -90,14 +90,14 @@
   - [x] Adicionar botões de ação: adicionar, editar, deletar 🟧
   - [x] Criar o formulário de categorias (modal) 🟧
 
-- [] Tela de CRUD de Funcionários (RF018) 🟦
+- [x] Tela de CRUD de Funcionários (RF018) 🟦
   - [x] Criar o componente da tela 🟦
   - [x] Implementar layout básico 🟦
   - [x] Criar a tabela/lista de funcionários 🟦
   - [x] Adicionar botões de ação: adicionar, editar, deletar 🟦
   - [x] Criar o formulário de funcionário (modal) 🟦
   - [x] Adicionar validações nos campos do formulário 🟦
-  - [] Criar indicações visuais de erro no form 🟦
+  - [x] Criar indicações visuais de erro no form 🟦
   - [x] Implementar filtros e busca na lista de funcionários 🟦
   - [x] Implementar scroll infinito 🟦
   - [x] Ajustes visuais 🟦
@@ -124,3 +124,5 @@
   - [] Arquivo JSON com 5 categorias (Notebook, Desktop, Impressora, Mouse, Teclado)
 
 ### Etapa 02: Back-end 
+
+> 📅 Prazo para finalização da Etapa 02: **04/11**

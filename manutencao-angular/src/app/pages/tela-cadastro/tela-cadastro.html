@@ -10,9 +10,9 @@
             <div class="col-span-6 mt-1.5">
               <input id="nome" placeholder="Nome" type="text" name="nome" [(ngModel)]="cliente.nome" #nome="ngModel" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-2 focus:border-gray-400"
               [ngClass]="{
-                'border-2 border-red-500': nome.errors?.['required'] && (nome.touched || formCadastro.submitted),
-                'border-2 border-green-500': nome.valid && nome.touched,
-                'border-1 border-gray-300': nome.pristine
+                'border-red-500': nome.errors?.['required'] && (nome.touched || formCadastro.submitted),
+                'border-green-500': nome.valid && nome.touched,
+                'border-gray-300': nome.pristine
               }" />
 
               @if (nome.errors?.['required'] && (nome.touched || formCadastro.submitted)) {
@@ -22,33 +22,56 @@
 
             <div class="col-span-3 mt-1.5">
               <!-- Dentro dos () vai o evento que você quer "escutar" pra executar a função escolhida. -->  
-              <input id="cpf" placeholder="CPF" type="text" name="cpf" autocomplete="family-name" (input)="mascaraCPF()" [(ngModel)]="cliente.cpf" maxlength="14" pattern="^\d{3}\.\d{3}\.\d{3}-\d{2}$" (keypress)="somenteNumeros($event)" #cpf="ngModel" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
-              [ngClass]="{
-                'border-2 border-red-500': cpf.errors?.['required'] && (cpf.touched || formCadastro.submitted),
-                'border-2 border-yellow-500': cpf.errors?.['pattern'],
-                'border-2 border-green-500': cpf.valid && cpf.touched,
-                'border-1 border-gray-300': cpf.pristine
-              }" />
+              <input 
+                id="cpf" 
+                type="text" 
+                name="cpf" 
+                maxlength="14" 
+                autocomplete="family-name"
+                #cpf="ngModel" 
+                required 
+                [(ngModel)]="cliente.cpf" 
+                placeholder="000.000.000-00" 
+                CpfValidator
+                [numericos]="'cpf'" 
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
+                [ngClass]="{
+                  'border-red-500': cpf.errors?.['required'] && (cpf.touched || cpf.dirty),
+                  'border-yellow-500': cpf.errors?.['cpfIncompleto'] && (cpf.touched || cpf.dirty),
+                  'border-green-500': cpf.valid && cpf.touched,
+                  'border-gray-300': cpf.pristine
+                }" />
 
-              @if (cpf.errors?.['required'] && (cpf.touched || formCadastro.submitted)) {
+              @if (cpf.errors?.['required'] && (cpf.touched || cpf.dirty)) {
                 <span class="pl-2 text-red-600 text-xs">O CPF é obrigatório</span>
-              } @else if (cpf.errors?.['pattern']) {
+              } @else if (cpf.errors?.['cpfIncompleto'] && (cpf.touched || cpf.dirty)) {
                 <span class="pl-2 text-yellow-600 text-xs">O CPF está incompleto ou inválido</span>
               }
             </div>
 
             <div class="col-span-3 mt-1.5">
-              <input id="telefone" placeholder="Telefone" type="text" name="telefone" autocomplete="tel" (input)="mascaraTelefone()" [(ngModel)]="cliente.telefone" maxlength="15" (keypress)="somenteNumeros($event)" #telefone="ngModel" pattern="^\(\d{2}\)\s?\d{5}-\d{4}$" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
-              [ngClass]="{
-                'border-2 border-red-500': telefone.errors?.['required'] && (telefone.touched || formCadastro.submitted),
-                'border-2 border-yellow-500': telefone.errors?.['pattern'],
-                'border-2 border-green-500': telefone.valid && telefone.touched,
-                'border-1 border-gray-300': telefone.pristine
-              }" />
+              <input 
+                id="telefone" 
+                placeholder="(00) 90000-0000" 
+                type="text" 
+                maxlength="15" 
+                name="telefone" 
+                autocomplete="tel" 
+                [numericos]="'telefone'"
+                TelefoneValidator
+                [(ngModel)]="cliente.telefone" 
+                #telefone="ngModel" 
+                required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
+                [ngClass]="{
+                  'border-red-500': telefone.errors?.['vazio'] && (telefone.touched || telefone.dirty),
+                  'border-yellow-500': telefone.errors?.['telefoneIncompleto'] && (telefone.touched || telefone.dirty),
+                  'border-green-500': telefone.valid && telefone.touched,
+                  'border-gray-300': telefone.pristine
+                }" />
 
-              @if (telefone.errors?.['required'] && (telefone.touched || formCadastro.submitted)) {
+              @if (telefone.errors?.['vazio'] && (telefone.touched || telefone.dirty)) {
                 <span class="pl-2 text-red-600 text-xs">O telefone é obrigatório</span>
-              } @else if (telefone.errors?.['pattern']) {
+              } @else if (telefone.errors?.['telefoneIncompleto']) {
                 <span class="pl-2 text-yellow-600 text-xs">O telefone está inválido ou incompleto</span>
               }
             </div>
@@ -56,10 +79,10 @@
             <div class="col-span-6 mt-1.5">
               <input id="email" placeholder="Email" type="email" name="email" autocomplete="email" [(ngModel)]="cliente.usuario.email" #email="ngModel" email required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
               [ngClass]="{
-                'border-2 border-red-500': (email.invalid && (email.touched || formCadastro.submitted)),
-                'border-2 border-yellow-500': (email.errors?.['email']),
-                'border-2 border-green-500': email.valid && email.touched,
-                'border-1 border-gray-300': email.pristine
+                'border-red-500': (email.invalid && (email.touched || formCadastro.submitted)),
+                'border-yellow-500': (email.errors?.['email']),
+                'border-green-500': email.valid && email.touched,
+                'border-gray-300': email.pristine
               }"
             />
 
@@ -72,15 +95,28 @@
             } 
             </div>
 
-            <div class="mt-4 col-span-2">
-              <input id="cep" placeholder="CEP" type="text" name="cep" autocomplete="postal-code" [(ngModel)]="cliente.endereco.cep" (ngModelChange)="validaCEP($event)" (input)="mascaraCEP()" maxlength="9" (keypress)="somenteNumeros($event)" #cep="ngModel" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
-              [ngClass]="{
-                'border-2 border-purple-500': cepStatus == status.ProblemaAPI && (cep.touched || formCadastro.submitted),
-                'border-2 border-red-500': (cepStatus == status.Invalido && (cep.touched || formCadastro.submitted)) || (cepStatus == status.Vazio && (cep.touched || formCadastro.submitted)),
-                'border-2 border-yellow-500': cepStatus == status.Incompleto && (cep.touched || formCadastro.submitted),
-                'border-2 border-green-500': cepStatus == status.Valido,
-                'border-1 border-gray-300': cep.pristine
-              }" />
+            <div class="mt-4 col-span-6 flex flex-col gap-2">
+              <input 
+                id="cep" 
+                placeholder="CEP" 
+                type="text" 
+                name="cep" 
+                autocomplete="postal-code" 
+                [(ngModel)]="cliente.endereco.cep" 
+                (ngModelChange)="validaCEP($event)" 
+                [numericos]="'cep'"
+                maxlength="9" 
+                CepValidator
+                #cep="ngModel" 
+                required 
+                class="w-50 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400"
+                [ngClass]="{
+                  'border-purple-500': cepStatus == status.ProblemaAPI && (cep.touched || formCadastro.submitted),
+                  'border-red-500': (cepStatus == status.Invalido && (cep.touched || formCadastro.submitted)) || (cepStatus == status.Vazio && (cep.touched || formCadastro.submitted)),
+                  'border-yellow-500': cepStatus == status.Incompleto && (cep.touched || formCadastro.submitted),
+                  'border-green-500': cepStatus == status.Valido,
+                  'border-gray-300': cep.pristine
+                }" />
 
               @if(cepStatus === status.Incompleto && (cep.touched || formCadastro.submitted)) {
                 <span class="pl-2 text-yellow-600 text-xs">O CEP está incompleto</span>
@@ -91,44 +127,89 @@
               }
 
               @if (cep.invalid && (cep.touched || formCadastro.submitted)) {              
-                @if(cep.errors?.['required']) {
+                @if(cep.errors?.['vazio']) {
                   <span class="pl-2 text-red-600 text-xs">O CEP é obrigatório</span>
-                } @else if (cepStatus === status.ProblemaAPI) {
-                  <span class="pl-2 text-purple-600 text-xs">Tivemos um problema com a API. Por favor, recarregue a página.</span>
                 } 
+              }
+
+              @if (cepStatus === status.ProblemaAPI && (cep.touched || formCadastro.submitted)) {
+                <span class="pl-2 text-purple-600 text-xs">Tivemos um problema com a API. Por favor, recarregue a página.</span>
               }
             </div>
 
             <div class="col-span-5 mt-1.5">
-              <input id="logradouro" placeholder="Logradouro" type="text" name="logradouro" autocomplete="street-address" required [readOnly]="true" [(ngModel)]="endereco.logradouro" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
-              [ngClass]="{
-                'bg-green-100': cepStatus == status.Valido
-              }" />
+              <input 
+                id="logradouro" 
+                placeholder="Logradouro" 
+                type="text" 
+                name="logradouro" 
+                autocomplete="street-address" 
+                required 
+                [readOnly]="true" 
+                [(ngModel)]="endereco.logradouro" 
+                class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
+                [ngClass]="{
+                  'bg-green-100': cepStatus == status.Valido
+                }" />
             </div>
 
             <div class="col-span-1 mt-1.5">
-              <input id="numero" placeholder="Nº" name="numero" autocomplete="address-line1" [(ngModel)]="cliente.endereco.numero" (keypress)="somenteNumeros($event)" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+              <input 
+                id="numero" 
+                placeholder="Nº" 
+                name="numero" 
+                autocomplete="address-line1" 
+                [(ngModel)]="cliente.endereco.numero" 
+                [numericos]="''" 
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400" 
+                [ngClass]="{
+                  'border-gray-300': cep.pristine
+                }"/>
             </div>
 
             <div class="col-span-2 mt-1.5">
-              <input id="bairro" placeholder="Bairro" type="text" name="bairro" autocomplete="address-level2" [(ngModel)]="cliente.endereco.bairro" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
-              [ngClass]="{
-                'bg-green-100': cepStatus == status.Valido
-              }" />
+              <input 
+                id="bairro" 
+                placeholder="Bairro" 
+                type="text" 
+                name="bairro" 
+                autocomplete="address-level2" 
+                [(ngModel)]="cliente.endereco.bairro" 
+                [readOnly]="true" 
+                class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
+                [ngClass]="{
+                  'bg-green-100': cepStatus == status.Valido
+                }" />
             </div>
 
             <div class="col-span-2 mt-1.5">
-              <input id="cidade" placeholder="Cidade" type="text" name="cidade" autocomplete="address-level2" [(ngModel)]="cliente.endereco.cidade" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
-              [ngClass]="{
-                'bg-green-100': cepStatus == status.Valido
-              }" />
+              <input 
+                id="cidade" 
+                placeholder="Cidade" 
+                type="text" 
+                name="cidade" 
+                autocomplete="address-level2" 
+                [(ngModel)]="cliente.endereco.cidade" 
+                [readOnly]="true" 
+                class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
+                [ngClass]="{
+                  'bg-green-100': cepStatus == status.Valido
+                }" />
             </div>
 
             <div class="col-span-2 mt-1.5">
-              <input id="estado" placeholder="Estado" type="text" name="estado" autocomplete="address-level1" [(ngModel)]="cliente.endereco.estado" [readOnly]="true" class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
-              [ngClass]="{
-                'bg-green-100': cepStatus == status.Valido
-              }" />
+              <input 
+                id="estado" 
+                placeholder="Estado" 
+                type="text" 
+                name="estado" 
+                autocomplete="address-level1" 
+                [(ngModel)]="cliente.endereco.estado" 
+                [readOnly]="true" 
+                class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 cursor-not-allowed focus:outline-none focus:border-gray-300" 
+                [ngClass]="{
+                  'bg-green-100': cepStatus == status.Valido
+                }" />
             </div>
         </div>
       </div>

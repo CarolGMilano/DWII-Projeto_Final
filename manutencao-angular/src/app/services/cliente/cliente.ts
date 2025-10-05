@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Cliente, TipoUsuario } from '../../models';
+
+import { Cliente, TipoUsuario } from '../../shared';
 
 const LS_CLIENTES = "clientes";
 

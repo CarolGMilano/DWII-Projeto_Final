@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { TipoUsuario } from '../../models';
 import { RouterLink } from '@angular/router';
+
+import { TipoUsuario } from '../../shared';
 
 @Component({
   selector: 'app-navbar',

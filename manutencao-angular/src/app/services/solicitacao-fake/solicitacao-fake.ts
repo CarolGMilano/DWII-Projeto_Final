@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SolicitacaoDetalhe } from '../../models';
+
+import { SolicitacaoDetalhe } from '../../shared';
 
 const LS_SOLICITACOES = 'solicitacoes';
 

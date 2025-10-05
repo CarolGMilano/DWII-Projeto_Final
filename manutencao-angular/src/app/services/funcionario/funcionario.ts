@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Funcionario } from '../../models/index'; 
+
+import { Funcionario } from '../../shared'; 
 
 const LS_FUNCIONARIOS = "funcionarios";
 
