@@ -1,5 +1,4 @@
-import { Endereco } from './Endereco';
-import { Usuario } from './Usuario';
+import { Endereco, Usuario } from './index';
 
 export interface Cliente {
   idCliente?: number; //Opcional, pois o ID vem do banco

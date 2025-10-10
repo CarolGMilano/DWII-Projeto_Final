@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { TelaCadastro, TelaLogin, TelaFuncionarios, GerarRelatorio, TelaVisualizarDetalhes } from './pages/index';
+import { TelaCadastro, TelaLogin, TelaFuncionarios, GerarRelatorio, TelaVisualizarDetalhes, TelaHistorico } from './pages/index';
 import { TelaInicialCliente } from './pages/tela-inicial-cliente/tela-inicial-cliente';
 import { TelaInicialFuncionario } from './pages/tela-inicial-funcionario/tela-inicial-funcionario';
 import { NovaSolicitacao } from './components/nova-solicitacao/nova-solicitacao';
@@ -20,10 +20,12 @@ export const routes: Routes = [
     component: ClienteFuncionarioLayout,
     children: [
       { path: 'tela-inicial-cliente', component: TelaInicialCliente },
+      { path: 'historico-solicitacoes', component: TelaHistorico },
       { path: 'nova-solicitacao', component: NovaSolicitacao },
       { path: 'visualizar-orcamento/:id', component: VisualizarOrcamento},
       { path: 'visualizar-servico/:id', component: VisualizarServico},
       { path: 'pagar-servico/:id', component: PagarServico},
+
       { path: 'tela-inicial-funcionario', component: TelaInicialFuncionario },
       { path: 'tela-lista-solicitacoes', component: TelaListaSolicitacoes },
       { path: 'realizar-orcamento/:id', component: RealizarOrcamento },

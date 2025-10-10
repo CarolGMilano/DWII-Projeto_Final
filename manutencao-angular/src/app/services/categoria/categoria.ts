@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Categoria } from '../../models/Categoria';
 
 @Injectable({
@@ -8,24 +8,33 @@ import { Categoria } from '../../models/Categoria';
 })
 
 export class CategoriaService {
-  private apiUrl = '';
+  private apiUrl = ''; 
+  
+  constructor(private http: HttpClient) {}
 
-  constructor(private http : HttpClient) {}
-
-  get categorias():Observable<Categoria[]>{
+  get categorias(): Observable<Categoria[]> {
+    const mockCategorias: Categoria[] = [
+      { id: 1, nome: 'Celular' },
+      { id: 2, nome: 'Computador' },
+      { id: 3, nome: 'Impressora' },
+      { id: 4, nome: 'Televisão' }
+    ];
+    return of(mockCategorias); // transforma em Observable
+  }
+  /*
+  get categorias(): Observable<Categoria[]> {
     return this.http.get<Categoria[]>(this.apiUrl + '/categorias');
   }
-  postCategoria(categoria: Categoria): Observable<Categoria>{
-    return this.http.post<Categoria>(this.apiUrl + '/categorias', categoria)
-  } 
-
-  putCategoria(id: number, categoria: string): Observable<Categoria>{
-    return this.http.put<Categoria>(`${this.apiUrl}/categorias/${id}`, categoria)
+  */
+  postCategoria(categoria: Categoria): Observable<Categoria> {
+    return this.http.post<Categoria>(this.apiUrl + '/categorias', categoria);
   }
-  
-  deleteCategoria(id: number){
+
+  putCategoria(id: number, categoria: string): Observable<Categoria> {
+    return this.http.put<Categoria>(`${this.apiUrl}/categorias/${id}`, categoria);
+  }
+
+  deleteCategoria(id: number) {
     return this.http.delete(`${this.apiUrl}/categorias/${id}`);
   }
-  
-
 }

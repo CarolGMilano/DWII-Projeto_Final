@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { ClienteService, FuncionarioService } from './services';
-import { Cliente, Funcionario, TipoUsuario } from './models';
+import { Cliente, Funcionario, TipoUsuario } from './shared';
 import { MatIconModule } from '@angular/material/icon';
 
   const clientesFake: Cliente[] = [

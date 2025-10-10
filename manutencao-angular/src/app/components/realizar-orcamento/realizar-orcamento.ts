@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { SolicitacaoModel } from '../../models/Solicitacao';
 import { SolicitacaoService } from '../../services';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
@@ -20,6 +20,7 @@ export class RealizarOrcamento implements OnInit {
   solicitacao! : SolicitacaoModel;
   private dadosService = inject(SolicitacaoService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   orcamentoForm = new FormGroup({
    itens: new FormArray([]),
@@ -101,6 +102,10 @@ export class RealizarOrcamento implements OnInit {
       },
       error: (err) => console.error('Erro ao enviar orçamento:', err)
     });
+  }
+
+  voltar(){
+    this.router.navigate(['/tela-inicial-funcionario']);
   }
 }
 

@@ -1,5 +1,4 @@
-import { NovaSolicitacao } from "../components/nova-solicitacao/nova-solicitacao";
-import { Categoria } from "./Categoria";
+import { Categoria } from "../../models/Categoria";
 import { ClienteResumo } from "./ClienteResumo";
 import { Funcionario } from "./Funcionario";
 
@@ -77,8 +76,8 @@ export interface SolicitacaoDetalhe {
   descricao: string;
   status: EstadoSolicitacaoT;
   historico: HistoricoT[];
-  orcamento?: OrcamentoT;
-  manutencao?: ManutencaoT;
-  funcionario?: Funcionario;
+  orcamento: OrcamentoT | null;
+  manutencao: ManutencaoT | null;
+  funcionario: Funcionario | null;
   cliente: ClienteResumo;
 }

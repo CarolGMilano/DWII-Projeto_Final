@@ -1,4 +1,4 @@
-<div class="w-full h-full shadow-lg flex flex-col justify-between">
+<div class="w-full h-full shadow-lg flex flex-col justify-between bg-white text-gray-700 rounded-md">
   <div>
     <div class="flex p-7 items-center">
       <svg width="24" height="24" class="mr-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,46 +11,51 @@
     <nav class="p-8 flex flex-col gap-8">
       @if (usuarioLogado.usuario.tipo === TipoUsuario.CLIENTE) {
         <div class="flex flex-col gap-1">
-          <h3 class="text-gray-400 text-xs font-semibold uppercase">Solicitações</h3>
+          <h3 class="text-white text-xs font-semibold uppercase">Solicitações</h3>
           <div>
-            <a [routerLink]="['/tela-inicial-cliente']" class="text-gray-700 text-sm hover:bg-gray-100 hover:text-black rounded px-2 py-1 flex items-center gap-2">
+            <a [routerLink]="['/tela-inicial-cliente']" class="text-white text-sm hover:bg-gray-100 hover:text-black rounded px-2 py-1 flex items-center gap-2">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke-current">
               <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
               <span>Abertas</span>
             </a>
 
-            <!--  
-                Possível rota de histórico, com as solicitação que já foram finalizadas
+            <!--  Possível rota de histórico, com as solicitação que já foram finalizadas  -->
 
-            <a [routerLink]="['/historico-solicitacoes']" class="text-gray-700 text-sm hover:bg-gray-100 hover:text-black rounded px-2 py-1 flex items-center gap-2">
+            <a [routerLink]="['/historico-solicitacoes']" class="text-white text-sm hover:bg-gray-100 hover:text-black rounded px-2 py-1 flex items-center gap-2">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke-current">
               <path d="M4 6H20M4 10H20M4 14H20M4 18H20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
 
               <span>Histórico</span>
-            </a> -->
+            </a>
           </div> 
         </div>
       }
   
       @if (usuarioLogado.usuario.tipo === TipoUsuario.FUNCIONARIO) {
         <div class="flex flex-col gap-1">
-          <h3 class="text-gray-400 text-xs font-semibold uppercase">Solicitações</h3>
+          <h3 class="text-gray-500 text-xs font-semibold uppercase">Solicitações</h3>
 
           <div>
             <a [routerLink]="['/tela-inicial-funcionario']" class="text-gray-700 text-sm hover:bg-gray-100 hover:text-black rounded px-2 py-1 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" class="fill-current stroke-current"><path d="M454.25-406v82q0 11.05 7.51 18.52 7.5 7.48 18.49 7.48 10.99 0 18.41-7.48 7.42-7.47 7.42-18.52v-82h81.69q10.98 0 18.6-7.42 7.63-7.42 7.63-18.38 0-10.97-7.48-18.46-7.47-7.49-18.52-7.49h-82v-82.17q0-11.08-7.48-18.58-7.48-7.5-18.53-7.5-11.06 0-18.52 7.5Q454-551 454-539.92v82.17h-82q-11.05 0-18.52 7.51-7.48 7.5-7.48 18.25 0 11.06 7.5 18.52Q361-406 372.08-406h82.17Zm25.77 290q-65.79 0-123.27-24.87-57.48-24.87-100.24-67.64-42.77-42.76-67.64-100.22Q164-366.19 164-431.98q0-65.79 24.87-123.27 24.87-57.48 67.64-100.24 42.76-42.77 100.22-67.64Q414.19-748 479.98-748q65.79 0 123.27 24.87 57.48 24.87 100.24 67.64 42.77 42.76 67.64 100.22Q796-497.81 796-432.02q0 65.79-24.87 123.27-24.87 57.48-67.64 100.24-42.76 42.77-100.22 67.64Q545.81-116 480.02-116ZM480-432ZM107.62-650.77q-8.7-8.69-8.7-18.58 0-9.88 8.7-18.57l117.46-117.46q8.31-8.31 18.38-8.5 10.08-.2 18.77 8.5 8.69 8.69 8.69 18.57 0 9.89-8.69 18.58L143.77-649.77q-8.31 8.31-17.88 8-9.58-.31-18.27-9Zm745.76 0q-8.69 8.69-18.57 8.69-9.89 0-18.58-8.69L698.77-768.23q-8.31-8.31-8.5-18.38-.19-10.08 8.5-18.77 8.69-8.7 18.58-8.7 9.88 0 18.57 8.7l117.46 118.46q8.31 8.31 8.5 17.88.2 9.58-8.5 18.27ZM479.78-168q109.84 0 187.03-76.97T744-431.78q0-109.84-76.97-187.03T480.22-696q-109.84 0-187.03 76.97T216-432.22q0 109.84 76.97 187.03T479.78-168Z"/></svg>
+  
+              <span>Em Aberto</span>
+            </a>
+
+            <a [routerLink]="['/tela-lista-solicitacoes']" class="text-gray-700 text-sm hover:bg-gray-100 hover:text-black rounded px-2 py-1 flex items-center gap-2">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke-current">
               <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5M12 12H15M12 16H15M9 12H9.01M9 16H9.01" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
-
-              <span>Solicitações abertas</span>
+  
+              <span>Outras solicitações</span>
             </a>
           </div>
         </div>
 
         <div class="flex flex-col gap-1">
-          <h3 class="text-gray-400 text-xs font-semibold uppercase">Gestão</h3>
+          <h3 class="text-gray-500 text-xs font-semibold uppercase">Gestão</h3>
           
           <div>
             <a [routerLink]="['/tela-categorias']" class="text-gray-700 text-sm hover:bg-gray-100 hover:text-black rounded px-2 py-1 flex items-center gap-2">
@@ -72,7 +77,7 @@
         </div>
 
         <div class="flex flex-col gap-1">
-          <h3 class="text-gray-400 text-xs font-semibold uppercase">Relatórios</h3>
+          <h3 class="text-gray-500 text-xs font-semibold uppercase">Relatórios</h3>
           <a [routerLink]="['/gerar-relatorio']" class="text-gray-700 text-sm hover:bg-gray-100 hover:text-black rounded px-2 py-1 flex items-center gap-2">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke-current">
             <path d="M9 19V13C9 11.8954 8.10457 11 7 11H5C3.89543 11 3 11.8954 3 13V19C3 20.1046 3.89543 21 5 21H7C8.10457 21 9 20.1046 9 19ZM9 19V9C9 7.89543 9.89543 7 11 7H13C14.1046 7 15 7.89543 15 9V19M9 19C9 20.1046 9.89543 21 11 21H13C14.1046 21 15 20.1046 15 19M15 19V5C15 3.89543 15.8954 3 17 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H17C15.8954 21 15 20.1046 15 19Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -91,7 +96,7 @@
         <p class="text-gray-500 text-sm">{{ usuarioLogado.usuario.email }}</p>
       </div>
 
-      <button class="text-gray-500 hover:text-black hover:cursor-pointer transition-colors duration-300">
+      <button class="text-gray-500 hover:text-white hover:cursor-pointer transition-colors duration-300">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="stroke-current">
           <path d="M11 16L7 12M7 12L11 8M7 12L21 12M16 16V17C16 18.6569 14.6569 20 13 20H6C4.34315 20 3 18.6569 3 17V7C3 5.34315 4.34315 4 6 4H13C14.6569 4 16 5.34315 16 7V8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>

@@ -1,4 +1,4 @@
-<div class="p-4 sm:p-8 lg:p-12 bg-white rounded-lg h-full">
+<div class="p-4 sm:p-8 lg:p-10 bg-white rounded-lg h-full bg-white rounded-lg h-full">
     <div class="flex justify-between pb-4">
         <h2 class="font-bold text-[22px] ">Minhas Solicitações</h2>
         <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
@@ -28,19 +28,17 @@
             <input type="search" class="p-1 w-[300px] outline-0" placeholder="Pesquisar" [(ngModel)]="searchText">
         </div>
     </div>
-
-    <div class="mt-10 overflow-x-auto max-h-132 rounded-[10px] overflow-y-auto">
+    <div class="mt-10 max-h-[70vh] overflow-auto rounded-[10px] scroll-smooth">
         <table class="min-w-full divide-y divide-gray-200 rounded-lg">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 sticky top-0 z-10">
                 <tr>
-                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora</th>
-                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Descrição do
-                        equipamento</th>
-                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Status</th>
-                    <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Ações</th>
+                <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900 bg-gray-50">Data/Hora</th>
+                <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900 bg-gray-50">Descrição do equipamento</th>
+                <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900 bg-gray-50">Status</th>
+                <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900 bg-gray-50">Ações</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
+            <tbody class="divide-y divide-gray-200 bg-white h-full">
                 @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao); track item) {
                 <tr>
                     <td class="px-4 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
