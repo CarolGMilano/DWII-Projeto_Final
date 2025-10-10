@@ -6,6 +6,7 @@ import { Categoria } from '../../models/Categoria';
 @Injectable({
   providedIn: 'root'
 })
+
 export class CategoriaService {
   private apiUrl = '';
 

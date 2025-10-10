@@ -14,6 +14,7 @@ import { SolicitacaoService } from '../../services/solicitacao/solicitacao';
   templateUrl: './tela-inicial-cliente.html',
   styleUrl: './tela-inicial-cliente.css'
 })
+
 export class TelaInicialCliente implements OnInit {
   // solicitacoes = MOCK_DATA_SOLICITACOES;
   solicitacoes: any[] = [];
