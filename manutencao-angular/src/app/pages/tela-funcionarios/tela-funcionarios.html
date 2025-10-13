@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-10 shadow-lg px-10 py-10 bg-white rounded-lg h-full">
-  <div class="flex-col gap-10">
-    <h2 class="font-bold text-[22px]">Funcionários</h2>
+  <div class="flex flex-col gap-10">
+    <h2 class="text-gray-800 font-bold text-2xl">Funcionários</h2>
   
     <div class="flex min-w-2/3 place-content-between">
       <div class="relative w-100">
@@ -30,7 +30,7 @@
         <tr>
           <th class="px-4 py-2 text-left text-sm text-gray-700 font-semibold rounded-l-lg w-2/6">
             <span class="bg-white border-1 border-gray-300 text-gray-700 text-xs font-medium pl-2 pr-1 py-0.3 rounded-full mr-1">
-              {{listarTodos().length}}
+              {{this.funcionarios.length}}
             </span>
             Nome
           </th>
@@ -40,9 +40,9 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        @for (funcionario of funcionariosFiltrados; track funcionario.idFuncionario){
+        @for (funcionario of funcionariosFiltrados; track funcionario.id){
           <tr class="hover:bg-gray-50 transition-colors">
-            <td class="px-12 py-2 text-sm text-gray-500">{{ funcionario.nome }}</td>
+            <td class="px-12 py-2 text-sm text-gray-500">{{ funcionario.usuario.nome }}</td>
             <td class="px-4 py-2 text-sm text-gray-500">{{ funcionario.usuario.email }}</td>
             <td class="px-4 py-2 text-sm text-gray-500">{{ funcionario.dataNascimento | date: 'dd/MM/yyyy' }}</td>
             <td class="px-12 py-2 space-x-4">
@@ -84,7 +84,7 @@
       
             <div class="flex flex-col gap-2">
               <div class="col-span-6 mt-1.5">
-                <input id="nome" placeholder="Nome" type="text" name="nome" [(ngModel)]="funcionario.nome" #nome="ngModel" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
+                <input id="nome" placeholder="Nome" type="text" name="nome" [(ngModel)]="funcionario.usuario.nome" #nome="ngModel" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
                 [ngClass]="{
                 'border-red-500': nome.errors?.['required'] && (nome.touched || formFuncionario.submitted),
                 'border-green-500': nome.valid && nome.touched,

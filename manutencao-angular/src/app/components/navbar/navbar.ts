@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 import { TipoUsuario } from '../../shared';
+import { LoginService } from '../../services';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +11,14 @@ import { TipoUsuario } from '../../shared';
   styleUrl: './navbar.css'
 })
 export class Navbar {
-  usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')!);
+  private loginService = inject(LoginService);
+  private router = inject(Router);
+
+  usuarioLogado = this.loginService.usuarioLogado;
   TipoUsuario = TipoUsuario;
+
+  logout(){
+    this.loginService.logout();
+    this.router.navigate(['']);
+  }
 }

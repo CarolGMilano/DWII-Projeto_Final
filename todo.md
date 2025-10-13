@@ -126,3 +126,34 @@
 ### Etapa 02: Back-end 
 
 > 📅 Prazo para finalização da Etapa 02: **04/11**
+
+#### Telas iniciais
+- [] Tela de Login (RF002) 🟦
+
+- [] Tela de Cadastro (RF001) 🟦
+
+#### Telas de cliente
+- [] Tela de Dashboard (RF003 e RF009) 🟩
+
+- [] Tela de Histórico 🟦
+
+- [] Tela de Criar solicitação (RF004) 🟧
+
+- [] Tela de Visualizar orçamento (RF005, RF006 e RF007) 🟧
+
+- [] Tela de Visualizar Serviço (RF008) 🟧
+
+- [] Tela de Pagar serviço (RF010) 🟧
+
+#### Telas de funcionário
+- [] Tela de Dashboard (RF011 e RF013) 🟩
+
+- [] Tela de Visualizar Detalhes da Solicitação - **Visão funcionário** 🟦
+
+- [] Tela de Efetuar orçamento (RF012) 🟧
+
+- [] Tela de CRUD de Categoria (RF017) 🟧
+
+- [] Tela de CRUD de Funcionários (RF018) 🟦
+
+- [] Tela de Gerar relatório 🟩

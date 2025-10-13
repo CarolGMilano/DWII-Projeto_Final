@@ -5,16 +5,18 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { 
   SharedModule,
-  SolicitacaoDetalhe, 
-  EstadoSolicitacaoT, 
-  EstadoSolicitacaoLabel, 
-  EstadoSolicitacaoCor, 
-  ManutencaoT, 
-  HistoricoT, 
-  Funcionario 
+  Solicitacao, 
+  StatusSolicitacao, 
+  StatusSolicitacaoLabel, 
+  StatusSolicitacaoCor, 
+  Manutencao, 
+  Historico,
+  StatusSolicitacaoObservacao,
+  Funcionario, 
 } from "../../shared";
 
 import { ClienteService, FuncionarioService, SolicitacaoFakeService } from '../../services';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-tela-visualizar-detalhes',
@@ -29,173 +31,57 @@ export class TelaVisualizarDetalhes implements OnInit {
   private clienteService = inject(ClienteService);
   private funcionarioService = inject(FuncionarioService);
 
-  EstadoSolicitacaoLabel = EstadoSolicitacaoLabel;
-  EstadoSolicitacaoCor = EstadoSolicitacaoCor;
-  EstadoSolicitacaoT = EstadoSolicitacaoT;
+  StatusSolicitacaoLabel = StatusSolicitacaoLabel;
+  StatusSolicitacaoCor = StatusSolicitacaoCor;
+  StatusSolicitacaoObservacao = StatusSolicitacaoObservacao;
+  StatusSolicitacao = StatusSolicitacao;
 
   funcionarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')!);
-
-  solicitacao1: SolicitacaoDetalhe = {
-    equipamento: 'Ar Condicionado',
-    categoria: { id: 1, nome: 'Eletrônicos' },
-    descricao: 'Não está resfriando',
-    status: EstadoSolicitacaoT.ORCADA,
-    historico: [
-      { dataHora: new Date('2025-09-01'), estado: EstadoSolicitacaoT.ABERTA, observacao: 'Solicitação recebida' },
-      { dataHora: new Date('2025-09-09'), estado: EstadoSolicitacaoT.ORCADA, funcionario: this.funcionarioService.buscarPorId(1)!, observacao: 'Solicitação orçada' }
-    ],
-    orcamento: { 
-      servico: [
-        { descricao: 'Limpeza', preco: 100 },
-        { descricao: 'Reparo compressor', preco: 250 }
-      ],
-      valorTotal: 350, 
-      aprovada: false
-    },
-    manutencao: null,
-    funcionario: this.funcionarioService.buscarPorId(1)!,
-    cliente: this.clienteService.buscarPorId(1)!
-  }
-
-  solicitacao2: SolicitacaoDetalhe = {
-    equipamento: 'Geladeira',
-    categoria: { id: 2, nome: 'Eletrodomésticos' },
-    descricao: 'Não liga',
-    status: EstadoSolicitacaoT.REJEITADA,
-    historico: [
-      { dataHora: new Date('2025-09-01'), estado: EstadoSolicitacaoT.ABERTA, observacao: 'Solicitação recebida' },
-      { dataHora: new Date('2025-09-03'), estado: EstadoSolicitacaoT.ORCADA, funcionario: this.funcionarioService.buscarPorId(2)!, observacao: 'Solicitação orçada' },
-      { dataHora: new Date('2025-09-11'), estado: EstadoSolicitacaoT.REJEITADA, observacao: 'Solicitação rejeitada' }
-    ],
-    orcamento: { 
-      servico: [
-        { descricao: 'Troca placa', preco: 300 }
-      ],
-      valorTotal: 300, 
-      aprovada: false, 
-      msgRejei: 'Cliente não aprovou' 
-    },
-    manutencao: null,
-    funcionario: this.funcionarioService.buscarPorId(2)!,
-    cliente: this.clienteService.buscarPorId(2)!
-  };
-
-  solicitacao3: SolicitacaoDetalhe = {
-    equipamento: 'Máquina de Lavar',
-    categoria: { id: 2, nome: 'Eletrodomésticos' },
-    descricao: 'Faz barulho estranho ao centrifugar',
-    status: EstadoSolicitacaoT.APROVADA,
-    historico: [
-      { dataHora: new Date('2025-09-01'), estado: EstadoSolicitacaoT.ABERTA, observacao: 'Solicitação recebida' },
-      { dataHora: new Date('2025-09-04'), estado: EstadoSolicitacaoT.ORCADA, funcionario: this.funcionarioService.buscarPorId(2)!, observacao: 'Orçamento enviado' },
-      { dataHora: new Date('2025-09-10'), estado: EstadoSolicitacaoT.APROVADA, observacao: 'Orçamento aprovado' }
-    ],
-    orcamento: { 
-      servico: [
-        { descricao: 'Substituição rolamento', preco: 200 },
-        { descricao: 'Troca correia', preco: 120 }
-      ],
-      valorTotal: 320,
-      aprovada: true
-    },
-    manutencao: null,
-    funcionario: this.funcionarioService.buscarPorId(2)!,
-    cliente: this.clienteService.buscarPorId(3)!
-  };
-
-  solicitacao4: SolicitacaoDetalhe = {
-    equipamento: 'Televisão',
-    categoria: { id: 1, nome: 'Eletrônicos' },
-    descricao: 'Imagem apagada, só sai áudio',
-    status: EstadoSolicitacaoT.APROVADA,
-    historico: [
-      { dataHora: new Date('2025-09-01'), estado: EstadoSolicitacaoT.ABERTA, observacao: 'Solicitação recebida' },
-      { dataHora: new Date('2025-09-05'), estado: EstadoSolicitacaoT.ORCADA, funcionario: this.funcionarioService.buscarPorId(1)!, observacao: 'Orçamento enviado' },
-      { dataHora: new Date('2025-09-15'), estado: EstadoSolicitacaoT.APROVADA, observacao: 'Orçamento aprovado' }
-    ],
-    orcamento: { 
-      servico: [
-        { descricao: 'Troca de backlight', preco: 180 },
-        { descricao: 'Reparo na placa principal', preco: 220 }
-      ],
-      valorTotal: 400,
-      aprovada: true
-    },
-    manutencao: null,
-    funcionario: this.funcionarioService.buscarPorId(1)!,
-    cliente: this.clienteService.buscarPorId(4)!
-  };
-
-  solicitacao5: SolicitacaoDetalhe = {
-    equipamento: 'Notebook',
-    categoria: { id: 1, nome: 'Eletrônicos' },
-    descricao: 'Tela com manchas e teclado com problemas',
-    status: EstadoSolicitacaoT.PAGA,
-    historico: [
-      { dataHora: new Date('2025-09-02'), estado: EstadoSolicitacaoT.ABERTA, observacao: 'Solicitação recebida' },
-      { dataHora: new Date('2025-09-05'), estado: EstadoSolicitacaoT.ORCADA, funcionario: this.funcionarioService.buscarPorId(2)!, observacao: 'Orçamento enviado' },
-      { dataHora: new Date('2025-09-07'), estado: EstadoSolicitacaoT.APROVADA, observacao: 'Orçamento aprovado' },
-      { dataHora: new Date('2025-09-12'), estado: EstadoSolicitacaoT.ARRUMADA, funcionario: this.funcionarioService.buscarPorId(2)!, observacao: 'Manutenção realizada' },
-      { dataHora: new Date('2025-09-13'), estado: EstadoSolicitacaoT.PAGA, observacao: 'Manutenção paga' }
-    ],
-    orcamento: { 
-      servico: [
-        { descricao: 'Troca de tela', preco: 250 },
-        { descricao: 'Substituição de bateria', preco: 320 },
-        { descricao: 'Troca de dobradiça', preco: 180 },
-        { descricao: 'Formatação e reinstalação do sistema', preco: 200 },
-        { descricao: 'Limpeza interna completa', preco: 120 }
-      ],
-      valorTotal: 1070,
-      aprovada: true
-    },
-    manutencao: null,
-    funcionario: this.funcionarioService.buscarPorId(2)!,
-    cliente: this.clienteService.buscarPorId(5)!
-  };
-
-  manutencao: ManutencaoT = {
+  
+  manutencao: Manutencao = {
+    idSolicitacao: undefined,
     descricao: '',
     orientacoes: '',
-    funcionario: this.funcionarioLogado
   };
 
-  funcionarios: Funcionario[] = this.funcionarioService.listarTodos();
+  funcionarios: Funcionario[] = [];
   funcionarioDestinoSelecionado!: number;
 
   mostrarFormulario: boolean = false;
   mostrarRedirecionamento: boolean = false;
 
+  solicitacoes: Solicitacao[] = [];
+
   private route = inject(ActivatedRoute);
 
   id!: number;
-  solicitacao!: SolicitacaoDetalhe;
+  solicitacao!: Solicitacao;
 
   ngOnInit(): void {
-    if(this.listarTodos().length == 0){
-      this.solicitacaoFakeService.inserir(this.solicitacao1);
-      this.solicitacaoFakeService.inserir(this.solicitacao2);
-      this.solicitacaoFakeService.inserir(this.solicitacao3);
-      this.solicitacaoFakeService.inserir(this.solicitacao4);
-      this.solicitacaoFakeService.inserir(this.solicitacao5);
-    }
-
     this.id = Number(this.route.snapshot.paramMap.get('id'));
-    this.solicitacao = this.solicitacaoFakeService.buscarPorId(this.id);
+
+    this.funcionarioService.listarTodos().subscribe({
+      next: (dados) => this.funcionarios = dados,
+      error: (err) => console.error(err)
+    });
+
+    this.solicitacaoFakeService.buscarPorId(this.id).subscribe({
+      next: (solicitacao) => this.solicitacao = solicitacao
+    });
   }
 
   get podeFazerManutencao(): boolean {
     const statusValido = 
-      this.solicitacao.status === EstadoSolicitacaoT.APROVADA ||
-      this.solicitacao.status === EstadoSolicitacaoT.REDIRECIONADA;
+      this.solicitacao.status === StatusSolicitacao.APROVADA ||
+      this.solicitacao.status === StatusSolicitacao.REDIRECIONADA;
 
     const usuarioResponsavel = 
-      this.solicitacao.funcionario?.idFuncionario === this.funcionarioLogado.idFuncionario;
+      this.solicitacao.funcionario?.id === this.funcionarioLogado.idFuncionario;
 
     const orcamentoAceito = this.solicitacao.orcamento?.aprovada ?? false;
 
     const manutencaoNaoFeita = !this.solicitacao.historico.some(
-      h => h.estado === EstadoSolicitacaoT.ARRUMADA
+      h => h.status === StatusSolicitacao.ARRUMADA
     );
 
     return statusValido && usuarioResponsavel && orcamentoAceito && manutencaoNaoFeita;
@@ -203,13 +89,13 @@ export class TelaVisualizarDetalhes implements OnInit {
 
   get podeRedirecionar(): boolean {
     const statusValido = 
-      this.solicitacao.status == EstadoSolicitacaoT.APROVADA || 
-      this.solicitacao.status == EstadoSolicitacaoT.REDIRECIONADA ||
-      this.solicitacao.status == EstadoSolicitacaoT.ARRUMADA ||
-      this.solicitacao.status == EstadoSolicitacaoT.PAGA 
+      this.solicitacao.status == StatusSolicitacao.APROVADA || 
+      this.solicitacao.status == StatusSolicitacao.REDIRECIONADA ||
+      this.solicitacao.status == StatusSolicitacao.ARRUMADA ||
+      this.solicitacao.status == StatusSolicitacao.PAGA 
 
     const usuarioResponsavel = 
-      this.solicitacao.funcionario?.idFuncionario === this.funcionarioLogado.idFuncionario;
+      this.solicitacao.funcionario?.id === this.funcionarioLogado.idFuncionario;
 
     const orcamentoAceito = this.solicitacao.orcamento?.aprovada ?? false;
 
@@ -218,17 +104,29 @@ export class TelaVisualizarDetalhes implements OnInit {
 
   get podeFinalizar(): boolean {
     const statusValido =  
-      this.solicitacao.status == EstadoSolicitacaoT.REDIRECIONADA ||
-      this.solicitacao.status == EstadoSolicitacaoT.PAGA 
+      this.solicitacao.status == StatusSolicitacao.REDIRECIONADA ||
+      this.solicitacao.status == StatusSolicitacao.PAGA 
 
     const usuarioResponsavel = 
-      this.solicitacao.funcionario?.idFuncionario === this.funcionarioLogado.idFuncionario;
+      this.solicitacao.funcionario?.id === this.funcionarioLogado.idFuncionario;
 
     const manutencaoPaga = this.solicitacao.historico.some(
-      h => h.estado === EstadoSolicitacaoT.PAGA
+      h => h.status === StatusSolicitacao.PAGA
     );
 
     return statusValido && usuarioResponsavel && manutencaoPaga;
+  }
+
+  getStatusCor(status: number): string {
+    return StatusSolicitacaoCor[status as StatusSolicitacao];
+  }
+
+  getStatusLabel(status: number): string {
+    return StatusSolicitacaoLabel[status as StatusSolicitacao];
+  }
+
+  getStatusObservacao(status: number): string {
+    return StatusSolicitacaoObservacao[status as StatusSolicitacao];
   }
 
   mostrarFormularioManutencao (){
@@ -251,76 +149,101 @@ export class TelaVisualizarDetalhes implements OnInit {
   }
 
   salvarRedirecionamento(){
-    if(Number(this.funcionarioDestinoSelecionado) === -1) return;
+    if (Number(this.funcionarioDestinoSelecionado) === -1) return;
 
-    let solicitacao: SolicitacaoDetalhe = this.solicitacaoFakeService.buscarPorId(this.id);
-    let funcionarioDestinoS: Funcionario = this.funcionarioService.buscarPorId(Number(this.funcionarioDestinoSelecionado))!;
+    forkJoin({
+      solicitacao: this.solicitacaoFakeService.buscarPorId(this.id),
+      funcionarioDestino: this.funcionarioService.buscarPorId(Number(this.funcionarioDestinoSelecionado))
+    }).subscribe({
+      next: ({ solicitacao, funcionarioDestino }) => {
+        if (!funcionarioDestino) return;
 
-    console.log(this.funcionarioDestinoSelecionado);
-    console.log(funcionarioDestinoS);
+        const historico: Historico = {
+          dataHora: new Date(),
+          status: StatusSolicitacao.REDIRECIONADA,
+          funcionario: this.funcionarioLogado,
+          funcionarioDestino: funcionarioDestino
+        };
 
-    const historico: HistoricoT = {
-      dataHora: new Date(),
-      estado: EstadoSolicitacaoT.REDIRECIONADA,
-      funcionario: this.funcionarioLogado,
-      funcionarioDestino: funcionarioDestinoS,
-      observacao: 'Redirecionamento realizado'
-    }
+        // Atualiza a solicitação
+        solicitacao.historico.push(historico);
+        solicitacao.status = historico.status;
+        solicitacao.funcionario = funcionarioDestino;
 
-    solicitacao.historico.push(historico);
-    solicitacao.status = historico.estado;
-    solicitacao.funcionario = funcionarioDestinoS;
-
-    this.solicitacaoFakeService.atualizar(solicitacao);
-    
-    this.solicitacao = this.solicitacaoFakeService.buscarPorId(this.id);
-
-    this.cancelarRedirecionamento();
+        this.solicitacaoFakeService.atualizar(solicitacao).subscribe({
+          next: () => {
+            // Atualiza o objeto local
+            this.solicitacao = solicitacao;
+            this.cancelarRedirecionamento();
+          },
+          error: err => console.error('Erro ao atualizar solicitacao', err)
+        });
+      },
+      error: err => console.error('Erro ao buscar dados', err)
+    });
   }
 
   salvarManutencao(){
-    if(!this.formManutencao.form.valid) return;
+    if (!this.formManutencao.form.valid) return;
 
-    let solicitacao: SolicitacaoDetalhe = this.solicitacaoFakeService.buscarPorId(this.id);
+    this.solicitacaoFakeService.buscarPorId(this.id).subscribe({
+      next: (solicitacao) => {
+        const manutencao: Manutencao = {
+          idSolicitacao: this.id,
+          descricao: this.manutencao.descricao,
+          orientacoes: this.manutencao.orientacoes
+        };
+        const historico: Historico = {
+          dataHora: new Date(),
+          status: StatusSolicitacao.ARRUMADA,
+          funcionario: this.funcionarioLogado
+        };
 
-    const manutencao: ManutencaoT = this.manutencao;
-    const historico: HistoricoT = {
-      dataHora: new Date(),
-      estado: EstadoSolicitacaoT.ARRUMADA,
-      funcionario: this.funcionarioLogado,
-      observacao: 'Manutenção concluída'
-    }
+        solicitacao.historico.push(historico);
+        solicitacao.manutencao = manutencao;
+        solicitacao.status = historico.status;
 
-    solicitacao.historico.push(historico);
-    solicitacao.manutencao = manutencao;
-    solicitacao.status = historico.estado;
-
-    this.solicitacaoFakeService.atualizar(solicitacao);
-    
-    this.solicitacao = this.solicitacaoFakeService.buscarPorId(this.id);
-
-    this.cancelarManutencao();
+        this.solicitacaoFakeService.atualizar(solicitacao).subscribe({
+          next: () => {
+            this.solicitacao = solicitacao;
+            this.cancelarManutencao();
+          },
+          error: (err) => console.error('Erro ao atualizar a solicitação', err)
+        });
+      },
+      error: (err) => console.error('Erro ao buscar a solicitação', err)
+    });
   }
 
-  finalizarSolicitacao(){
-    let solicitacao: SolicitacaoDetalhe = this.solicitacaoFakeService.buscarPorId(this.id);
+  finalizarSolicitacao() {
+    this.solicitacaoFakeService.buscarPorId(this.id).subscribe({
+      next: (solicitacao) => {
+        const historico: Historico = {
+          dataHora: new Date(),
+          status: StatusSolicitacao.FINALIZADA,
+          funcionario: this.funcionarioLogado
+        };
 
-    const historico: HistoricoT = {
-      dataHora: new Date(),
-      estado: EstadoSolicitacaoT.FINALIZADA,
-      funcionario: this.funcionarioLogado,
-      observacao: 'Solicitação concluída'
-    }
+        solicitacao.historico.push(historico);
+        solicitacao.status = historico.status;
 
-    solicitacao.historico.push(historico);
-    solicitacao.status = historico.estado;
-
-    this.solicitacaoFakeService.atualizar(solicitacao);
-    
-    this.solicitacao = this.solicitacaoFakeService.buscarPorId(this.id);
+        this.solicitacaoFakeService.atualizar(solicitacao).subscribe({
+          next: () => {
+            this.solicitacao = solicitacao;
+          },
+          error: (err) => console.error('Erro ao atualizar solicitação', err)
+        });
+      },
+      error: (err) => console.error('Erro ao buscar solicitação', err)
+    });
   }
 
-  listarTodos(): SolicitacaoDetalhe[]{
-    return this.solicitacaoFakeService.listarTodos();
+  listarTodos(): void {
+    this.solicitacaoFakeService.listarTodos().subscribe({
+      next: (solicitacoes) => {
+        this.solicitacoes = solicitacoes;
+      },
+      error: (err) => console.error('Erro ao listar solicitações', err)
+    });
   }
 }
