@@ -1,4 +1,4 @@
-<div class="p-12 bg-white rounded-lg h-full">
+<div class="p-4 sm:p-8 lg:p-10 bg-white rounded-lg h-full">
     <div class="flex justify-between pb-4">
         <h2 class="font-bold text-[22px]">Solicitações Abertas</h2>
         <div>
@@ -13,15 +13,15 @@
         </div>
     </div>
     <hr>
-    <div class="mt-6 w-[100%] flex justify-between items-center text-sm">
+    <div class="mt-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 text-sm w-full">
         <div class="flex justify-between items-center gap-4 text-gray-700">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 sm:gap-4">
                 <label>Filtrar por data:</label>
                 <input type="date" [(ngModel)]="selectedDate"
-                    class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0" />
+                    class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0 w-full sm:w-auto" />
             </div>
             <label class="pl-6">Ordenar:</label>
-            <div class="flex items-center bg-gray-200 pt-0.5 pb-0.5 pl-2 pr-2 rounded-md outline-0 cursor-pointer">
+            <div class="flex items-center bg-gray-200 pt-0.5 pb-0.5 pl-2 pr-2 rounded-md outline-0 cursor-pointer w-full sm:w-auto">
                 <select [(ngModel)]="filtroOrdenacao" class="flex items-center text-sm w-32 cursor-pointer outline-0">
                     <option value="desc">Mais recentes</option>
                     <option value="asc">Mais antigos</option>
@@ -35,9 +35,9 @@
         </div>
     </div>
 
-    <div class="mt-10 overflow-x-auto">
+    <div class="mt-10 max-h-[70vh] overflow-auto rounded-[10px] scroll-smooth">
         <table class="min-w-full divide-y divide-gray-200 rounded-lg">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 sticky top-0 z-10">
                 <tr>
                     <th scope="col" class="px-1 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora de
                         abertura</th>
