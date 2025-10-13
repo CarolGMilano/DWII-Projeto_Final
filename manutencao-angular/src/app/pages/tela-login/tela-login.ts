@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 
-import { SharedModule, Usuario, TipoUsuario, UsuarioStatus, Cliente, Funcionario } from '../../shared'
+import { TipoUsuario, UsuarioStatus, Login } from '../../shared'
 import { LoginService } from '../../services';
 
 @Component({
@@ -19,7 +19,7 @@ export class TelaLogin {
   private router = inject(Router);
   readonly loginService = inject(LoginService);
 
-  usuario: Usuario = {
+  loginAtual: Login = {
     email: '',
     senha: ''
   }
@@ -34,18 +34,25 @@ export class TelaLogin {
   login(){
     if (!this.formLogin.form.valid) return;
 
-    let usuarioEncontrado: Cliente | Funcionario | null = this.loginService.login(this.usuario.email, this.usuario.senha);
+    this.loginService.login(this.loginAtual).subscribe(usuario => {
+      if (usuario) {
+        this.loginService.usuarioLogado = usuario;
 
-    if (usuarioEncontrado != null) {
-      if (usuarioEncontrado.usuario.tipo === TipoUsuario.CLIENTE) {
-        this.router.navigate(['/tela-inicial-cliente']);
-        this.usuarioStatus = UsuarioStatus.Valido;
-      } else if (usuarioEncontrado.usuario.tipo === TipoUsuario.FUNCIONARIO) {
-        this.router.navigate(['/tela-inicial-funcionario']);
-        this.usuarioStatus = UsuarioStatus.Valido;
+        if (usuario.tipo === TipoUsuario.CLIENTE) {
+          this.router.navigate(['/tela-inicial-cliente']);
+          this.usuarioStatus = UsuarioStatus.Valido;
+        } else if (usuario.tipo === TipoUsuario.FUNCIONARIO) {
+          this.router.navigate(['/tela-inicial-funcionario']);
+          this.usuarioStatus = UsuarioStatus.Valido;
+        }
+      } else {
+        this.usuarioStatus = UsuarioStatus.Invalido;
       }
-    } else {
-      this.usuarioStatus = UsuarioStatus.Invalido;
-    }
+    })
+  }
+
+  logout(){
+    this.loginService.logout();
+    this.router.navigate(['']);
   }
 }

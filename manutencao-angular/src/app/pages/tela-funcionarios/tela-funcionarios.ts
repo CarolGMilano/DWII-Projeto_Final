@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 import { SharedModule, Funcionario, TipoUsuario, Usuario } from '../../shared';
 import { FuncionarioService } from '../../services';
@@ -19,6 +20,7 @@ export class TelaFuncionarios implements OnInit {
   funcionarios: Funcionario[] = [];
 
   usuario: Usuario = {
+    nome: '',
     email: '',
     senha: '',
     tipo: TipoUsuario.FUNCIONARIO
@@ -26,7 +28,6 @@ export class TelaFuncionarios implements OnInit {
 
   funcionario: Funcionario = {
     usuario: this.usuario,
-    nome: '',
     dataNascimento: new Date()
   };
 
@@ -38,17 +39,17 @@ export class TelaFuncionarios implements OnInit {
   modoFormulario: 'nenhum' | 'adicionar' | 'editar' = 'nenhum';
 
   ngOnInit(): void {
-    this.funcionarios = this.listarTodos();
+    this.listarTodos();
   }
 
   abrirAdicionar() {
     this.funcionario = {
       usuario: {
+        nome: '',
         email: '',
         senha: '',
         tipo: TipoUsuario.FUNCIONARIO
       },
-      nome: '',
       dataNascimento: new Date()
     };
     this.modoFormulario = 'adicionar';
@@ -83,32 +84,42 @@ export class TelaFuncionarios implements OnInit {
     const texto = this.pesquisa.toLowerCase();
 
     return this.funcionarios.filter(f =>
-      f.nome.toLowerCase().includes(texto)
+      f.usuario.nome.toLowerCase().includes(texto)
     );
   }
 
-  listarTodos(): Funcionario[]{
-    return this.funcionarioService.listarTodos();
+  listarTodos() {
+    this.funcionarioService.listarTodos().subscribe({
+      next: (funcionarios) => {
+        this.funcionarios = funcionarios;
+      }
+    });
   }
-
+ 
   salvar():void {
     if (!this.formFuncionario.form.valid) return;
 
     if (this.modoFormulario === 'adicionar') {
-      this.funcionarioService.inserir(this.funcionario);
+      this.funcionarioService.inserir(this.funcionario).subscribe({
+        next: () => this.listarTodos(),
+      });
     } else {
-      this.funcionarioService.atualizar(this.funcionario);
+      this.funcionarioService.atualizar(this.funcionario).subscribe({
+        next: () => this.listarTodos(),
+      });
     }
 
-    this.funcionarios = this.listarTodos();
     this.mostrarFormulario = false;
     this.formFuncionario.reset();
   }
 
   excluir(){
-    this.funcionarioService.remover(this.funcionario.idFuncionario!);
+    if (!this.funcionario.id) return;
 
-    this.funcionarios = this.listarTodos();
+    this.funcionarioService.remover(this.funcionario.id).subscribe({
+        next: () => this.listarTodos(),
+      });
+
     this.mostrarPopupExclusao = false;
   }
 }

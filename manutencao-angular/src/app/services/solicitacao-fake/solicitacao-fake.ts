@@ -1,54 +1,38 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { SolicitacaoDetalhe } from '../../shared';
-
-const LS_SOLICITACOES = 'solicitacoes';
+import { Solicitacao } from '../../shared';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class SolicitacaoFakeService {
-  private id = 0;
+  private readonly _httpClient = inject(HttpClient)
   
-  listarTodos(): SolicitacaoDetalhe[] {
-    const solicitacoes = localStorage[LS_SOLICITACOES];
+  BASE_URL = "http://localhost:3000/solicitacao";
 
-    return solicitacoes ? JSON.parse(solicitacoes) : [];
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  }
+  
+  listarTodos(): Observable<Solicitacao[]> {
+    return this._httpClient.get<Solicitacao[]>(this.BASE_URL, this.httpOptions);
   }
 
-  inserir(solicitacao: SolicitacaoDetalhe): void {
-    const solicitacoes = this.listarTodos();
 
-    if (solicitacoes.length > 0) {
-      this.id = Math.max(...solicitacoes.map(solicitacao => solicitacao.idSolicitacao || 0)) + 1;
-    }
-    
-    solicitacao.idSolicitacao = this.id++;
-    
-    solicitacoes.push(solicitacao);
-
-    localStorage[LS_SOLICITACOES] = JSON.stringify(solicitacoes);
+  inserir(solicitacao: Solicitacao): Observable<Solicitacao> {
+    return this._httpClient.post<Solicitacao>(this.BASE_URL, JSON.stringify(solicitacao), this.httpOptions);
   }
 
-  buscarPorId(id: number): SolicitacaoDetalhe {
-    const solicitacoes = this.listarTodos();
-
-    return solicitacoes.find(solicitacao => solicitacao.idSolicitacao === id)!;
+  buscarPorId(id: number): Observable<Solicitacao> {
+    return this._httpClient.get<Solicitacao>(`${this.BASE_URL}/${id}`, this.httpOptions);
   }
 
-  atualizar(solicitacao: SolicitacaoDetalhe): void{
-    const solicitacoes = this.listarTodos();
-
-    solicitacoes.forEach((obj, index, lista) => {
-      if(solicitacao.idSolicitacao === obj.idSolicitacao) {
-        lista[index] = solicitacao;
-      }
-    });
-
-    localStorage[LS_SOLICITACOES] = JSON.stringify(solicitacoes);
-  }
-
-  remover(id: number): void {
+  atualizar(solicitacao: Solicitacao): Observable<Solicitacao>{
+    return this._httpClient.put<Solicitacao>(`${this.BASE_URL}/${solicitacao.id}`, JSON.stringify(solicitacao), this.httpOptions);
   }
 }

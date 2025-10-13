@@ -23,6 +23,7 @@ export class TelaCadastro {
   clientes: Cliente[] = [];
 
   usuario: Usuario = {
+    nome: '',
     email: '',
     senha: '',
     tipo: TipoUsuario.CLIENTE
@@ -39,7 +40,6 @@ export class TelaCadastro {
 
   cliente: Cliente = {
     usuario: this.usuario,
-    nome: '',
     cpf: '',
     telefone: '',
     endereco: this.endereco
@@ -65,7 +65,7 @@ export class TelaCadastro {
       return;
     }
 
-    //Se esse CEP formatado tiver 8 digitos
+    //Se esse CEP tiver 8 digitos
     if(cep.length === 8) {
       //Faz a requisição para a API ViaCEP e retorna o resultado
       this._jsonEnderecoService.getEndereco(cep).subscribe({
@@ -94,7 +94,7 @@ export class TelaCadastro {
     }
   }
   
-  salvar(): void{
+  salvar(){
     if (!this.formCadastro.form.valid) return;
     
     //Senha aleatória para teste sem backend
@@ -102,11 +102,11 @@ export class TelaCadastro {
 
     const cliente: Cliente = {
       usuario: {
+        nome: this.cliente.usuario.nome,
         email: this.cliente.usuario.email,
         senha: senhaAleatoria,
         tipo: this.cliente.usuario.tipo
       },
-      nome: this.cliente.nome,
       cpf: this.cliente.cpf,
       telefone: this.cliente.telefone,
       endereco: {
@@ -119,10 +119,11 @@ export class TelaCadastro {
       }
     }
 
-    this.clienteService.inserir(cliente);
-    
-    this.router.navigate(['']);
-
-    console.log(cliente);
+    this.clienteService.inserir(cliente).subscribe({
+      next: () => {
+        console.log('Cliente cadastrado com sucesso!');
+        this.router.navigate(['']);
+      }
+    });
   }
 }

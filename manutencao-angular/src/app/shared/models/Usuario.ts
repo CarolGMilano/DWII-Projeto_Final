@@ -1,8 +1,7 @@
-import { TipoUsuario } from './EnumTipoUsuario';
-
 export interface Usuario {
-  idUsuario?: number; //Opcional, pois o ID vem do banco
+  id?: number; //Opcional, pois o ID vem do banco
+  nome: string;
   email: string;
   senha: string;
-  tipo?: TipoUsuario;
+  tipo?: number;
 }
