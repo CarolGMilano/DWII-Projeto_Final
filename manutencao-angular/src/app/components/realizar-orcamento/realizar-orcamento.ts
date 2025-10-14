@@ -5,10 +5,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
+import { MoedaBrPipe } from '../../pipes/moeda/moeda-pipe-pipe';
 
 @Component({
   selector: 'app-realizar-orcamento',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoedaBrPipe],
   templateUrl: './realizar-orcamento.html',
   styleUrl: './realizar-orcamento.css'
 })
@@ -32,7 +33,7 @@ export class RealizarOrcamento implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
 
-    this.dadosService.getSolicitacao(id).subscribe({
+    this.dadosService.getSolicitacao(this.solicitacao).subscribe({
       next: (res) => this.solicitacao = res,
       error: (err) => {
         console.error('Erro ao buscar solicitação:', err)
@@ -95,7 +96,7 @@ export class RealizarOrcamento implements OnInit {
     const descricaoPreco = this.itens.value;
     const precoTotal = this.orcamentoForm.get('precoTotal')?.value ?? 0;
 
-    this.dadosService.enviarOrcamento(this.solicitacao.id, precoTotal, descricaoPreco).subscribe({
+    this.dadosService.enviarOrcamento(this.solicitacao, precoTotal, descricaoPreco).subscribe({
       next: (res) => {
         console.log('Orçamento enviado com sucesso:', res);
         this.onSubmit.emit(res);

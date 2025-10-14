@@ -6,10 +6,11 @@ import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/route
 import { SolicitacaoService } from '../../services';
 import { OrcamentoModel } from '../../models/Orcamento';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
+import { MoedaBrPipe } from '../../pipes/moeda/moeda-pipe-pipe';
 
 @Component({
   selector: 'app-visualizar-orcamento',
-  imports: [FormsModule, ReactiveFormsModule, RouterModule, RouterLink],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, RouterLink, MoedaBrPipe],
   templateUrl: './visualizar-orcamento.html',
   styleUrl: './visualizar-orcamento.css'
 })
@@ -27,7 +28,7 @@ export class VisualizarOrcamento implements OnInit{
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
 
-    this.dadosService.getSolicitacao(id).subscribe({
+    this.dadosService.getSolicitacao(this.solicitacao).subscribe({
       next: (res) => this.solicitacao = res,
       error: (err) => console.error('Erro ao buscar solicitação:', err)
     });
@@ -49,7 +50,7 @@ export class VisualizarOrcamento implements OnInit{
       return;
     }
 
-    this.dadosService.atualizarStatus(this.solicitacao.id, EstadoSolicitacao.REJEITADA, this.justificativa).subscribe({
+    this.dadosService.atualizarStatus(this.solicitacao, EstadoSolicitacao.REJEITADA, this.justificativa).subscribe({
       next: (res) => {
         this.solicitacao = res;
         modal.close();
@@ -59,7 +60,7 @@ export class VisualizarOrcamento implements OnInit{
   }
 
   enviarAprovacao() : void {
-    this.dadosService.atualizarStatus(this.solicitacao.id, EstadoSolicitacao.APROVADA).subscribe({
+    this.dadosService.atualizarStatus(this.solicitacao, EstadoSolicitacao.APROVADA).subscribe({
       next: (res) => {
         this.solicitacao = res;
       },

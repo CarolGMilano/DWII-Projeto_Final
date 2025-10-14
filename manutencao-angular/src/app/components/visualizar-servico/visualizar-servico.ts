@@ -23,12 +23,22 @@ export class VisualizarServico  implements OnInit{
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
 
-    this.dadosService.getSolicitacao(id).subscribe({
+    // this.dadosService.getSolicitacao(id).subscribe({
+    //   next: (res) => this.solicitacao = res,
+    //   error: (err) => console.error('Erro ao buscar solicitação:', err)
+    // });
+
+    // this.dadosService.getHistorico(id).subscribe({
+    //   next: (res) => this.historico = res,
+    //   error: (err) => console.error('Erro ao buscar histórico:', err)
+    // });
+
+    this.dadosService.getSolicitacao({ id: id } as SolicitacaoModel).subscribe({
       next: (res) => this.solicitacao = res,
       error: (err) => console.error('Erro ao buscar solicitação:', err)
     });
 
-    this.dadosService.getHistorico(id).subscribe({
+    this.dadosService.getHistorico({ idSolicitacao: id } as HistoricoSolicitacao).subscribe({
       next: (res) => this.historico = res,
       error: (err) => console.error('Erro ao buscar histórico:', err)
     });
