@@ -28,11 +28,11 @@
         <form [formGroup]="orcamentoForm" (ngSubmit)="enviarOrcamento()">
             <div formArrayName="itens">
                 @for (item of itens.controls; track item; let i = $index) {
-                <div [formGroupName]="i" class="flex gap-4">
-                    <input formControlName="descricao" placeholder="Descrição do item" />
-                    <input formControlName="preco" type="number" placeholder="Preço" (input)="atualizarTotal()" />
-                    <button type="button" (click)="removerItem(i)" class= "p-2 bg-red-400 text-white rounded-md">Remover</button>
-                </div>
+                    <div [formGroupName]="i" class="flex gap-4">
+                        <input formControlName="descricao" placeholder="Descrição do item" />
+                        <input formControlName="preco" type="number" placeholder="Preço" (input)="atualizarTotal()" />
+                        <button type="button" (click)="removerItem(i)" class= "p-2 bg-red-400 text-white rounded-md">Remover</button>
+                    </div>
                 }
             </div>
 
@@ -45,7 +45,7 @@
             </div>
 
             <div class="mt-4 font-semibold">
-                Total: R$ {{ orcamentoForm.get('precoTotal')?.value }}
+                <p>Total: {{ orcamentoForm.get('precoTotal')?.value | moedaBr }}</p>
             </div>
             <button type="submit" [disabled]="orcamentoForm.invalid" class="bg-green-600 text-white px-4 py-2 mt-2 cursor-pointer">
                 Salvar Orçamento

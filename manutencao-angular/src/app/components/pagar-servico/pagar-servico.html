@@ -26,7 +26,7 @@
         <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
           <ul class="list-disc pl-5">
             @for (item of solicitacao.descricaoPreco; track item.descricao) {
-              <li>{{item.descricao}} - {{item.preco}}</li>
+              <li>{{item.descricao}} - {{item.preco | moedaBr}}</li>
             }
           </ul>
         </dd>
