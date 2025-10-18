@@ -1,0 +1,69 @@
+<div class="p-4 sm:p-8 lg:p-10 bg-white rounded-lg h-full">
+  <div class="w-full max-w-2xl">
+    <h2 class="mb-6 text-2xl font-bold text-[22px]">Gerar Relatório</h2>
+
+    <div class="flex gap-4 mb-8">
+      <button class="btn btn-primary px-4 py-2 rounded shadow cursor-pointer opacity-[90%] hover:opacity-[100%]"
+        (click)="mostrarReceita = true; mostrarCategoria = false">Relatório de Receita</button>
+      <button class="btn btn-secondary px-4 py-2 rounded shadow cursor-pointer opacity-[90%] hover:opacity-[100%]"
+        (click)="mostrarReceita = false; mostrarCategoria = true; gerarPorCategoria()">Relatório por Categoria</button>
+    </div>
+
+    <!-- Filtro de datas para relatório de receita -->
+    <div *ngIf="mostrarReceita" class="mb-6 flex gap-4 items-end">
+      <div>
+        <label for="dataInicial" class="block text-sm font-medium text-gray-700">Data Inicial</label>
+        <input id="dataInicial" type="date" [(ngModel)]="dataInicial" class="form-control" />
+      </div>
+      <div>
+        <label for="dataFinal" class="block text-sm font-medium text-gray-700">Data Final</label>
+        <input id="dataFinal" type="date" [(ngModel)]="dataFinal" class="form-control" />
+      </div>
+      <button class="btn btn-success px-4 py-2 rounded shadow" (click)="gerarReceita()">Filtrar</button>
+      <button class="btn btn-outline-primary px-4 py-2 rounded shadow" (click)="downloadReceitaPDF()">Download
+        PDF</button>
+    </div>
+
+
+    <!-- Lista agrupada por dia -->
+    <div *ngIf="mostrarReceita && receitaPorDia.length > 0"
+      class="bg-green-50 border border-green-400 text-green-800 px-6 py-4 rounded-lg mb-6 shadow">
+      <h4 class="font-semibold text-lg mb-4">Receita por Dia</h4>
+      <ul class="list-disc pl-6">
+        <li *ngFor="let item of receitaPorDia">
+          <span class="font-bold">{{ item.data }}</span>: R$ {{ item.valor }}
+        </li>
+      </ul>
+      <div class="mt-4 font-bold text-lg">Total: R$ {{ receitaTotal }}</div>
+    </div>
+
+
+    <!-- Lista agrupada por categoria -->
+    <div *ngIf="mostrarCategoria && receitaPorCategoria.length > 0" class="mt-6">
+      <h4 class="font-semibold mb-4 text-lg">Receita por Categoria</h4>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 rounded-lg">
+          <thead class="bg-gray-50 sticky top-0 z-10">
+            <tr>
+              <th scope="col" class="px-1 py-2 text-left text-sm font-semibold text-gray-900">Categoria</th>
+              <th scope="col" class="px-1 py-2 text-left text-sm font-semibold text-gray-900">Valor (R$)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <tr *ngFor="let item of receitaPorCategoria" class="border-t">
+              <td class="px-6 py-3">{{ item.categoria }}</td>
+              <td class="px-6 py-3 font-semibold">{{ item.valor }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-outline-primary px-4 py-2 rounded shadow mt-4 opacity-[90%] hover:opacity-[100%] cursor-pointer" (click)="downloadCategoriaPDF()">Download
+        PDF</button>
+    </div>
+
+    <div *ngIf="!mostrarReceita && !mostrarCategoria"
+      class="bg-blue-50 border border-blue-400 text-blue-800 px-6 py-4 rounded-lg mt-6 shadow">
+      Selecione um relatório para visualizar os dados.
+    </div>
+  </div>
+</div>
