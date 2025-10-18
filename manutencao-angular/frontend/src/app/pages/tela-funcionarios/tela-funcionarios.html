@@ -1,0 +1,199 @@
+<div class="flex flex-col gap-10 shadow-lg px-10 py-10 bg-white rounded-lg h-full">
+  <div class="flex flex-col gap-10">
+    <h2 class="text-gray-800 font-bold text-2xl">Funcionários</h2>
+  
+    <div class="flex min-w-2/3 place-content-between">
+      <div class="relative w-100">
+        <div class="absolute left-3 top-4.5 -translate-y-1/2 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                  d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+          </svg>
+        </div>
+
+        <input name="pesquisar" type="text" placeholder="Pesquisar um funcionário" [(ngModel)]="pesquisa" class="w-full rounded-md bg-white px-10 py-1.5 text-sm font-light text-gray-900 placeholder:text-gray-400 border border-gray-300 outline-none focus:border-gray-800"/>
+      </div>
+
+      <button type="button" alt="Adicionar" class="py-1.5 px-2.5 rounded flex items-center justify-center group bg-gray-800 text-white font-normal text-base hover:bg-gray-700 hover:cursor-pointer" (click)="abrirAdicionar()">
+        <svg width="20" height="20" viewBox="0 0 10 10" fill="none" class="stroke-white mr-2 group-hover:stroke-white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.99999 1.66667V8.33334M8.33332 5.00001L1.66666 5.00001" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+  
+        Adicionar Funcionário
+      </button>
+    </div>
+  </div>
+
+  <div class=" overflow-x-auto max-h-132 overflow-y-auto">
+    <table class="w-full table-fixed">
+      <thead class=" border-b border-gray-200">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm text-gray-700 font-semibold rounded-l-lg w-2/6">
+            <span class="bg-white border-1 border-gray-300 text-gray-700 text-xs font-medium pl-2 pr-1 py-0.3 rounded-full mr-1">
+              {{this.funcionarios.length}}
+            </span>
+            Nome
+          </th>
+          <th class="px-4 py-2 text-left text-sm text-gray-700 font-semibold w-2/6">E-mail</th>
+          <th class="px-4 py-2 text-left text-sm text-gray-700 font-semibold w-1/6">Data de nascimento</th>
+          <th class="px-4 py-2 text-left text-sm text-gray-700 font-semibold rounded-r-lg w-1/6"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        @for (funcionario of funcionariosFiltrados; track funcionario.id){
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-12 py-2 text-sm text-gray-500">{{ funcionario.usuario.nome }}</td>
+            <td class="px-4 py-2 text-sm text-gray-500">{{ funcionario.usuario.email }}</td>
+            <td class="px-4 py-2 text-sm text-gray-500">{{ funcionario.dataNascimento | date: 'dd/MM/yyyy' }}</td>
+            <td class="px-12 py-2 space-x-4">
+              <button type="button" class="px-1 py-1 text-white rounded-full group hover:bg-gray-100 hover:cursor-pointer" (click)="abrirEditar(funcionario)">
+                <svg width="20" height="20" viewBox="0 0 8 8" fill="none" class="stroke-gray-500 group-hover:stroke-gray-700" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_294_1596)">
+                    <path d="M5.07736 1.74408L6.25587 2.92259M5.57736 1.24408C5.9028 0.918641 6.43044 0.918641 6.75587 1.24408C7.08131 1.56951 7.08131 2.09715 6.75587 2.42259L2.16664 7.01183H0.999969V5.82147L5.57736 1.24408Z" stroke-width="0.3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_294_1596">
+                      <rect width="8" height="8" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </button>
+              
+              <button type="button" class="px-1 py-1 text-white rounded-full group hover:bg-red-100 hover:cursor-pointer" (click)="abrirExcluir(funcionario)">
+                <svg width="20" height="20" viewBox="0 0 8 8" fill="none" class="stroke-[#C70003]" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6.33334 2.33333L6.04424 6.38083C6.01932 6.7297 5.72902 7 5.37926 7H2.62076C2.271 7 1.9807 6.7297 1.95578 6.38083L1.66668 2.33333M3.33334 3.66667V5.66667M4.66668 3.66667V5.66667M5.00001 2.33333V1.33333C5.00001 1.14924 4.85077 1 4.66668 1H3.33334C3.14925 1 3.00001 1.14924 3.00001 1.33333V2.33333M1.33334 2.33333H6.66668"  stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhum funcionário encontrado.</td>
+        </tr>
+      }
+    </tbody>
+    </table>
+  </div>
+  
+  @if (mostrarFormulario) {
+    <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <form #formFuncionario="ngForm" (ngSubmit)="salvar()">
+          <div class="flex flex-col gap-5">
+            <h2 class="text-lg font-semibold text-gray-900">{{ modoFormulario === 'adicionar' ? 'Cadastrar funcionário' : 'Editar funcionário' }}</h2>
+      
+            <div class="flex flex-col gap-2">
+              <div class="col-span-6 mt-1.5">
+                <input id="nome" placeholder="Nome" type="text" name="nome" [(ngModel)]="funcionario.usuario.nome" #nome="ngModel" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
+                [ngClass]="{
+                'border-red-500': nome.errors?.['required'] && (nome.touched || formFuncionario.submitted),
+                'border-green-500': nome.valid && nome.touched,
+                'border-gray-300': nome.pristine
+                }" />
+
+                @if (nome.errors?.['required'] && (nome.touched || formFuncionario.submitted)) {
+                  <span class="pl-2 text-red-600 text-xs">O nome é obrigatório</span>
+                } 
+              </div>
+        
+              <div class="col-span-6 mt-1.5">
+                <input id="email" placeholder="E-mail" autocomplete="email" type="email" name="email" [(ngModel)]="funcionario.usuario.email" #email="ngModel" email required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
+                [ngClass]="{
+                'border-red-500': (email.invalid && (email.touched || formFuncionario.submitted)),
+                'border-yellow-500': (email.errors?.['email']),
+                'border-green-500': email.valid && email.touched,
+                'border-gray-300': email.pristine
+                  }"
+                />
+
+                @if (email.invalid && (email.touched || formFuncionario.submitted)) {
+                  @if (email.errors?.['required']) {
+                    <span class="pl-2 text-red-600 text-xs">O email é obrigatório</span>
+                  } @else if (email.errors?.['email']) {
+                    <span class="pl-2 text-yellow-600 text-xs">O email não é válido</span>
+                  }
+                } 
+              </div>
+        
+              <div class="col-span-6 mt-1.5">
+                <input id="senha" placeholder="Senha" type="text" name="senha" [(ngModel)]="funcionario.usuario.senha" #senha="ngModel" minlength="4" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
+                [ngClass]="{
+                'border-1 border-red-500': ((senha.errors?.['required'] && (senha.touched || formFuncionario.submitted) && (senha.touched || formFuncionario.submitted))),
+                'border-yellow-500': senha.errors?.['minlength'] && (senha.touched || formFuncionario.submitted),
+                'border-green-500': senha.valid && senha.touched,
+                'border-gray-300': senha.pristine
+                }" />
+
+                @if (senha.invalid && (senha.touched || formFuncionario.submitted)) {
+                  @if (senha.errors?.['required']) {
+                    <span class="pl-2 text-red-600 text-xs">A senha é obrigatória</span>
+                  } @else if (senha.errors?.['minlength']) {
+                    <span class="pl-2 text-yellow-600 text-xs">A senha deve ter, pelo menos, 4 digitos</span>
+                  } 
+                } 
+              </div>
+        
+              <div class="col-span-6 mt-1.5">
+                <input 
+                  id="data" 
+                  placeholder="Data" 
+                  type="date" 
+                  name="data" 
+                  [(ngModel)]="funcionario.dataNascimento" 
+                  #data="ngModel" 
+                  required 
+                  class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-1 border-gray-400 outline-none focus:border-gray-800"
+                  [ngClass]="{
+                  'border-red-500 border-1': data.invalid && (data.touched || formFuncionario.submitted),
+                  'border-green-500 border-2': data.valid && data.dirty,
+                  'border-gray-300': data.pristine
+                  }" />
+
+                @if (data.invalid && (data.touched || formFuncionario.submitted)) {
+                  @if (data.errors?.['required']) {
+                    <span class="pl-2 text-red-600 text-xs">A data é obrigatória</span>
+                  } 
+                } 
+              </div>
+            </div>
+          </div>
+      
+          <div class="mt-6 flex items-center justify-end gap-x-6">
+            <button type="button" (click)="cancelar()" class="py-1.5 px-4 rounded-md flex items-center justify-center group bg-white text-black font-normal text-base hover:bg-gray-200 hover:text-gray-800 hover:cursor-pointer">Cancelar</button>
+
+            <div class="relative group inline-block">
+              <button type="submit" [disabled]="!formFuncionario.valid" class="py-1.5 px-4 rounded-md flex items-center justify-center group bg-gray-800 text-white font-normal text-base hover:bg-gray-700 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed">Salvar</button>
+
+              @if (!formFuncionario.valid) {
+                <div class="absolute left-2 translate-x-1/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 bg-black text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-indigo-400">
+                  Preencha o formulário corretamente
+                </div>
+              }
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  @if(mostrarPopupExclusao) {
+    <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      <div class="flex flex-col gap-6 items-center p-5 bg-white rounded-lg shadow-xl w-full max-w-md">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 9V11M12 15H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 16L13.7321 4C12.9623 2.66667 11.0378 2.66667 10.268 4L3.33978 16C2.56998 17.3333 3.53223 19 5.07183 19Z" stroke="#C70003" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        <div class="flex flex-col gap-2 text-center">
+          <p class="text-base font-bold text-gray-900">Tem certeza de que deseja excluir?</p>
+          <p class="text-sm text-gray-900">Esta ação é <span class="font-bold">permanente</span> e <span class="font-bold">não poderá ser desfeita</span>. Todas as informações do funcionário serão removidas do sistema.</p>
+
+          <div class="flex gap-10 justify-center items-center mt-4">
+            <button type="button" class="rounded-md px-8 py-2 text-sm font-base bg-[#C70003] text-white hover:bg-red-400 hover:cursor-pointer" (click)="excluir()">Excluir</button>
+            <button type="button" class="rounded-md px-8 py-2 text-sm font-base text-black hover:bg-gray-100 hover:cursor-pointer hover:text-gray-600" (click)="cancelar()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+  
+</div>
