@@ -1,0 +1,15 @@
+<div class="h-screen w-64 border-r-1 pt-24">
+    <div class="bg-gray-200 pl-8 p-2">
+        <h2>MENU PRINCIPAL</h2>
+    </div>
+    <div class="pl-8 mt-6 gap-2 flex flex-col">
+        @if (tipoUsuario === 'CLIENTE') {
+            <a href="/tela-inicial-cliente">Solicitações</a>
+        }
+
+        @if (tipoUsuario === 'FUNCIONARIO') {
+            <a href="/tela-inicial-funcionario">Solicitações abertas</a>
+            <a href="/tela-inicial-funcionario">Lista de solicitações</a>
+        }
+    </div>
+</div>

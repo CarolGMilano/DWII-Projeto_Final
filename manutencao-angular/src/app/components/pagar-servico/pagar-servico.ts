@@ -1,0 +1,44 @@
+import { Component, inject, OnInit } from '@angular/core';
+import { SolicitacaoService } from '../../services';
+import { SolicitacaoModel } from '../../models/Solicitacao';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
+import { MoedaBrPipe } from '../../pipes/moeda/moeda-pipe-pipe';
+
+@Component({
+  selector: 'app-pagar-servico',
+  imports: [MoedaBrPipe],
+  templateUrl: './pagar-servico.html',
+  styleUrl: './pagar-servico.css'
+})
+export class PagarServico implements OnInit{
+  solicitacao! : SolicitacaoModel;
+
+  private dadosService = inject(SolicitacaoService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.params['id']);
+
+    this.dadosService.getSolicitacao(this.solicitacao).subscribe({
+      next: (res) => this.solicitacao = res,
+      error: (err) => console.error('Erro ao buscar solicitação:', err)
+    });
+
+    this.dadosService.atualizarStatus(this.solicitacao, EstadoSolicitacao.PAGA).subscribe({
+      next: (res) => this.solicitacao = res,
+      error: (err) => console.error('Erro ao atualizar status:', err)
+    });
+  }
+
+  showModal(modal: HTMLDialogElement) {
+    modal.showModal();
+  }
+
+  closeModal(modal: HTMLDialogElement) {
+    modal.close();
+    this.router.navigate(['/tela-inicial-cliente']);
+  }
+   
+}
