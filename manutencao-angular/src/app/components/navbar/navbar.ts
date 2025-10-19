@@ -17,7 +17,7 @@ export class Navbar {
   usuarioLogado = this.loginService.usuarioLogado;
   TipoUsuario = TipoUsuario;
 
-  logout(){
+  deslogar(){
     this.loginService.logout();
     this.router.navigate(['']);
   }

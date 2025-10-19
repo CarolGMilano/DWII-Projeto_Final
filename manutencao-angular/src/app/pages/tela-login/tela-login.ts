@@ -1,6 +1,6 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 
 import { TipoUsuario, UsuarioStatus, Login } from '../../shared'
@@ -13,13 +13,14 @@ import { LoginService } from '../../services';
   styleUrl: './tela-login.css'
 })
 
-export class TelaLogin {
+export class TelaLogin implements OnInit {
   @ViewChild('formLogin') formLogin! : NgForm;
 
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   readonly loginService = inject(LoginService);
 
-  loginAtual: Login = {
+  login: Login = {
     email: '',
     senha: ''
   }
@@ -27,16 +28,36 @@ export class TelaLogin {
   usuarioStatus: UsuarioStatus = UsuarioStatus.Nenhum;
   status = UsuarioStatus;
 
+  loading: boolean = false;
+  mensagem!: string;
+
+  ngOnInit(): void {
+    if(this.loginService.usuarioLogado) {
+      if (this.loginService.usuarioLogado.tipo === TipoUsuario.CLIENTE) {
+          this.router.navigate(['/tela-inicial-cliente']);
+      } else if (this.loginService.usuarioLogado.tipo === TipoUsuario.FUNCIONARIO) {
+        this.router.navigate(['/tela-inicial-funcionario']);
+      } 
+    } else {
+      this.route.queryParams.subscribe(params => {
+        this.mensagem = params['error'];
+      })
+    }
+  }
+
   aoMudarInput() {
     this.usuarioStatus = UsuarioStatus.Nenhum;
   }
 
-  login(){
+  logar(){
     if (!this.formLogin.form.valid) return;
 
-    this.loginService.login(this.loginAtual).subscribe(usuario => {
+    this.loading = true;
+
+    this.loginService.login(this.login).subscribe(usuario => {
       if (usuario) {
         this.loginService.usuarioLogado = usuario;
+        this.loading = false;
 
         if (usuario.tipo === TipoUsuario.CLIENTE) {
           this.router.navigate(['/tela-inicial-cliente']);
@@ -46,12 +67,15 @@ export class TelaLogin {
           this.usuarioStatus = UsuarioStatus.Valido;
         }
       } else {
+        this.mensagem = "Usuário/Senha inválidos."
         this.usuarioStatus = UsuarioStatus.Invalido;
       }
     })
+
+    this.loading = false;
   }
 
-  logout(){
+  deslogar(){
     this.loginService.logout();
     this.router.navigate(['']);
   }
