@@ -230,7 +230,7 @@
                   <option [value]="-1">Selecione um funcionário</option>
                   
                   @for(funcionario of funcionarios; track funcionario.id){  
-                    @if(funcionario.id !== funcionarioLogado.idFuncionario){
+                    @if(funcionario.id !== funcionarioLogado?.id){
                       <option [value]="funcionario.id">{{ funcionario.usuario.nome }}</option>
                     }
                   }
