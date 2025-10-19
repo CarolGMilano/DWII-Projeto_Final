@@ -21,39 +21,39 @@ export class SolicitacaoService {
     return this.http.get<Categoria[]>(this.apiUrl + '/categorias');
   }
 
-  postSolicitacao(solicitacao: NovaSolicitacaoModel):Observable<NovaSolicitacaoModel>{
-    return this.http.post<NovaSolicitacaoModel>(this.apiUrl, solicitacao)
+  postSolicitacao(novaSolicitacao: NovaSolicitacaoModel):Observable<NovaSolicitacaoModel>{
+    return this.http.post<NovaSolicitacaoModel>(this.apiUrl, novaSolicitacao)
   }
 
   getSolicitacoes():Observable<SolicitacaoModel[]>{
     return this.http.get<SolicitacaoModel[]>(this.apiUrl)
   }
 
-  getSolicitacao(id: number): Observable<SolicitacaoModel>{
-    return this.http.get<SolicitacaoModel>(`${this.apiUrl}/${id}`);
+  getSolicitacao(solicitacao: SolicitacaoModel): Observable<SolicitacaoModel>{
+    return this.http.get<SolicitacaoModel>(`${this.apiUrl}/${solicitacao.id}`);
   }
   
-  getHistorico(id: number): Observable<HistoricoSolicitacao[]>{
-    return this.http.get<HistoricoSolicitacao[]>(`${this.apiUrl}/historico/${id}`);
+  getHistorico(historico: HistoricoSolicitacao): Observable<HistoricoSolicitacao[]>{
+    return this.http.get<HistoricoSolicitacao[]>(`${this.apiUrl}/historico/${historico.idSolicitacao}`);
   }
 
-  atualizarStatus(id: number, novoEstado: EstadoSolicitacao, motivo?: string): Observable<SolicitacaoModel> {
-    return this.http.put<SolicitacaoModel>(`${this.apiUrl}/${id}/estado`, {
+  atualizarStatus(solicitacao:SolicitacaoModel, novoEstado: EstadoSolicitacao, motivo?: string): Observable<SolicitacaoModel> {
+    return this.http.put<SolicitacaoModel>(`${this.apiUrl}/${solicitacao.id}}/estado`, {
       estado: novoEstado,
       rejOrcamento: motivo
     });
   }
 
-  pagarServico(id:number): Observable<SolicitacaoModel>{
-   return this.http.put<SolicitacaoModel>(`${this.apiUrl}/${id}`, {
+  pagarServico(solicitacao: SolicitacaoModel): Observable<SolicitacaoModel>{
+   return this.http.put<SolicitacaoModel>(`${this.apiUrl}/${solicitacao.id}`, {
       pago: true
     });
   }
 
-  enviarOrcamento(id: number, precoTotal: number, descricaoPreco: {descricao: string; preco: number} ): Observable<SolicitacaoModel> {
-    this.atualizarStatus(id, EstadoSolicitacao.ORCADA);
+  enviarOrcamento(solicitacao: SolicitacaoModel, precoTotal: number, descricaoPreco: {descricao: string; preco: number} ): Observable<SolicitacaoModel> {
+    this.atualizarStatus(solicitacao, EstadoSolicitacao.ORCADA);
     
-    return this.http.put<SolicitacaoModel>(`${this.apiUrl}/${id}/orcamento`, {
+    return this.http.put<SolicitacaoModel>(`${this.apiUrl}/${solicitacao.id}/orcamento`, {
       precoTotal: precoTotal,
       descricaoPreco : descricaoPreco
       
