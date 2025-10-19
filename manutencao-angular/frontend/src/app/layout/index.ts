@@ -1,1 +1,0 @@
-export * from './cliente-funcionario-layout/cliente-funcionario-layout';
