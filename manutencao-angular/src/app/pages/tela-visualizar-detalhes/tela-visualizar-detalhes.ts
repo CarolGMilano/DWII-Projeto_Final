@@ -12,10 +12,11 @@ import {
   Manutencao, 
   Historico,
   StatusSolicitacaoObservacao,
-  Funcionario, 
+  Funcionario,
+  Usuario, 
 } from "../../shared";
 
-import { ClienteService, FuncionarioService, SolicitacaoFakeService } from '../../services';
+import { ClienteService, FuncionarioService, LoginService, SolicitacaoFakeService } from '../../services';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -30,13 +31,14 @@ export class TelaVisualizarDetalhes implements OnInit {
   private solicitacaoFakeService = inject(SolicitacaoFakeService);
   private clienteService = inject(ClienteService);
   private funcionarioService = inject(FuncionarioService);
+  private loginService = inject(LoginService);
 
   StatusSolicitacaoLabel = StatusSolicitacaoLabel;
   StatusSolicitacaoCor = StatusSolicitacaoCor;
   StatusSolicitacaoObservacao = StatusSolicitacaoObservacao;
   StatusSolicitacao = StatusSolicitacao;
 
-  funcionarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')!);
+  funcionarioLogado: Usuario | null = this.loginService.usuarioLogado;
   
   manutencao: Manutencao = {
     idSolicitacao: undefined,
@@ -76,13 +78,15 @@ export class TelaVisualizarDetalhes implements OnInit {
       this.solicitacao.status === StatusSolicitacao.REDIRECIONADA;
 
     const usuarioResponsavel = 
-      this.solicitacao.funcionario?.id === this.funcionarioLogado.idFuncionario;
+      this.solicitacao.funcionario?.usuario.id === this.funcionarioLogado?.id;
 
     const orcamentoAceito = this.solicitacao.orcamento?.aprovada ?? false;
 
     const manutencaoNaoFeita = !this.solicitacao.historico.some(
       h => h.status === StatusSolicitacao.ARRUMADA
     );
+
+    console.log(this.solicitacao.funcionario?.usuario.id, this.funcionarioLogado?.id)
 
     return statusValido && usuarioResponsavel && orcamentoAceito && manutencaoNaoFeita;
   }
@@ -95,7 +99,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       this.solicitacao.status == StatusSolicitacao.PAGA 
 
     const usuarioResponsavel = 
-      this.solicitacao.funcionario?.id === this.funcionarioLogado.idFuncionario;
+      this.solicitacao.funcionario?.id === this.funcionarioLogado?.id;
 
     const orcamentoAceito = this.solicitacao.orcamento?.aprovada ?? false;
 
@@ -108,7 +112,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       this.solicitacao.status == StatusSolicitacao.PAGA 
 
     const usuarioResponsavel = 
-      this.solicitacao.funcionario?.id === this.funcionarioLogado.idFuncionario;
+      this.solicitacao.funcionario?.id === this.funcionarioLogado?.id;
 
     const manutencaoPaga = this.solicitacao.historico.some(
       h => h.status === StatusSolicitacao.PAGA
@@ -161,18 +165,19 @@ export class TelaVisualizarDetalhes implements OnInit {
         const historico: Historico = {
           dataHora: new Date(),
           status: StatusSolicitacao.REDIRECIONADA,
-          funcionario: this.funcionarioLogado,
+          //Só para sumir o erro, arrumar mais tarde
+          funcionario: this.funcionarioLogado as unknown as Funcionario,
           funcionarioDestino: funcionarioDestino
         };
 
-        // Atualiza a solicitação
+        //Atualiza a solicitação
         solicitacao.historico.push(historico);
         solicitacao.status = historico.status;
         solicitacao.funcionario = funcionarioDestino;
 
         this.solicitacaoFakeService.atualizar(solicitacao).subscribe({
           next: () => {
-            // Atualiza o objeto local
+            //Atualiza o objeto local
             this.solicitacao = solicitacao;
             this.cancelarRedirecionamento();
           },
@@ -196,7 +201,7 @@ export class TelaVisualizarDetalhes implements OnInit {
         const historico: Historico = {
           dataHora: new Date(),
           status: StatusSolicitacao.ARRUMADA,
-          funcionario: this.funcionarioLogado
+          funcionario: this.funcionarioLogado as unknown as Funcionario
         };
 
         solicitacao.historico.push(historico);
@@ -221,7 +226,7 @@ export class TelaVisualizarDetalhes implements OnInit {
         const historico: Historico = {
           dataHora: new Date(),
           status: StatusSolicitacao.FINALIZADA,
-          funcionario: this.funcionarioLogado
+          funcionario: this.funcionarioLogado as unknown as Funcionario
         };
 
         solicitacao.historico.push(historico);
