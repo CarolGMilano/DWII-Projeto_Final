@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.entity.Endereco;
 
 public class EnderecoDao implements DaoI<Endereco> {
@@ -17,7 +18,7 @@ public class EnderecoDao implements DaoI<Endereco> {
         String sql = "INSERT INTO endereco (cep, logradouro, numero, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
-            // conn = Conexao.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getCep());
             ps.setString(2, objeto.getLogradouro());
@@ -47,7 +48,7 @@ public class EnderecoDao implements DaoI<Endereco> {
         ResultSet rs = null;
 
         try {
-            // conn = Conexao.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             List<Endereco> enderecos = new ArrayList();
@@ -88,7 +89,7 @@ public class EnderecoDao implements DaoI<Endereco> {
         String sql = "SELECT id, cep, logradouro, numero, bairro, cidade, estado FROM endereco WHERE id = ?";
 
         try {
-            // conn = Conexao.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
@@ -126,7 +127,7 @@ public class EnderecoDao implements DaoI<Endereco> {
         PreparedStatement ps = null;
         String sql = "UPDATE endereco SET cep = ?, logradouro = ?, numero = ?, bairro = ?, cidade = ?, estado = ? WHERE id = ?";
         try {
-            // conn = Conexao.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getCep());
             ps.setString(2, objeto.getLogradouro());
@@ -156,7 +157,7 @@ public class EnderecoDao implements DaoI<Endereco> {
         PreparedStatement ps = null;
         String sql = "DELETE FROM endereco WHERE id = ?";
         try {
-            // conn = Conexao.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, objeto.getId());
             ps.executeUpdate();

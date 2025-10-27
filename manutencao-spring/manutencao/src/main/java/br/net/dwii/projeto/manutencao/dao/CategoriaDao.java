@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.entity.Categoria;
 
 public class CategoriaDao implements DaoI<Categoria> {
@@ -17,8 +18,8 @@ public class CategoriaDao implements DaoI<Categoria> {
         Connection conn = null;
 
         try {
-            // conn = Conexao.getConexao();
-            // ps = conn.prepareStatement(sql);
+            conn = ConnectionDB.getConnection();
+            ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
             ps.executeUpdate();
             ps.close();
@@ -36,8 +37,8 @@ public class CategoriaDao implements DaoI<Categoria> {
         ResultSet rs = null;
 
         try{
-            // conn = Conexao.getConexao();
-            // ps = conn.prepareStatement(sql);
+            conn = ConnectionDB.getConnection();
+            ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
 
             List<Categoria> categorias = new ArrayList<>();
@@ -77,7 +78,7 @@ public class CategoriaDao implements DaoI<Categoria> {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            // conn = Conexao.getConexao();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -122,7 +123,7 @@ public class CategoriaDao implements DaoI<Categoria> {
     public void delete(Categoria objeto) throws Exception {
         String sql = "DELETE FROM categoria WHERE id = ?";
 
-        try (Connection conn = Conexao.getConexao();
+        try (Connection conn = ConnectionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, objeto.getId());

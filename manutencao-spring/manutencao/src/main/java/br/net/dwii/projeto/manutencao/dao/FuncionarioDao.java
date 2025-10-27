@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.entity.Funcionario;
 
 public class FuncionarioDao implements DaoI<Funcionario> {
@@ -16,7 +17,7 @@ public class FuncionarioDao implements DaoI<Funcionario> {
         Connection conn = null;
         String sql = "INSERT INTO funcionario (nome, email, senha, tipo, codigo, data_nascimento) VALUES (?, ?, ?, ?, ?, ?)";
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
             ps.setString(2, objeto.getEmail());
@@ -48,7 +49,7 @@ public class FuncionarioDao implements DaoI<Funcionario> {
         String sql = "SELECT id, nome, email, senha, tipo, codigo, data";
         
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             List<Funcionario> funcionarios = new ArrayList();
@@ -91,7 +92,7 @@ public class FuncionarioDao implements DaoI<Funcionario> {
         String sql = "SELECT id, nome, email, senha, tipo, codigo, data_nascimento FROM funcionario WHERE id = ?";
 
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -134,7 +135,7 @@ public class FuncionarioDao implements DaoI<Funcionario> {
         String sql = "UPDATE funcionario SET nome = ?, email = ?, senha = ?, tipo = ?, codigo = ?, data_nascimento = ? WHERE id = ?";
 
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
             ps.setString(2, objeto.getEmail());
@@ -166,7 +167,7 @@ public class FuncionarioDao implements DaoI<Funcionario> {
         String sql = "DELETE FROM funcionario WHERE id = ?";
 
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, objeto.getId());
             ps.executeUpdate();
