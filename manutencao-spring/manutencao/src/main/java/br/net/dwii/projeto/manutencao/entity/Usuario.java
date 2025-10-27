@@ -1,6 +1,6 @@
 package br.net.dwii.projeto.manutencao.entity;
 
-public class Usuario {
+public abstract class Usuario {
     private Long id;
     private String nome;
     private String email;
