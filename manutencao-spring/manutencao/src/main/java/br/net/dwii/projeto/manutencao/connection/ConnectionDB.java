@@ -1,9 +1,10 @@
 package br.net.dwii.projeto.manutencao.connection;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Connection {
+public class ConnectionDB {
     private static final String url = "jdbc:mysql://localhost:3306/manutencao_db";
     private static final String user = "root";
     private static final String password = "root";

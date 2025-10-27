@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.entity.Cliente;
 
 public class ClienteDao implements DaoI<Cliente> {
@@ -15,7 +16,7 @@ public class ClienteDao implements DaoI<Cliente> {
         PreparedStatement ps = null;
         String sql = "INSERT INTO cliente (nome, telefone, email) VALUES (?, ?, ?)";
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
             ps.setString(2, objeto.getTelefone());
@@ -37,7 +38,7 @@ public class ClienteDao implements DaoI<Cliente> {
        String sql = "SELECT id, nome, telefone, email FROM cliente";
        ResultSet rs = null;
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             List<Cliente> clientes = new ArrayList();
@@ -73,7 +74,7 @@ public class ClienteDao implements DaoI<Cliente> {
         ResultSet rs = null;
 
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -108,7 +109,7 @@ public class ClienteDao implements DaoI<Cliente> {
         PreparedStatement ps = null;
         String sql = "UPDATE cliente SET nome = ?, telefone = ?, email = ? WHERE id = ?";
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
             ps.setString(2, objeto.getTelefone());
@@ -130,7 +131,7 @@ public class ClienteDao implements DaoI<Cliente> {
         PreparedStatement ps = null;
         String sql = "DELETE FROM cliente WHERE id = ?";
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, objeto.getId());
             ps.executeUpdate();
