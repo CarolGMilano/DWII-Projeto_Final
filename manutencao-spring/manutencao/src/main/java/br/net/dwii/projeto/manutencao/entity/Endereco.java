@@ -1,29 +1,23 @@
-package br.net.dwii.projeto.manutencao.models;
+package br.net.dwii.projeto.manutencao.entity;
 
-@Entity
-@Table(name = "endereco")
 public class Endereco {
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
     private String cep;
-
-    @Column
     private String logradouro;
-
-    @Column
     private String numero;
-
-    @Column
     private String bairro;
-
-    @Column
     private String cidade;
-
-    @Column
     private String estado;
+
+    public Endereco(Long id, String cep, String logradouro, String numero, String bairro, String cidade, String estado) {
+        this.id = id;
+        this.cep = cep;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+    }
 
     public Long getId() {
         return id;
@@ -73,5 +67,5 @@ public class Endereco {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
+    
 }

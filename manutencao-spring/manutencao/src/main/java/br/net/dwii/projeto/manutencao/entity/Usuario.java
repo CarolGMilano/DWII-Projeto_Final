@@ -1,23 +1,19 @@
-package br.net.dwii.projeto.manutencao.models;
+package br.net.dwii.projeto.manutencao.entity;
 
-@Entity
-@Table(name = "usuario")
-public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public abstract class Usuario {
     private Long id;
-
-    @Column
     private String nome;
-
-    @Column
     private String email;
-
-    @Column
     private String senha;
+    private Number tipo; // 1 - Cliente | 2 - Funcionario
 
-    @Column
-    private Number tipo; // 1-Admin 2-Funcionario 3-Cliente
+    public Usuario(long id, String nome, String email, String senha, Number tipo) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.tipo = tipo;
+    }
 
     public Long getId() {
         return id;
@@ -25,7 +21,7 @@ public class Usuario {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public String getNome() {
         return nome;
     }
@@ -53,7 +49,5 @@ public class Usuario {
     public void setTipo(Number tipo) {
         this.tipo = tipo;
     }
-
-
-
+    
 }
