@@ -125,7 +125,7 @@
 
 ### Etapa 02: Back-end 
 
-> 📅 Prazo para finalização da Etapa 02: **04/11**
+> 📅 Prazo para finalização da Etapa 02: **11/11**
 
 #### Telas iniciais
 - [] Tela de Login (RF002) 🟦
