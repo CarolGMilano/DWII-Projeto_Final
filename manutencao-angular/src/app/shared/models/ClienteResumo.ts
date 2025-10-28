@@ -1,7 +1,7 @@
 import { Endereco } from './Endereco';
 
 export interface ClienteResumo {
-  id?: number; 
+  id?: number; //
   nome: string;
   cpf: string;
   telefone: string;

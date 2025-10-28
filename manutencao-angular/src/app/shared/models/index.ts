@@ -4,6 +4,7 @@ export * from './Cliente';
 export * from './ClienteResumo';
 export * from './Endereco';
 export * from './Funcionario';
+export * from './FuncionarioResumo';
 export * from './Solicitacao';
 export * from './Orcamento';
 export * from './Historico';
