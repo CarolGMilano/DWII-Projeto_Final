@@ -1,12 +1,24 @@
 package br.net.dwii.projeto.manutencao.entity;
 
+import java.util.List;
+
 public class Orcamento {
     public Long id;
     public long idSolicitacao;
-    public Servico servico[];
+    public List<Servico> servico;
     public Double valorTotal;
     public boolean aprovado;
     public String msgRejeicao;
+
+    public Orcamento(long id, long idSolicitacao, List<Servico> servico, Double valorTotal, boolean aprovado,
+            String msgRejeicao) {
+        this.id = id;
+        this.idSolicitacao = idSolicitacao;
+        this.servico = servico;
+        this.valorTotal = valorTotal;
+        this.aprovado = aprovado;
+        this.msgRejeicao = msgRejeicao;
+    }
 
     public Long getId() {
         return id;
@@ -24,11 +36,11 @@ public class Orcamento {
         this.idSolicitacao = idSolicitacao;
     }
 
-    public Servico[] getServico() {
+    public List<Servico> getServico() {
         return servico;
     }
 
-    public void setServico(Servico[] servico) {
+    public void setServico(List<Servico> servico) {
         this.servico = servico;
     }
 

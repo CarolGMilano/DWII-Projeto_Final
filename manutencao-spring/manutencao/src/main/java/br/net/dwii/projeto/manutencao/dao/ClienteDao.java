@@ -7,13 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.net.dwii.projeto.manutencao.entity.Cliente;
+import br.net.dwii.projeto.manutencao.entity.Endereco;
 
 public class ClienteDao implements DaoI<Cliente> {
+    private EnderecoDao enderecoDao = new EnderecoDao();
+
     @Override
     public void add(Cliente objeto) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
-        String sql = "INSERT INTO cliente (nome, telefone, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO cliente (nome, telefone, email, idEndereco) VALUES (?, ?, ?)";
         try {
             // conn = ConnectionFactory.getConnection();
             ps = conn.prepareStatement(sql);
@@ -42,26 +45,27 @@ public class ClienteDao implements DaoI<Cliente> {
             rs = ps.executeQuery();
             List<Cliente> clientes = new ArrayList();
             while (rs.next()) {
-            Cliente cliente = new Cliente(
+                Endereco endereco = enderecoDao.getById(rs.getLong("id_endereco"));
+                Cliente cliente = new Cliente(
                     rs.getLong("id"),
                     rs.getString("nome"),
                     rs.getString("email"),
-                    null,
-                    null,
-                    null,
+                    rs.getString("senha"),
+                    rs.getInt("tipo"),
+                    rs.getString("cpf"),
                     rs.getString("telefone"),
-                    null
-            );
-            clientes.add(cliente);
+                    endereco
+                );
+                clientes.add(cliente);
             }
             return clientes;
         } catch (Exception e) {
             e.printStackTrace();
             throw new UnsupportedOperationException("Unimplemented method 'getAll'");
         } finally {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            if (conn != null) conn.close();
+          if (rs != null) rs.close();
+          if (ps != null) ps.close();   
+          if (conn != null) conn.close();
         }
     }
 
@@ -78,15 +82,16 @@ public class ClienteDao implements DaoI<Cliente> {
             ps.setLong(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
+                Endereco endereco = enderecoDao.getById(rs.getLong("id_endereco"));
                 Cliente cliente = new Cliente(
                     rs.getLong("id"),
                     rs.getString("nome"),
                     rs.getString("email"),
-                    null,
-                    null,
-                    null,
+                    rs.getString("senha"),
+                    rs.getInt("tipo"),
+                    rs.getString("cpf"),
                     rs.getString("telefone"),
-                    null
+                    endereco
                 );
                 return cliente;
             } else {
@@ -106,14 +111,17 @@ public class ClienteDao implements DaoI<Cliente> {
     public void update(Cliente objeto) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
-        String sql = "UPDATE cliente SET nome = ?, telefone = ?, email = ? WHERE id = ?";
+        String sql = "UPDATE cliente SET nome = ?, email = ?, senha = ?, tipo = ?, cpf = ?, telefone = ?, idEndereco = ? WHERE id = ?";
         try {
             // conn = ConnectionFactory.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
-            ps.setString(2, objeto.getTelefone());
-            ps.setString(3, objeto.getEmail());
-            ps.setLong(4, objeto.getId());
+            ps.setString(2, objeto.getEmail());
+            ps.setString(3, objeto.getSenha());
+            ps.setInt(4, objeto.getTipo().intValue());
+            ps.setString(5, objeto.getCpf());
+            ps.setString(6, objeto.getTelefone());
+            ps.setLong(7, objeto.getEndereco().getId());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

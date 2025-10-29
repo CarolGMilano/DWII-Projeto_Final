@@ -6,25 +6,23 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.net.dwii.projeto.manutencao.entity.Funcionario;
+import br.net.dwii.projeto.manutencao.entity.Servico;
 
-public class FuncionarioDao implements DaoI<Funcionario> {
+public class ServicoDao implements DaoI<Servico> {
 
     @Override
-    public void add(Funcionario objeto) throws Exception {
-        PreparedStatement ps = null;
-        Connection conn = null;
-        String sql = "INSERT INTO funcionario (nome, email, senha, tipo, codigo, data_nascimento) VALUES (?, ?, ?, ?, ?, ?)";
+    public void add(Servico objeto) throws Exception {
+       Connection conn = null;
+       PreparedStatement ps = null;
+        String sql = "INSERT INTO servico (descricao, valor, id_orcamento) VALUES (?, ?, ?)";
+
         try {
-            // conn = ConnectionFactory.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, objeto.getNome());
-            ps.setString(2, objeto.getEmail());
-            ps.setString(3, objeto.getSenha());
-            ps.setInt(4, objeto.getTipo().intValue());
-            ps.setInt(5, objeto.getCodigo().intValue());
-            ps.setDate(6, new java.sql.Date(objeto.getDataNascimento().getTime()));
-            ps.executeUpdate();
+        //    conn = ps.getConnection(sql);
+           ps = conn.prepareStatement(sql);
+           ps.setString(1, objeto.getDescricao());
+           ps.setDouble(2, objeto.getValor());
+           ps.setLong(3, objeto.getIdOrcamento());
+           ps.executeUpdate();
         } 
         catch (Exception e) {
             e.printStackTrace();
@@ -41,30 +39,27 @@ public class FuncionarioDao implements DaoI<Funcionario> {
     }
 
     @Override
-    public List<Funcionario> getAll() throws Exception {
+    public List<Servico> getAll() throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String sql = "SELECT id, nome, email, senha, tipo, codigo, data";
-        
-        try {
+        String sql = "SELECT * FROM servico";
+
+        try{
             // conn = ConnectionFactory.getConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            List<Funcionario> funcionarios = new ArrayList();
+            List<Servico> servicos = new ArrayList();
             while (rs.next()) {
-                Funcionario funcionario = new Funcionario(
+                Servico servico = new Servico(
                     rs.getLong("id"),
-                    rs.getString("nome"),
-                    rs.getString("email"),
-                    rs.getString("senha"),
-                    rs.getInt("tipo"),
-                    rs.getInt("codigo"),
-                    rs.getDate("data_nascimento")
+                    rs.getString("descricao"),
+                    rs.getDouble("valor"),
+                    rs.getLong("id_orcamento")
                 );
-                funcionarios.add(funcionario);
+                servicos.add(servico);
             }
-            return funcionarios;
+            return servicos;
         } 
         catch (Exception e) {
             e.printStackTrace();
@@ -84,11 +79,11 @@ public class FuncionarioDao implements DaoI<Funcionario> {
     }
 
     @Override
-    public Funcionario getById(long id) throws Exception {
+    public Servico getById(long id) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String sql = "SELECT *  FROM funcionario WHERE id = ?";
+        String sql = "SELECT *  FROM servico WHERE id = ?";
 
         try {
             // conn = ConnectionFactory.getConnection();
@@ -96,19 +91,15 @@ public class FuncionarioDao implements DaoI<Funcionario> {
             ps.setLong(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
-                Funcionario funcionario = new Funcionario(
+                Servico servico = new Servico(
                     rs.getLong("id"),
-                    rs.getString("nome"),
-                    rs.getString("email"),
-                    rs.getString("senha"),
-                    rs.getInt("tipo"),
-                    rs.getInt("codigo"),
-                    rs.getDate("data_nascimento")
+                    rs.getString("descricao"),
+                    rs.getDouble("valor"),
+                    rs.getLong("id_orcamento")
                 );
-                return funcionario;
-            } else {
-                return null;
+                return servico;
             }
+            return null;
         } 
         catch (Exception e) {
             e.printStackTrace();
@@ -128,21 +119,18 @@ public class FuncionarioDao implements DaoI<Funcionario> {
     }
 
     @Override
-    public void update(Funcionario objeto) throws Exception {
+    public void update(Servico objeto) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
-        String sql = "UPDATE funcionario SET nome = ?, email = ?, senha = ?, tipo = ?, codigo = ?, data_nascimento = ? WHERE id = ?";
+        String sql = "UPDATE servico SET descricao = ?, valor = ?, id_orcamento = ? WHERE id = ?";
 
         try {
             // conn = ConnectionFactory.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, objeto.getNome());
-            ps.setString(2, objeto.getEmail());
-            ps.setString(3, objeto.getSenha());
-            ps.setInt(4, objeto.getTipo().intValue());
-            ps.setInt(5, objeto.getCodigo().intValue());
-            ps.setDate(6, new java.sql.Date(objeto.getDataNascimento().getTime()));
-            ps.setLong(7, objeto.getId());
+            ps.setString(1, objeto.getDescricao());
+            ps.setDouble(2, objeto.getValor());
+            ps.setLong(3, objeto.getIdOrcamento());
+            ps.setLong(4, objeto.getId());
             ps.executeUpdate();
         } 
         catch (Exception e) {
@@ -160,10 +148,10 @@ public class FuncionarioDao implements DaoI<Funcionario> {
     }
 
     @Override
-    public void delete(Funcionario objeto) throws Exception {
+    public void delete(Servico objeto) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
-        String sql = "DELETE FROM funcionario WHERE id = ?";
+        String sql = "DELETE FROM servico WHERE id = ?";
 
         try {
             // conn = ConnectionFactory.getConnection();
@@ -184,5 +172,5 @@ public class FuncionarioDao implements DaoI<Funcionario> {
             }
         }
     }
-
+    
 }

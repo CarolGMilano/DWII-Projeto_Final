@@ -30,10 +30,10 @@ public class CategoriaDao implements DaoI<Categoria> {
 
     @Override
     public List<Categoria> getAll() throws Exception {
-        String sql = "INSERT INTO categoria (nome) VALUES (?)";
         PreparedStatement ps = null;
         Connection conn = null;
         ResultSet rs = null;
+        String sql = "INSERT INTO categoria (nome) VALUES (?)";
 
         try{
             // conn = Conexao.getConexao();

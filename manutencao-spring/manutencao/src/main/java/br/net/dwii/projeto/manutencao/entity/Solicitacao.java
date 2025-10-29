@@ -1,6 +1,7 @@
 package br.net.dwii.projeto.manutencao.entity;
 
 import java.sql.Date;
+import java.util.List;
 
 public class Solicitacao {
     private Long id;
@@ -10,20 +11,22 @@ public class Solicitacao {
     private Number status;
     private Cliente cliente;
     private Funcionario funcionario;
-    private Historico historico[];
+    private List<Historico> historico;
     private Date dataAbertura;
     private Orcamento orcamento;
 
     public Solicitacao(long id, String equipamento, Categoria categoria, String descricao, Number status,
-            Cliente cliente, Historico[] historico, Date dataAbertura) {
+            Cliente cliente, Funcionario funcionario, List<Historico> historico, Date dataAbertura, Orcamento orcamento) {
         this.id = id;
         this.equipamento = equipamento;
         this.categoria = categoria;
         this.descricao = descricao;
         this.status = status;
         this.cliente = cliente;
+        this.funcionario = funcionario;
         this.historico = historico;
         this.dataAbertura = dataAbertura;
+        this.orcamento = orcamento;
     }
 
     public Long getId() {
@@ -82,11 +85,11 @@ public class Solicitacao {
         this.funcionario = funcionario;
     }
 
-    public Historico[] getHistorico() {
+    public List<Historico> getHistorico() {
         return historico;
     }
 
-    public void setHistorico(Historico[] historico) {
+    public void setHistorico(List<Historico> historico) {
         this.historico = historico;
     }
 
