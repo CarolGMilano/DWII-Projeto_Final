@@ -1,22 +1,22 @@
 package br.net.dwii.projeto.manutencao.model.dto;
 
 public abstract class UsuarioDTO {
-  private int id;
+  private int idUsuario;
   private String nome;
   private String email;
   private String senha;
   private int tipo;
 
-  public UsuarioDTO(int id, String nome, String email, String senha, int tipo){
-    this.id = id;
+  public UsuarioDTO(int idUsuario, String nome, String email, String senha, int tipo){
+    this.idUsuario = idUsuario;
     this.nome = nome;
     this.email = email;
     this.senha = senha;
     this.tipo = tipo;
   }
 
-  public int getId() { return id; }
-  public void setId(int id) { this.id = id; }
+  public int getIdUsuario() { return idUsuario; }
+  public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 
   public String getNome() { return nome; }
   public void setNome(String nome) { this.nome = nome; }

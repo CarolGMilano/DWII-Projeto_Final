@@ -6,8 +6,8 @@ public class FuncionarioDTO extends UsuarioDTO {
   private int idFuncionario;
   private Date dataNascimento;
 
-  public FuncionarioDTO(int id, String nome, String email, String senha, int tipo, int idFuncionario, Date dataNascimento) {
-    super(id, nome, email, senha, tipo);
+  public FuncionarioDTO(int idUsuario, String nome, String email, String senha, int tipo, int idFuncionario, Date dataNascimento) {
+    super(idUsuario, nome, email, senha, tipo);
     this.idFuncionario = idFuncionario;
     this.dataNascimento = dataNascimento;
   }
