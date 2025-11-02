@@ -45,6 +45,7 @@ CREATE TABLE endereco (
   cep VARCHAR(8) NOT NULL,
   logradouro VARCHAR(200) NOT NULL,
   numero INT,
+  bairro VARCHAR(150) NOT NULL,
   cidade VARCHAR(200) NOT NULL,
   estado VARCHAR(200) NOT NULL,
   FOREIGN KEY (idCliente) REFERENCES cliente(id)

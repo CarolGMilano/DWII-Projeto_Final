@@ -2,6 +2,8 @@ package br.net.dwii.projeto.manutencao.entity;
 
 import java.sql.Date;
 
+import br.net.dwii.projeto.manutencao.model.Funcionario;
+
 public class Historico {
     private Long id;
     private long idSolicitacao;
