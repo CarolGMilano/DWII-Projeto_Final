@@ -1,4 +1,4 @@
-package br.net.dwii.projeto.manutencao.entity;
+package br.net.dwii.projeto.manutencao.model;
 
 public class Categoria {
     private Long id;

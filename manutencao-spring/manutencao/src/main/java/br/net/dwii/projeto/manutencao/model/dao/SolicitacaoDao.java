@@ -1,8 +1,8 @@
-package br.net.dwii.projeto.manutencao.dao;
+package br.net.dwii.projeto.manutencao.model.dao;
 
 import java.util.List;
 
-import br.net.dwii.projeto.manutencao.entity.Solicitacao;
+import br.net.dwii.projeto.manutencao.model.Solicitacao;
 
 public class SolicitacaoDao implements DaoI<Solicitacao> {
 

@@ -1,8 +1,8 @@
-package br.net.dwii.projeto.manutencao.dao;
+package br.net.dwii.projeto.manutencao.model.dao;
 
 import java.util.List;
 
-import br.net.dwii.projeto.manutencao.entity.Orcamento;
+import br.net.dwii.projeto.manutencao.model.Orcamento;
 
 public class OrcamentoDao implements DaoI<Orcamento> {
 
@@ -13,25 +13,21 @@ public class OrcamentoDao implements DaoI<Orcamento> {
 
     @Override
     public List<Orcamento> getAll() throws Exception {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAll'");
     }
 
     @Override
     public Orcamento getById(long id) throws Exception {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getById'");
     }
 
     @Override
     public void update(Orcamento objeto) throws Exception {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
     public void delete(Orcamento objeto) throws Exception {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
     

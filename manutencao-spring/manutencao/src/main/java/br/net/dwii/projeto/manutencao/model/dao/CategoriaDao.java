@@ -1,4 +1,4 @@
-package br.net.dwii.projeto.manutencao.dao;
+package br.net.dwii.projeto.manutencao.model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
-import br.net.dwii.projeto.manutencao.entity.Categoria;
+import br.net.dwii.projeto.manutencao.model.Categoria;
 
 public class CategoriaDao implements DaoI<Categoria> {
 
