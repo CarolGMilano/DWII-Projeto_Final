@@ -1,18 +1,16 @@
-package br.net.dwii.projeto.manutencao.entity;
+package br.net.dwii.projeto.manutencao.model;
 
 import java.sql.Date;
-
-import br.net.dwii.projeto.manutencao.model.Funcionario;
 
 public class Historico {
     private Long id;
     private long idSolicitacao;
     private Date dataHora;
-    private Number status;
+    private Integer status;
     private Funcionario funcionario;
     private Funcionario funcionarioDestino;
 
-    public Historico(Long id, long idSolicitacao, Date dataHora, Number status, Funcionario funcionario, Funcionario funcionarioDestino) {
+    public Historico(Long id, long idSolicitacao, Date dataHora, Integer status, Funcionario funcionario, Funcionario funcionarioDestino) {
         this.id = id;
         this.idSolicitacao = idSolicitacao;
         this.dataHora = dataHora;
@@ -45,11 +43,11 @@ public class Historico {
         this.dataHora = dataHora;
     }
 
-    public Number getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Number status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

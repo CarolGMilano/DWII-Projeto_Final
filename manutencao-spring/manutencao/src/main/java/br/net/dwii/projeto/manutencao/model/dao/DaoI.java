@@ -1,4 +1,4 @@
-package br.net.dwii.projeto.manutencao.dao;
+package br.net.dwii.projeto.manutencao.model.dao;
 
 import java.util.List;
 
