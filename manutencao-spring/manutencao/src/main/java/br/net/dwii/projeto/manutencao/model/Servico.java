@@ -4,6 +4,14 @@ public class Servico {
     private Long id;
     private String descricao;
     private Double valor;
+    private Long idOrcamento;
+
+    public Servico(Long id, String descricao, Double valor, Long idOrcamento) {
+        this.id = id;
+        this.descricao = descricao;
+        this.valor = valor;
+        this.idOrcamento = idOrcamento;
+    }
 
     public Long getId() {
         return id;
@@ -24,5 +32,13 @@ public class Servico {
     }
     public void setValor(Double valor) {
         this.valor = valor;
+    }
+
+    public Long getIdOrcamento() {
+        return idOrcamento;
+    }
+
+    public void setIdOrcamento(Long idOrcamento) {
+        this.idOrcamento = idOrcamento;
     }
 }

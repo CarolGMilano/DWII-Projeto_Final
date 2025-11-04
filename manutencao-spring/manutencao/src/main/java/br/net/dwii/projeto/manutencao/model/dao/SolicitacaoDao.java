@@ -3,6 +3,7 @@ package br.net.dwii.projeto.manutencao.model.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.net.dwii.projeto.manutencao.model.Categoria;
@@ -16,8 +17,8 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
 
     private ClienteDao clienteDao = new ClienteDao();
     private CategoriaDao categoriaDao = new CategoriaDao();
-    private HistoricoDao historicoDao = new HistoricoDao();
-    private OrcamentoDao orcamentoDao = new OrcamentoDao();
+    // private HistoricoDao historicoDao = new HistoricoDao();
+    // private OrcamentoDao orcamentoDao = new OrcamentoDao();
     private FuncionarioDao funcionarioDao = new FuncionarioDao();
 
     @Override
@@ -68,11 +69,11 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
 
            while (rs.next()) {
                Categoria categoria = categoriaDao.getById(rs.getLong("id_categoria"));
-               Cliente cliente = clienteDao.getById(rs.getLong("id_cliente"));
-               Funcionario funcionario = funcionarioDao.getById(rs.getLong("id_funcionario")); 
-               Orcamento orcamento = orcamentoDao.getById(rs.getLong("id_orcamento"));
+               Cliente cliente = clienteDao.consultar(rs.getInt("id_cliente"));
+               Funcionario funcionario = funcionarioDao.consultar(rs.getInt("id_funcionario")); 
+            //    Orcamento orcamento = orcamentoDao.getById(rs.getLong("id_orcamento"));
 
-               List<Historico> historicoList = historicoDao.getAll(); 
+            //    List<Historico> historicoList = historicoDao.getAll(); 
 
                Solicitacao solicitacao = new Solicitacao(
                    rs.getLong("id"),
@@ -82,9 +83,8 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
                    rs.getInt("status"), 
                    cliente,
                    funcionario,
-                   historicoList, 
-                   rs.getDate("data_abertura"),
-                   orcamento
+                //    historicoList, 
+                   rs.getDate("data_abertura")
                );
 
                solicitacoes.add(solicitacao);
@@ -122,10 +122,10 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
             rs = ps.executeQuery();
             if (rs.next()) {
                 Categoria categoria = categoriaDao.getById(rs.getLong("id_categoria"));
-                Cliente cliente = clienteDao.getById(rs.getLong("id_cliente"));
-                Funcionario funcionario = funcionarioDao.getById(rs.getLong("id_funcionario")); 
-                Orcamento orcamento = orcamentoDao.getById(rs.getLong("id_orcamento"));
-                List<Historico> historicoList = historicoDao.getAll(); 
+                Cliente cliente = clienteDao.consultar(rs.getInt("id_cliente"));
+                Funcionario funcionario = funcionarioDao.consultar(rs.getInt("id_funcionario")); 
+                // Orcamento orcamento = orcamentoDao.getById(rs.getLong("id_orcamento"));
+                // List<Historico> historicoList = historicoDao.getAll(); 
 
                 Solicitacao solicitacao = new Solicitacao(
                     rs.getLong("id"),
@@ -135,9 +135,8 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
                     rs.getInt("status"), 
                     cliente,
                     funcionario,
-                    historicoList, 
-                    rs.getDate("data_abertura"),
-                    orcamento
+                    // historicoList, 
+                    rs.getDate("data_abertura")
                 );
 
                 return solicitacao;

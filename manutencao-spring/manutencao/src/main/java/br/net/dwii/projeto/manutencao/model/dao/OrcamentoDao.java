@@ -1,5 +1,7 @@
 package br.net.dwii.projeto.manutencao.model.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import br.net.dwii.projeto.manutencao.model.Orcamento;
@@ -8,7 +10,14 @@ public class OrcamentoDao implements DaoI<Orcamento> {
 
     @Override
     public void add(Orcamento objeto) throws Exception {
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
+        Connection conn = null;
+        PreparedStatement ps = null;
+        String sql = "INSERT INTO orcamento (valor_total, descricao_servico, data_validade) VALUES (?, ?, ?)";
+
+        try {
+            
+        } catch (Exception e) {
+        }
     }
 
     @Override

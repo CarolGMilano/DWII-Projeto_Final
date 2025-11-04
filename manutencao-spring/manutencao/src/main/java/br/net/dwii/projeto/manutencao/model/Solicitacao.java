@@ -1,28 +1,29 @@
 package br.net.dwii.projeto.manutencao.model;
 
 import java.sql.Date;
+import java.util.List;
 
 public class Solicitacao {
     private Long id;
     private String equipamento;
     private Categoria categoria;
     private String descricao;
-    private Number status;
+    private Integer status;
     private Cliente cliente;
     private Funcionario funcionario;
-    private Historico historico[];
+    private List<Historico> historico;
     private Date dataAbertura;
     private Orcamento orcamento;
 
-    public Solicitacao(long id, String equipamento, Categoria categoria, String descricao, Number status,
-            Cliente cliente, Historico[] historico, Date dataAbertura) {
+    public Solicitacao(long id, String equipamento, Categoria categoria, String descricao, Integer status,
+            Cliente cliente, Funcionario funcionario, Date dataAbertura) {
         this.id = id;
         this.equipamento = equipamento;
         this.categoria = categoria;
         this.descricao = descricao;
         this.status = status;
         this.cliente = cliente;
-        this.historico = historico;
+        this.funcionario = funcionario;
         this.dataAbertura = dataAbertura;
     }
 
@@ -62,7 +63,7 @@ public class Solicitacao {
         return status;
     }
 
-    public void setStatus(Number status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -82,11 +83,11 @@ public class Solicitacao {
         this.funcionario = funcionario;
     }
 
-    public Historico[] getHistorico() {
+    public List<Historico> getHistorico() {
         return historico;
     }
 
-    public void setHistorico(Historico[] historico) {
+    public void setHistorico(List<Historico> historico) {
         this.historico = historico;
     }
 
