@@ -32,7 +32,7 @@ export class TelaCadastro {
   endereco: Endereco = {
     cep: '',
     logradouro: '',
-    numero: '',
+    numero: undefined,
     bairro: '',
     cidade: '',
     estado: '',
@@ -50,7 +50,7 @@ export class TelaCadastro {
 
   limpaEndereco() {
     this.endereco.logradouro = '';
-    this.endereco.numero = '';
+    this.endereco.numero = undefined;
     this.endereco.bairro = '';
     this.endereco.cidade = '';
     this.endereco.estado = '';

@@ -7,16 +7,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.model.Funcionario;
 
+@Repository
 public class FuncionarioDao {
   private final String inserir = "INSERT INTO funcionario (idUsuario, dataNascimento) VALUES (?, ?)";
   private final String alterar = "UPDATE funcionario SET dataNascimento = ? WHERE id = ?";
   private final String consultar = "SELECT f.id, f.idUsuario, f.dataNascimento FROM funcionario f JOIN usuario u ON f.idUsuario = u.id WHERE f.id = ? AND u.ativo = true";
   private final String listar = "SELECT f.id, f.idUsuario, f.dataNascimento FROM funcionario f JOIN usuario u ON f.idUsuario = u.id WHERE u.ativo = true";
 
-  public void adicionar(Funcionario funcionario) throws Exception {
+  public void inserir(Funcionario funcionario) throws Exception {
     try (
       Connection connection = ConnectionDB.getConnection();
       PreparedStatement psInserir = connection.prepareStatement(inserir, Statement.RETURN_GENERATED_KEYS);
@@ -36,7 +39,7 @@ public class FuncionarioDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'adicionar'");
+      throw new Exception("Erro ao inserir funcionário", e);
     } 
   }
 
@@ -52,7 +55,7 @@ public class FuncionarioDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'alterar'");
+      throw new Exception("Erro ao alterar funcionário", e);
     }
   }
 
@@ -79,7 +82,7 @@ public class FuncionarioDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'consultar'");
+      throw new Exception("Erro ao consultar funcionário", e);
     } 
   }
 
@@ -104,7 +107,7 @@ public class FuncionarioDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+      throw new Exception("Erro ao listar funcionários", e);
     } 
   }
 }

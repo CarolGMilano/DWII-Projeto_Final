@@ -5,12 +5,12 @@ public class Endereco {
   private int idCliente;
   private String cep;
   private String logradouro;
-  private String numero;
+  private int numero;
   private String bairro;
   private String cidade;
   private String estado;
 
-  public Endereco(int id, int idCliente, String cep, String logradouro, String numero, String bairro, String cidade, String estado) {
+  public Endereco(int id, int idCliente, String cep, String logradouro, int numero, String bairro, String cidade, String estado) {
     this.id = id;
     this.idCliente = idCliente;
     this.cep = cep;
@@ -33,8 +33,8 @@ public class Endereco {
   public String getLogradouro() { return logradouro; }
   public void setLogradouro(String logradouro) { this.logradouro = logradouro; }
 
-  public String getNumero() { return numero; }
-  public void setNumero(String numero) { this.numero = numero; }
+  public int getNumero() { return numero; }
+  public void setNumero(int numero) { this.numero = numero; }
 
   public String getBairro() { return bairro; }
   public void setBairro(String bairro) { this.bairro = bairro; }
