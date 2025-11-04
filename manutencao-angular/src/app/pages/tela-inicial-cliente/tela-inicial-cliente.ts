@@ -7,6 +7,8 @@ import { RouterModule } from '@angular/router';
 import { MOCK_DATA_SOLICITACOES } from '../../models/mock-data-solicitacoes';
 import { MatIconModule } from '@angular/material/icon';
 import { SolicitacaoService } from '../../services/solicitacao/solicitacao';
+import { NovaSolicitacao } from '../../components/nova-solicitacao/nova-solicitacao';
+import { SolicitacaoModel } from '../../models/Solicitacao';
 
 @Component({
   selector: 'app-tela-inicial-cliente',
@@ -17,7 +19,8 @@ import { SolicitacaoService } from '../../services/solicitacao/solicitacao';
 
 export class TelaInicialCliente implements OnInit {
   // solicitacoes = MOCK_DATA_SOLICITACOES;
-  solicitacoes: any[] = [];
+  solicitacoes: SolicitacaoModel[] = [];
+  mensagem: string = '';
   searchText: string = '';
   dateField?: string = '';
   selectedDate?: Date;
@@ -37,14 +40,21 @@ export class TelaInicialCliente implements OnInit {
     this.carregarSolicitacoes();
   }
 
-  carregarSolicitacoes() {
+  carregarSolicitacoes(): SolicitacaoModel[] {
     this.solicitacaoService.getSolicitacoes().subscribe({
-      next: (data) => {
-        this.solicitacoes = data;
+      next: (data: SolicitacaoModel[] | null) => {
+        if(data == null) {
+          this.solicitacoes = [];
+        }
+        else {
+          this.solicitacoes = data;
+        }
       },
       error: (err) => {
+        this.mensagem = "Erro ao carregar solicitações";
         console.error('Erro ao carregar solicitações', err);
       }
     });
+    return this.solicitacoes;
   }
 }
