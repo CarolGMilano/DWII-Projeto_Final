@@ -16,7 +16,7 @@ public class EnderecoDao {
   private final String inserir = "INSERT INTO endereco (idCliente, cep, logradouro, numero, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
   private final String consultar = "SELECT id, idCliente, cep, logradouro, numero, bairro, cidade, estado FROM endereco WHERE idCliente = ?";
 
-  public void adicionar(Endereco endereco) throws Exception {
+  public void inserir(Endereco endereco) throws Exception {
     try (
       Connection connection = ConnectionDB.getConnection();
       PreparedStatement psInserir = connection.prepareStatement(inserir, Statement.RETURN_GENERATED_KEYS);
@@ -24,7 +24,7 @@ public class EnderecoDao {
       psInserir.setInt(1, endereco.getIdCliente());
       psInserir.setString(2, endereco.getCep());
       psInserir.setString(3, endereco.getLogradouro());
-      psInserir.setString(4, endereco.getNumero());
+      psInserir.setInt(4, endereco.getNumero());
       psInserir.setString(5, endereco.getBairro());
       psInserir.setString(6, endereco.getCidade());
       psInserir.setString(7, endereco.getEstado());
@@ -41,7 +41,7 @@ public class EnderecoDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'adicionar'");
+      throw new Exception("Erro ao inserir endereço", e);
     } 
   }
   
@@ -59,7 +59,7 @@ public class EnderecoDao {
             rsConsultar.getInt("idCliente"),
             rsConsultar.getString("cep"),
             rsConsultar.getString("logradouro"),
-            rsConsultar.getString("numero"),
+            rsConsultar.getInt("numero"),
             rsConsultar.getString("bairro"),
             rsConsultar.getString("cidade"),
             rsConsultar.getString("estado")
@@ -73,7 +73,7 @@ public class EnderecoDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'consultar'");
+      throw new Exception("Erro ao consultar endereço", e);
     } 
   }
 }

@@ -7,17 +7,21 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.model.Usuario;
 
+@Repository
 public class UsuarioDao {
-  private final String inserir = "INSERT INTO usuario (nome, email, senha, idTipo, ativo) VALUES (?, ?, ?, ?, ?)";
+  private final String inserir = "INSERT INTO usuario (nome, email, senha, salt, idTipo, ativo) VALUES (?, ?, ?, ?, ?, ?)";
   private final String alterar = "UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE id = ?";
   private final String consultar = "SELECT id, nome, email, idTipo, ativo FROM usuario WHERE id = ? AND ativo = true";
+  private final String consultarPorEmail = "SELECT * FROM usuario WHERE email = ? AND ativo = true";
   private final String listar = "SELECT id, nome, email, senha, idTipo, ativo FROM usuario WHERE ativo = true AND idTipo = ?";
   private final String deletar = "UPDATE usuario SET ativo = false WHERE id = ?";
 
-  public void adicionar(Usuario usuario) throws Exception {
+  public void inserir(Usuario usuario) throws Exception {
     try (
       Connection connection = ConnectionDB.getConnection();
       PreparedStatement psInserir = connection.prepareStatement(inserir, Statement.RETURN_GENERATED_KEYS);
@@ -25,8 +29,9 @@ public class UsuarioDao {
       psInserir.setString(1, usuario.getNome());
       psInserir.setString(2, usuario.getEmail());
       psInserir.setString(3, usuario.getSenha());
-      psInserir.setInt(4, usuario.getTipo());
-      psInserir.setBoolean(5, usuario.getAtivo());
+      psInserir.setString(4, usuario.getSalt());
+      psInserir.setInt(5, usuario.getTipo());
+      psInserir.setBoolean(6, usuario.getAtivo());
 
       psInserir.executeUpdate();
 
@@ -40,7 +45,7 @@ public class UsuarioDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'adicionar'");
+      throw new Exception("Erro ao inserir usuário", e);
     } 
   }
 
@@ -58,7 +63,7 @@ public class UsuarioDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'alterar'");
+      throw new Exception("Erro ao alterar usuário", e);
     }
   }
 
@@ -87,16 +92,45 @@ public class UsuarioDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'consultar'");
+      throw new Exception("Erro ao consultar usuário", e);
     } 
   }
 
-  public List<Usuario> listar(int tipo) throws Exception {    
+  public Usuario consultarPorEmail(String usuarioEmail) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psConsultarPorEmail = connection.prepareStatement(consultarPorEmail);
+    ) {
+      psConsultarPorEmail.setString(1, usuarioEmail);
+
+      try(ResultSet rsConsultar = psConsultarPorEmail.executeQuery()){
+        if (rsConsultar.next()) {
+          Usuario usuario = new Usuario(
+            rsConsultar.getInt("id"),
+            rsConsultar.getString("nome"),
+            rsConsultar.getString("email"),
+            rsConsultar.getInt("idTipo"),
+            rsConsultar.getBoolean("ativo")
+          );
+
+          return usuario;
+        } else {
+          return null;
+        }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao consultar usuário por e-mail", e);
+    } 
+  }
+
+  public List<Usuario> listar() throws Exception {    
     try(
       Connection connection = ConnectionDB.getConnection();
       PreparedStatement psListar = connection.prepareStatement(listar);
     ) {
-      psListar.setInt(1, tipo);
+      //psListar.setInt(1, tipo);
 
       try(ResultSet rsListar = psListar.executeQuery()){
         List<Usuario> usuarios = new ArrayList<>();
@@ -117,7 +151,7 @@ public class UsuarioDao {
     }
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'listar'");
+      throw new Exception("Erro ao listar usuários", e);
     } 
   }
 
@@ -132,7 +166,7 @@ public class UsuarioDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new UnsupportedOperationException("Unimplemented method 'deletar'");
+      throw new Exception("Erro ao deletar usuário", e);
     }
   }
 }

@@ -19,6 +19,7 @@ CREATE TABLE usuario (
   nome VARCHAR(150) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   senha VARCHAR(150) NOT NULL,
+  salt VARCHAR(150) NOT NULL,
   idTipo INT NOT NULL,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
   FOREIGN KEY (idTipo) REFERENCES tipoUsuario(id)
@@ -108,3 +109,17 @@ CREATE TABLE servico (
   preco NUMERIC(10, 2) NOT NULL,
   FOREIGN KEY (idOrcamento) REFERENCES orcamento(id)
 );
+
+INSERT INTO tipoUsuario (id, descricao) VALUES 
+(1, 'Cliente'),
+(2, 'Funcionário');
+
+INSERT INTO statusSolicitacao (id, descricao) VALUES
+(1, 'Aberta'),
+(2, 'Orçada'),
+(3, 'Aprovada'),
+(4, 'Rejeitada'),
+(5, 'Redirecionada'),
+(6, 'Arrumada'),
+(7, 'Paga'),
+(8, 'Finalizada');

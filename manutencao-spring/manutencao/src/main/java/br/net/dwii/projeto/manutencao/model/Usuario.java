@@ -5,14 +5,16 @@ public class Usuario {
 	private String nome;
 	private String email;
 	private String senha;
+	private String salt;
 	private int tipo;
 	private Boolean ativo;
 
-	public Usuario (int id, String nome, String email, String senha, int tipo, Boolean ativo) {
+	public Usuario (int id, String nome, String email, String senha, String salt, int tipo, Boolean ativo) {
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
+		this.salt = salt;
 		this.tipo = tipo;
 		this.ativo = ativo;
 	}
@@ -37,6 +39,9 @@ public class Usuario {
 
 	public String getSenha() { return senha; }
 	public void setSenha(String senha) { this.senha = senha; }
+
+	public String getSalt() { return salt; }
+	public void setSalt(String salt) { this.salt = salt; }
 
 	public int getTipo() { return tipo; }
 	public void setTipo(int tipo) { this.tipo = tipo; }
