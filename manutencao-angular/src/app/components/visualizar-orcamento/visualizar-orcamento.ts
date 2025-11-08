@@ -27,11 +27,11 @@ export class VisualizarOrcamento implements OnInit{
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
-
+/*
     this.dadosService.getSolicitacao(this.solicitacao).subscribe({
       next: (res) => this.solicitacao = res,
       error: (err) => console.error('Erro ao buscar solicitação:', err)
-    });
+    });*/
   }
 
   showModal(modal: HTMLDialogElement) {
@@ -42,7 +42,7 @@ export class VisualizarOrcamento implements OnInit{
     modal.close();
     this.router.navigate(['/visualizar-orcamento/:id']);
   }
-
+/*
   //finalizar ainda justificativa de rej por conta do back
   enviarRejeicao(modal: HTMLDialogElement, form: NgForm) {
     if (!this.justificativa.trim()) {
@@ -66,5 +66,5 @@ export class VisualizarOrcamento implements OnInit{
       },
       error: (err) => console.error('Erro ao aprovar solicitação:', err)
     });
-  }
+  }*/
 }

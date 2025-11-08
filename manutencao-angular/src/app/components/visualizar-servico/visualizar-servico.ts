@@ -32,7 +32,7 @@ export class VisualizarServico  implements OnInit{
     //   next: (res) => this.historico = res,
     //   error: (err) => console.error('Erro ao buscar histórico:', err)
     // });
-
+/*
     this.dadosService.getSolicitacao({ id: id } as SolicitacaoModel).subscribe({
       next: (res) => this.solicitacao = res,
       error: (err) => console.error('Erro ao buscar solicitação:', err)
@@ -42,6 +42,6 @@ export class VisualizarServico  implements OnInit{
       next: (res) => this.historico = res,
       error: (err) => console.error('Erro ao buscar histórico:', err)
     });
-
+*/
   }
 }

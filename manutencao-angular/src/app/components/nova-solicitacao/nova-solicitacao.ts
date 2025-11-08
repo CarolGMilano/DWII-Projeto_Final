@@ -58,7 +58,7 @@ export class NovaSolicitacao implements OnInit {
       descricao: rawValue.descricao ?? '',
       estado: EstadoSolicitacao.ABERTA
     };
-
+/*
     this.solicitacaoService.postSolicitacao(novaSolicitacao).subscribe({
       next: (resposta) => {
         console.log('Solicitação criada com sucesso:', resposta);
@@ -71,6 +71,6 @@ export class NovaSolicitacao implements OnInit {
         alert('Erro ao criar solicitação. Tente novamente.');
       },
     });
-
+*/
   }
 }
