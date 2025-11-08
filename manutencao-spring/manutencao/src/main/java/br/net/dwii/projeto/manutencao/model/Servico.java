@@ -1,44 +1,27 @@
 package br.net.dwii.projeto.manutencao.model;
 
 public class Servico {
-    private Long id;
-    private String descricao;
-    private Double valor;
-    private Long idOrcamento;
+  private int id;
+  private int idOrcamento;
+  private String descricao;
+  private double preco;
 
-    public Servico(Long id, String descricao, Double valor, Long idOrcamento) {
-        this.id = id;
-        this.descricao = descricao;
-        this.valor = valor;
-        this.idOrcamento = idOrcamento;
-    }
+  public Servico(int id, int idOrcamento, String descricao, double preco) {
+    this.id = id;
+    this.idOrcamento = idOrcamento;
+    this.descricao = descricao;
+    this.preco = preco;
+  }
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public int getId() { return id; }
+  public void setId(int id) { this.id = id; }
 
-    public String getDescricao() {
-        return descricao;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+  public int getIdOrcamento() { return idOrcamento; }
+  public void setIdOrcamento(int idOrcamento) { this.idOrcamento = idOrcamento; }
 
-    public Double getValor() {
-        return valor;
-    }
-    public void setValor(Double valor) {
-        this.valor = valor;
-    }
+  public String getDescricao() { return descricao; }
+  public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public Long getIdOrcamento() {
-        return idOrcamento;
-    }
-
-    public void setIdOrcamento(Long idOrcamento) {
-        this.idOrcamento = idOrcamento;
-    }
+  public double getPreco() { return preco; }
+  public void setPreco(double preco) { this.preco = preco; }
 }

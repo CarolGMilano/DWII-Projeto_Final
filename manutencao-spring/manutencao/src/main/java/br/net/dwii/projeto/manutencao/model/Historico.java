@@ -3,67 +3,38 @@ package br.net.dwii.projeto.manutencao.model;
 import java.sql.Date;
 
 public class Historico {
-    private int id;
-    private int idSolicitacao;
-    private Date dataHora;
-    private int status;
-    private Funcionario funcionario;
-    private Funcionario funcionarioDestino;
+  private int id;
+  private int idSolicitacao;
+  private Date dataHora;
+  private int idStatus;
+  private int idFuncionario;
+  private int idFuncionarioDestino;
+  
+  public Historico(int id, int idSolicitacao, Date dataHora, int idStatus, int idFuncionario,
+      int idFuncionarioDestino) {
+    this.id = id;
+    this.idSolicitacao = idSolicitacao;
+    this.dataHora = dataHora;
+    this.idStatus = idStatus;
+    this.idFuncionario = idFuncionario;
+    this.idFuncionarioDestino = idFuncionarioDestino;
+  }
 
-    public Historico(int id, int idSolicitacao, Date dataHora, int status, Funcionario funcionario, Funcionario funcionarioDestino) {
-        this.id = id;
-        this.idSolicitacao = idSolicitacao;
-        this.dataHora = dataHora;
-        this.status = status;
-        this.funcionario = funcionario;
-        this.funcionarioDestino = funcionarioDestino;
-    }
+  public int getId() { return id; }
+  public void setId(int id) { this.id = id; }
 
-    public int getId() {
-        return id;
-    }
+  public int getIdSolicitacao() { return idSolicitacao; }
+  public void setIdSolicitacao(int idSolicitacao) { this.idSolicitacao = idSolicitacao; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public Date getDataHora() { return dataHora; }
+  public void setDataHora(Date dataHora) { this.dataHora = dataHora; }
 
-    public int getIdSolicitacao() {
-        return idSolicitacao;
-    }
+  public int getIdStatus() { return idStatus; }
+  public void setIdStatus(int idStatus) { this.idStatus = idStatus; }
 
-    public void setIdSolicitacao(int idSolicitacao) {
-        this.idSolicitacao = idSolicitacao;
-    }
+  public int getIdFuncionario() { return idFuncionario; }
+  public void setIdFuncionario(int idFuncionario) { this.idFuncionario = idFuncionario; }
 
-    public Date getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(Date dataHora) {
-        this.dataHora = dataHora;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public Funcionario getFuncionario() {
-        return funcionario;
-    }
-
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
-    }
-
-    public Funcionario getFuncionarioDestino() {
-        return funcionarioDestino;
-    }
-
-    public void setFuncionarioDestino(Funcionario funcionarioDestino) {
-        this.funcionarioDestino = funcionarioDestino;
-    }
+  public int getIdFuncionarioDestino() { return idFuncionarioDestino; }
+  public void setIdFuncionarioDestino(int idFuncionarioDestino) { this.idFuncionarioDestino = idFuncionarioDestino; }
 }

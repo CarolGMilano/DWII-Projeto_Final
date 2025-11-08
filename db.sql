@@ -86,7 +86,6 @@ CREATE TABLE historico (
   idStatus INT NOT NULL,
   idFuncionario INT NOT NULL,
   idFuncionarioDestino INT,
-  observacao VARCHAR(255) NOT NULL,
   FOREIGN KEY (idSolicitacao) REFERENCES solicitacao(id), 
   FOREIGN KEY (idStatus) REFERENCES statusSolicitacao(id), 
   FOREIGN KEY (idFuncionario) REFERENCES funcionario(id),

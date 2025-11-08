@@ -23,7 +23,7 @@ public class CategoriaDao implements DaoI<Categoria> {
         try {
             conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, objeto.getNome());
+            ps.setString(1, objeto.getDescricao());
             ps.executeUpdate();
             ps.close();
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class CategoriaDao implements DaoI<Categoria> {
         try {
             // conn = Conexao.getConexao();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, objeto.getNome());
+            ps.setString(1, objeto.getDescricao());
             ps.setInt(2, objeto.getId());
             ps.executeUpdate();
             ps.close();
