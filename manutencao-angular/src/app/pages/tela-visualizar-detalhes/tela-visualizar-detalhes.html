@@ -142,19 +142,19 @@
                 </p>
 
                 @if(historico.funcionario && !historico.funcionarioDestino){
-                  <p class="text-gray-700 text-xs pt-2">Sob responsabilidade de <span class="font-semibold">{{ historico.funcionario.usuario.nome }}</span></p>
+                  <p class="text-gray-700 text-xs pt-2">Sob responsabilidade de <span class="font-semibold">{{ historico.funcionario.nome }}</span></p>
                 }
 
                 @if(historico.funcionarioDestino){
                   <div class="flex justify-center items-center text-sm flex items-center gap-2 pt-2">
                     <div class="flex flex-col gap-1">
-                      <span class="text-sm font-light">{{ historico.funcionario?.usuario?.nome }}</span>
+                      <span class="text-sm font-light">{{ historico.funcionario?.nome }}</span>
                       <span class="text-xs font-semibold">Origem</span>
                     </div>
                     
                     <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="currentColor" [style.color]=" getStatusCor(historico.status) "><path d="M504-480 348-636q-11-11-11-28t11-28q11-11 28-11t28 11l184 184q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L404-268q-11 11-28 11t-28-11q-11-11-11-28t11-28l156-156Z"/></svg>
                     <div class="flex flex-col gap-1">
-                      <span class="text-sm font-light">{{ historico.funcionarioDestino.usuario.nome }}</span>
+                      <span class="text-sm font-light">{{ historico.funcionarioDestino.nome }}</span>
                       <span class="text-xs font-semibold">Destino</span>
                     </div>
                   </div>
@@ -231,7 +231,7 @@
                   
                   @for(funcionario of funcionarios; track funcionario.id){  
                     @if(funcionario.id !== funcionarioLogado?.id){
-                      <option [value]="funcionario.id">{{ funcionario.usuario.nome }}</option>
+                      <option [value]="funcionario.id">{{ funcionario.nome }}</option>
                     }
                   }
                 </select>

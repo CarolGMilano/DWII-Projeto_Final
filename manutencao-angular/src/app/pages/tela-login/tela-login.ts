@@ -32,12 +32,16 @@ export class TelaLogin implements OnInit {
   mensagem!: string;
 
   ngOnInit(): void {
-    if(this.loginService.usuarioLogado) {
-      if (this.loginService.usuarioLogado.tipo === TipoUsuario.CLIENTE) {
-          this.router.navigate(['/tela-inicial-cliente']);
-      } else if (this.loginService.usuarioLogado.tipo === TipoUsuario.FUNCIONARIO) {
-        this.router.navigate(['/tela-inicial-funcionario']);
-      } 
+    const usuario = this.loginService.usuarioLogado;
+
+    if(usuario) {
+      const rota = (
+        usuario.tipo === TipoUsuario.CLIENTE 
+          ? '/tela-inicial-cliente' 
+          : '/tela-inicial-funcionario'
+      );
+    
+      this.router.navigate([rota]);
     } else {
       this.route.queryParams.subscribe(params => {
         this.mensagem = params['error'];
@@ -54,23 +58,38 @@ export class TelaLogin implements OnInit {
 
     this.loading = true;
 
-    this.loginService.login(this.login).subscribe(usuario => {
-      if (usuario) {
-        this.loginService.usuarioLogado = usuario;
+    this.loginService.login(this.login).subscribe({
+      next: (usuario) => {
+        if(usuario != null) {
+          this.loginService.usuarioLogado = usuario;
+          this.loading = false;
+
+          if (usuario.tipo === TipoUsuario.CLIENTE) {
+            this.router.navigate(['/tela-inicial-cliente']);
+            this.usuarioStatus = UsuarioStatus.Valido;
+          } else if (usuario.tipo === TipoUsuario.FUNCIONARIO) {
+            this.router.navigate(['/tela-inicial-funcionario']);
+            this.usuarioStatus = UsuarioStatus.Valido;
+          }
+        }
+      },
+      error: (erro) => {
         this.loading = false;
 
-        if (usuario.tipo === TipoUsuario.CLIENTE) {
-          this.router.navigate(['/tela-inicial-cliente']);
-          this.usuarioStatus = UsuarioStatus.Valido;
-        } else if (usuario.tipo === TipoUsuario.FUNCIONARIO) {
-          this.router.navigate(['/tela-inicial-funcionario']);
-          this.usuarioStatus = UsuarioStatus.Valido;
+        if (erro.status === 401 || erro.status === 404) {
+          this.mensagem = erro.error;
+          this.usuarioStatus = UsuarioStatus.Invalido;
+        } else if (erro.status === 500) {
+          this.mensagem = 'Erro interno no servidor.';
+          this.usuarioStatus = UsuarioStatus.Invalido;
+        } else {
+          this.mensagem = 'Erro inesperado ao efetuar login.';
+          this.usuarioStatus = UsuarioStatus.Invalido;
         }
-      } else {
-        this.mensagem = "Usuário/Senha inválidos."
-        this.usuarioStatus = UsuarioStatus.Invalido;
+
+        alert(this.mensagem);
       }
-    })
+    });
 
     this.loading = false;
   }
