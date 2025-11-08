@@ -10,14 +10,13 @@ public class Orcamento {
     public boolean aprovado;
     public String msgRejeicao;
     
-    public Orcamento(int id, int idSolicitacao, List<Servico> servico, Double valorTotal, boolean aprovado,
-            String msgRejeicao) {
+    public Orcamento(int id, int idSolicitacao, List<Servico> servico, Double valorTotal, boolean aprovado) {
         this.id = id;
         this.idSolicitacao = idSolicitacao;
         this.servico = servico;
         this.valorTotal = valorTotal;
         this.aprovado = aprovado;
-        this.msgRejeicao = msgRejeicao;
+        this.msgRejeicao = null;
     }
 
     public int getId() {

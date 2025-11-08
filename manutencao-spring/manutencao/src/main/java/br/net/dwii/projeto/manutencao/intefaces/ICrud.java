@@ -2,22 +2,22 @@ package br.net.dwii.projeto.manutencao.intefaces;
 
 import java.util.List;
 
-public interface ICrud<T, Id, Texto> {
+public interface ICrud<T> {
     
-    T buscarPorId(Id id);
+    T buscarPorId(int id);
 
-    T buscarPorNome(Texto nome);
+    T buscarPorNome(String nome);
 
-    boolean existeId(Id id);
+    boolean existeId(int id);
 
-    boolean existeNome(Texto nome);
+    boolean existeNome(String nome);
 
-    T salvar(T entidade);
+    T salvar(T entidade) throws Exception;
 
     List<T> listar();
 
-    boolean deletar(Id id);
+    boolean deletar(int id);
 
-    T atualizar(T entidade, Id id);
+    T atualizar(T entidade, int id);
 
 }

@@ -8,12 +8,12 @@ import br.net.dwii.projeto.manutencao.intefaces.ICrud;
 import br.net.dwii.projeto.manutencao.model.Categoria;
 import br.net.dwii.projeto.manutencao.model.dao.CategoriaDao;
 
-public class CategoriaService implements ICrud<Categoria, Integer, String>{
+public class CategoriaService implements ICrud<Categoria>{
     @Autowired
     private CategoriaDao categoriaDao;
 
    @Override
-    public Categoria buscarPorId(Integer id) {
+    public Categoria buscarPorId(int id) {
        try {
             return categoriaDao.getById(id);
         } catch (Exception e) {
@@ -38,7 +38,7 @@ public class CategoriaService implements ICrud<Categoria, Integer, String>{
     }
 
     @Override
-    public boolean existeId(Integer id) {
+    public boolean existeId(int id) {
         return buscarPorId(id) != null;
     }
 
@@ -69,7 +69,7 @@ public class CategoriaService implements ICrud<Categoria, Integer, String>{
     }
 
     @Override
-    public Categoria atualizar(Categoria categoria, Integer id) {
+    public Categoria atualizar(Categoria categoria, int id) {
        try {
             Categoria existente = categoriaDao.getById(id);
             if (existente != null) {
@@ -84,7 +84,7 @@ public class CategoriaService implements ICrud<Categoria, Integer, String>{
     }
 
     @Override
-    public boolean deletar(Integer id) {
+    public boolean deletar(int id) {
         Categoria categoria = buscarPorId(id);
         try {
             categoriaDao.delete(categoria);
