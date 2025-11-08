@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.net.dwii.projeto.manutencao.intefaces.ICrud;
 import br.net.dwii.projeto.manutencao.model.Categoria;
@@ -17,6 +18,7 @@ import br.net.dwii.projeto.manutencao.model.dao.FuncionarioDao;
 import br.net.dwii.projeto.manutencao.model.dao.OrcamentoDao;
 import br.net.dwii.projeto.manutencao.model.dao.SolicitacaoDao;
 
+@Service
 public class SolicitacaoService implements ICrud<Solicitacao>{
     @Autowired
     private SolicitacaoDao solicitacaoDao;

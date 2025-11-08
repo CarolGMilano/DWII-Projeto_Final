@@ -1,9 +1,11 @@
-package br.net.dwii.projeto.manutencao.controller;
+package br.net.dwii.projeto.manutencao.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.net.dwii.projeto.manutencao.model.dto.LoginDTO;
@@ -11,8 +13,6 @@ import br.net.dwii.projeto.manutencao.model.dto.UsuarioLogadoDTO;
 import br.net.dwii.projeto.manutencao.model.exception.SenhaIncorretaException;
 import br.net.dwii.projeto.manutencao.model.exception.UsuarioNaoEncontradoException;
 import br.net.dwii.projeto.manutencao.service.UsuarioService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @CrossOrigin

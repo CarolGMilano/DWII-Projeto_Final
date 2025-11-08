@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 import br.net.dwii.projeto.manutencao.model.Cliente;
 import br.net.dwii.projeto.manutencao.model.Endereco;
 import br.net.dwii.projeto.manutencao.model.Usuario;
+import br.net.dwii.projeto.manutencao.model.dao.ClienteDao;
 import br.net.dwii.projeto.manutencao.model.dto.ClienteDTO;
 import br.net.dwii.projeto.manutencao.model.dto.ClienteResumoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.EnderecoDTO;
 import br.net.dwii.projeto.manutencao.model.exception.ClienteNaoEncontradoException;
 import br.net.dwii.projeto.manutencao.model.exception.CpfDuplicadoException;
-import br.net.dwii.projeto.manutencao.model.dao.ClienteDao;
 
 @Service
 public class ClienteService {

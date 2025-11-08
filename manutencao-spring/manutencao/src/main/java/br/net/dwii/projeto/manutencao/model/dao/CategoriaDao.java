@@ -6,9 +6,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.model.Categoria;
 
+@Repository
 public class CategoriaDao implements DaoI<Categoria> {
 
     @Override

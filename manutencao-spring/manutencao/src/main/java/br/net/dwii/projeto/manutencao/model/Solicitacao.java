@@ -15,7 +15,7 @@ public class Solicitacao {
     private Date dataAbertura;
     private Orcamento orcamento;
 
-    public Solicitacao(int id, String equipamento, Categoria categoria, String descricao, Integer status,
+    public Solicitacao(int id, String equipamento, Categoria categoria, String descricao, int status,
             Cliente cliente, Funcionario funcionario, Date dataAbertura) {
         this.id = id;
         this.equipamento = equipamento;

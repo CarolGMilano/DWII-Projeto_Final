@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SolicitacaoService } from '../../services/solicitacao/solicitacao';
 import { NovaSolicitacao } from '../../components/nova-solicitacao/nova-solicitacao';
 import { SolicitacaoModel } from '../../models/Solicitacao';
+import { Solicitacao } from '../../shared';
 
 @Component({
   selector: 'app-tela-inicial-cliente',
@@ -19,7 +20,7 @@ import { SolicitacaoModel } from '../../models/Solicitacao';
 
 export class TelaInicialCliente implements OnInit {
   // solicitacoes = MOCK_DATA_SOLICITACOES;
-  solicitacoes: SolicitacaoModel[] = [];
+  solicitacoes: Solicitacao[] = [];
   mensagem: string = '';
   searchText: string = '';
   dateField?: string = '';
@@ -40,9 +41,9 @@ export class TelaInicialCliente implements OnInit {
     this.carregarSolicitacoes();
   }
 
-  carregarSolicitacoes(): SolicitacaoModel[] {
+  carregarSolicitacoes(): Solicitacao[] {
     this.solicitacaoService.getSolicitacoes().subscribe({
-      next: (data: SolicitacaoModel[] | null) => {
+      next: (data: Solicitacao[] | null) => {
         if(data == null) {
           this.solicitacoes = [];
         }

@@ -7,6 +7,7 @@ import { Categoria } from '../../models/Categoria';
 import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
 import { HistoricoSolicitacao } from '../../models/HistoricoSolicitacao';
 import { NovaSolicitacaoModel } from '../../models/NovaSolicitacao';
+import { Solicitacao } from '../../shared';
 
 @Injectable({
   providedIn: 'root'
@@ -55,11 +56,11 @@ export class SolicitacaoService {
     );
   }
 
-  getSolicitacoes(): Observable<SolicitacaoModel[]> {
-    return this.http.get<SolicitacaoModel[]>(
+  getSolicitacoes(): Observable<Solicitacao[]> {
+    return this.http.get<Solicitacao[]>(
       this.BASE_URL, 
       this.httpOptions).pipe(
-        map((resp: HttpResponse<SolicitacaoModel[]>) => {
+        map((resp: HttpResponse<Solicitacao[]>) => {
           return resp.body ?? [];
       }),
       catchError((e, c) => {
@@ -69,11 +70,11 @@ export class SolicitacaoService {
     );
   }
 
-  getSolicitacao(solicitacao: SolicitacaoModel): Observable<SolicitacaoModel  | null> {
-    return this.http.get<SolicitacaoModel>(
+  getSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao  | null> {
+    return this.http.get<Solicitacao>(
       this.BASE_URL + "/" + solicitacao.id,
       this.httpOptions).pipe(
-        map((resp: HttpResponse<SolicitacaoModel>) => {
+        map((resp: HttpResponse<Solicitacao>) => {
           if (resp.status === 200 || resp.status === 201) {
             return resp.body;
           } else {
@@ -113,12 +114,12 @@ export class SolicitacaoService {
       );
   }
 
-  atualizarStatus(solicitacao: SolicitacaoModel, novoEstado: EstadoSolicitacao, motivo?: string): Observable<SolicitacaoModel  | null> {
-    return this.http.put<SolicitacaoModel>(
+  atualizarStatus(solicitacao: Solicitacao, novoEstado: EstadoSolicitacao, motivo?: string): Observable<Solicitacao  | null> {
+    return this.http.put<Solicitacao>(
       this.BASE_URL + "/" + solicitacao.id + "/estado",
       { estado: novoEstado, rejOrcamento: motivo },
       this.httpOptions).pipe(
-        map((resp: HttpResponse<SolicitacaoModel>) => {
+        map((resp: HttpResponse<Solicitacao>) => {
           if (resp.status === 200 || resp.status === 201) {
             return resp.body;
           } else {
@@ -136,12 +137,12 @@ export class SolicitacaoService {
       );
   }
 
-  pagarServico(solicitacao: SolicitacaoModel): Observable<SolicitacaoModel  | null> {
-    return this.http.put<SolicitacaoModel>(
+  pagarServico(solicitacao: Solicitacao): Observable<Solicitacao  | null> {
+    return this.http.put<Solicitacao>(
       this.BASE_URL + "/" + solicitacao.id,
       { pago: true },
       this.httpOptions).pipe(
-        map((resp: HttpResponse<SolicitacaoModel>) => {
+        map((resp: HttpResponse<Solicitacao>) => {
           if (resp.status === 200 || resp.status === 201) {
             return resp.body;
           } else {
@@ -159,13 +160,13 @@ export class SolicitacaoService {
       );
   }
 
-  enviarOrcamento(solicitacao: SolicitacaoModel, precoTotal: number, descricaoPreco: { descricao: string; preco: number }): Observable<SolicitacaoModel  | null> {
+  enviarOrcamento(solicitacao: Solicitacao, precoTotal: number, descricaoPreco: { descricao: string; preco: number }): Observable<Solicitacao  | null> {
     this.atualizarStatus(solicitacao, EstadoSolicitacao.ORCADA);
-    return this.http.put<SolicitacaoModel>(
+    return this.http.put<Solicitacao>(
       this.BASE_URL + "/" + solicitacao.id + "/orcamento",
       { precoTotal: precoTotal, descricaoPreco: descricaoPreco },
       this.httpOptions).pipe(
-        map((resp: HttpResponse<SolicitacaoModel>) => {
+        map((resp: HttpResponse<Solicitacao>) => {
           if (resp.status === 200 || resp.status === 201) {
             return resp.body;
           } else {

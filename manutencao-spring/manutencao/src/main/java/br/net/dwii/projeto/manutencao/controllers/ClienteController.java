@@ -1,13 +1,11 @@
-package br.net.dwii.projeto.manutencao.controller;
-import br.net.dwii.projeto.manutencao.service.ClienteService;
-
+package br.net.dwii.projeto.manutencao.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +15,7 @@ import br.net.dwii.projeto.manutencao.model.dto.ClienteResumoDTO;
 import br.net.dwii.projeto.manutencao.model.exception.ClienteNaoEncontradoException;
 import br.net.dwii.projeto.manutencao.model.exception.CpfDuplicadoException;
 import br.net.dwii.projeto.manutencao.model.exception.EmailDuplicadoException;
+import br.net.dwii.projeto.manutencao.service.ClienteService;
 
 @CrossOrigin
 @RestController

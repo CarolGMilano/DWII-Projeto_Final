@@ -3,11 +3,13 @@ package br.net.dwii.projeto.manutencao.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.net.dwii.projeto.manutencao.intefaces.ICrud;
 import br.net.dwii.projeto.manutencao.model.Categoria;
 import br.net.dwii.projeto.manutencao.model.dao.CategoriaDao;
 
+@Service
 public class CategoriaService implements ICrud<Categoria>{
     @Autowired
     private CategoriaDao categoriaDao;
