@@ -3,36 +3,35 @@ package br.net.dwii.projeto.manutencao.model;
 import java.util.List;
 
 public class Orcamento {
-    public Long id;
-    public long idSolicitacao;
+    public int id;
+    public int idSolicitacao;
     public List<Servico> servico;
     public Double valorTotal;
     public boolean aprovado;
     public String msgRejeicao;
     
-    public Orcamento(long id, long idSolicitacao, List<Servico> servico, Double valorTotal, boolean aprovado,
-            String msgRejeicao) {
+    public Orcamento(int id, int idSolicitacao, List<Servico> servico, Double valorTotal, boolean aprovado) {
         this.id = id;
         this.idSolicitacao = idSolicitacao;
         this.servico = servico;
         this.valorTotal = valorTotal;
         this.aprovado = aprovado;
-        this.msgRejeicao = msgRejeicao;
+        this.msgRejeicao = null;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public long getIdSolicitacao() {
+    public int getIdSolicitacao() {
         return idSolicitacao;
     }
 
-    public void setIdSolicitacao(long idSolicitacao) {
+    public void setIdSolicitacao(int idSolicitacao) {
         this.idSolicitacao = idSolicitacao;
     }
 

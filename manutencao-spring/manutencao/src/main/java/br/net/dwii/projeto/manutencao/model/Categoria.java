@@ -1,18 +1,18 @@
 package br.net.dwii.projeto.manutencao.model;
 
 public class Categoria {
-    private Long id;
+    private Integer id;
     private String nome;
 
-    public Categoria(long id, String nome) {
+    public Categoria(Integer id, String nome) {
         this.id = id;
         this.nome = nome;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

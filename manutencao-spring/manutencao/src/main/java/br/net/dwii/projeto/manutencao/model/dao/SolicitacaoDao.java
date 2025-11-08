@@ -68,15 +68,15 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
            List<Solicitacao> solicitacoes = new ArrayList();
 
            while (rs.next()) {
-               Categoria categoria = categoriaDao.getById(rs.getLong("id_categoria"));
+               Categoria categoria = categoriaDao.getById(rs.getInt("id_categoria"));
                Cliente cliente = clienteDao.consultar(rs.getInt("id_cliente"));
                Funcionario funcionario = funcionarioDao.consultar(rs.getInt("id_funcionario")); 
-            //    Orcamento orcamento = orcamentoDao.getById(rs.getLong("id_orcamento"));
+            //    Orcamento orcamento = orcamentoDao.getById(rs.getInt("id_orcamento"));
 
             //    List<Historico> historicoList = historicoDao.getAll(); 
 
                Solicitacao solicitacao = new Solicitacao(
-                   rs.getLong("id"),
+                   rs.getInt("id"),
                    rs.getString("equipamento"),
                    categoria,
                    rs.getString("descricao"),
@@ -109,7 +109,7 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
     }
 
     @Override
-    public Solicitacao getById(long id) throws Exception {
+    public Solicitacao getById(int id) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -121,14 +121,14 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
             ps.setLong(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
-                Categoria categoria = categoriaDao.getById(rs.getLong("id_categoria"));
+                Categoria categoria = categoriaDao.getById(rs.getInt("id_categoria"));
                 Cliente cliente = clienteDao.consultar(rs.getInt("id_cliente"));
                 Funcionario funcionario = funcionarioDao.consultar(rs.getInt("id_funcionario")); 
-                // Orcamento orcamento = orcamentoDao.getById(rs.getLong("id_orcamento"));
+                // Orcamento orcamento = orcamentoDao.getById(rs.getInt("id_orcamento"));
                 // List<Historico> historicoList = historicoDao.getAll(); 
 
                 Solicitacao solicitacao = new Solicitacao(
-                    rs.getLong("id"),
+                    rs.getInt("id"),
                     rs.getString("equipamento"),
                     categoria,
                     rs.getString("descricao"),

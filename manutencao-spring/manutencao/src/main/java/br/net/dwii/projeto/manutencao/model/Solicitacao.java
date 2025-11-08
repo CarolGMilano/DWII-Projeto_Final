@@ -4,18 +4,18 @@ import java.sql.Date;
 import java.util.List;
 
 public class Solicitacao {
-    private Long id;
+    private int id;
     private String equipamento;
     private Categoria categoria;
     private String descricao;
-    private Integer status;
+    private int status;
     private Cliente cliente;
     private Funcionario funcionario;
     private List<Historico> historico;
     private Date dataAbertura;
     private Orcamento orcamento;
 
-    public Solicitacao(long id, String equipamento, Categoria categoria, String descricao, Integer status,
+    public Solicitacao(int id, String equipamento, Categoria categoria, String descricao, Integer status,
             Cliente cliente, Funcionario funcionario, Date dataAbertura) {
         this.id = id;
         this.equipamento = equipamento;
@@ -27,11 +27,11 @@ public class Solicitacao {
         this.dataAbertura = dataAbertura;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
