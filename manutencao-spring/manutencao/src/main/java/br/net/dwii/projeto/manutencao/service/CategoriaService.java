@@ -5,96 +5,73 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.net.dwii.projeto.manutencao.intefaces.ICrud;
 import br.net.dwii.projeto.manutencao.model.Categoria;
 import br.net.dwii.projeto.manutencao.model.dao.CategoriaDao;
 
 @Service
-public class CategoriaService implements ICrud<Categoria>{
+public class CategoriaService {
+
     @Autowired
     private CategoriaDao categoriaDao;
 
-   @Override
-    public Categoria buscarPorId(int id) {
-       try {
-            return categoriaDao.getById(id);
-        } catch (Exception e) {
-            e.printStackTrace(); //comando usado para mostrar o rastreamento completo do erro no console quando uma exceção (Exception e) é capturada.
-            return null;
+    private void validarCategoria(Categoria categoria) {
+        if (categoria.getNome() == null || categoria.getNome().isBlank()) {
+            throw new IllegalArgumentException("O nome da categoria é obrigatório");
         }
     }
 
-    @Override
-    public Categoria buscarPorNome(String nome) {
-        try {
-            List<Categoria> categorias = categoriaDao.getAll();
-            for (Categoria c : categorias) {
-                if (c.getNome().equalsIgnoreCase(nome)) {
-                    return c;
-                }
+    public void inserirCategoria(Categoria categoria) throws Exception {
+        validarCategoria(categoria);
+
+        List<Categoria> existentes = categoriaDao.getAll();
+        for (Categoria c : existentes) {
+            if (c.getNome().equalsIgnoreCase(categoria.getNome())) {
+                throw new Exception("Já existe uma categoria com esse nome");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return null;
+
+        categoriaDao.add(categoria);
     }
 
-    @Override
-    public boolean existeId(int id) {
-        return buscarPorId(id) != null;
-    }
-
-    @Override
-    public boolean existeNome(String nome) {
-        return buscarPorNome(nome) != null;
-    }
-
-    @Override
-    public Categoria salvar(Categoria categoria) {
-        try {
-            categoriaDao.add(categoria);
-            return categoria;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    public Categoria consultarCategoria(int id) throws Exception {
+        Categoria categoria = categoriaDao.getById(id);
+        if (categoria == null) {
+            throw new Exception("Categoria não encontrada para o ID: " + id);
         }
+        return categoria;
     }
 
-    @Override
-    public List<Categoria> listar() {
-        try {
-            return categoriaDao.getAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public Categoria atualizar(Categoria categoria, int id) {
-       try {
-            Categoria existente = categoriaDao.getById(id);
-            if (existente != null) {
-                existente.setNome(categoria.getNome());
-                categoriaDao.update(existente);
-                return existente;
+    public Categoria consultarPorNome(String nome) throws Exception {
+        List<Categoria> categorias = categoriaDao.getAll();
+        for (Categoria c : categorias) {
+            if (c.getNome().equalsIgnoreCase(nome)) {
+                return c;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return null;
+        throw new Exception("Categoria não encontrada com o nome: " + nome);
     }
 
-    @Override
-    public boolean deletar(int id) {
-        Categoria categoria = buscarPorId(id);
-        try {
-            categoriaDao.delete(categoria);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public List<Categoria> listarCategorias() throws Exception {
+        return categoriaDao.getAll();
     }
-    
+
+    public void atualizarCategoria(int id, Categoria categoria) throws Exception {
+        validarCategoria(categoria);
+        Categoria existente = categoriaDao.getById(id);
+
+        if (existente == null) {
+            throw new Exception("Categoria não encontrada para o ID: " + id);
+        }
+
+        categoria.setId(id);
+        categoriaDao.update(categoria);
+    }
+
+    public void deletarCategoria(int id) throws Exception {
+        Categoria categoria = categoriaDao.getById(id);
+        if (categoria == null) {
+            throw new Exception("Categoria não encontrada para o ID: " + id);
+        }
+        categoriaDao.delete(categoria);
+    }
 }

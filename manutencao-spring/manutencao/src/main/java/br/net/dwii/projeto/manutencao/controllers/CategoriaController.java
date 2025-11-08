@@ -1,6 +1,4 @@
 package br.net.dwii.projeto.manutencao.controllers;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,73 +11,76 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.net.dwii.projeto.manutencao.model.Categoria;
 import br.net.dwii.projeto.manutencao.service.CategoriaService;
 
-
-
 @CrossOrigin
 @RestController
+@RequestMapping("/categorias")
 public class CategoriaController {
-    @Autowired    
+
+    @Autowired
     private CategoriaService categoriaService;
 
-    public static List<Categoria> categorias = new ArrayList<>();
-
-    @GetMapping("/categorias")
-    public ResponseEntity<List<Categoria>> listarCategorias() {
-        categoriaService.listar();
-        return ResponseEntity.ok(categorias);
-    }
-
-    @GetMapping("/categoria/{id}")
-    public ResponseEntity<Categoria> obterCategoriaPorId(@PathVariable("id") int id) {
-        Categoria c = categoriaService.buscarPorId(id);
-
-        if (c == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            return ResponseEntity.ok(c);
-        }
-
-    }
-
-    @PostMapping("/categorias")
-    public ResponseEntity<Categoria> inserirCategoria(@RequestBody Categoria categoria) {   
-        Categoria c = categoriaService.salvar(categoria);
-
-        if (c == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoria);
-        }
-        
-    }
-
-   @PutMapping("/categorias/{id}")
-    public ResponseEntity<Categoria> atualizarCategoria(@PathVariable("id") Integer id, @RequestBody Categoria categoria) {
-        Categoria atualizada = categoriaService.atualizar(categoria, id);
-
-        if (atualizada == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        } else {
-            return ResponseEntity.ok(atualizada);
+    @GetMapping
+    public ResponseEntity<?> listarCategorias() {
+        try {
+            List<Categoria> categorias = categoriaService.listarCategorias();
+            return ResponseEntity.ok(categorias);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Erro ao listar categorias: " + e.getMessage());
         }
     }
 
-
-    @DeleteMapping("/categorias/{id}")
-    public ResponseEntity<Categoria> removerCategoria(@PathVariable("id") int id){
-        var categoria = categoriaService.buscarPorId(id);
-        boolean removida = categoriaService.deletar(id);
-
-        if (removida) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> consultarCategoria(@PathVariable("id") int id) {
+        try {
+            Categoria categoria = categoriaService.consultarCategoria(id);
             return ResponseEntity.ok(categoria);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body("Categoria não encontrada: " + e.getMessage());
         }
     }
     
+    @PostMapping
+    public ResponseEntity<?> inserirCategoria(@RequestBody Categoria categoria) {
+        try {
+            categoriaService.inserirCategoria(categoria);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Categoria inserida com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Erro ao inserir categoria: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizarCategoria(@PathVariable("id") int id, @RequestBody Categoria categoria) {
+        try {
+            categoriaService.atualizarCategoria(id, categoria);
+            return ResponseEntity.ok("Categoria atualizada com sucesso!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body("Erro ao atualizar categoria: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarCategoria(@PathVariable("id") int id) {
+        try {
+            categoriaService.deletarCategoria(id);
+            return ResponseEntity.ok("Categoria removida com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body("Erro ao remover categoria: " + e.getMessage());
+        }
+    }
 }

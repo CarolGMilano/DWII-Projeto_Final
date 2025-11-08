@@ -1,159 +1,138 @@
 package br.net.dwii.projeto.manutencao.service;
 
-import java.sql.Date;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.net.dwii.projeto.manutencao.intefaces.ICrud;
+import br.net.dwii.projeto.manutencao.model.Solicitacao;
 import br.net.dwii.projeto.manutencao.model.Categoria;
 import br.net.dwii.projeto.manutencao.model.Cliente;
 import br.net.dwii.projeto.manutencao.model.Funcionario;
-import br.net.dwii.projeto.manutencao.model.Orcamento;
-import br.net.dwii.projeto.manutencao.model.Solicitacao;
-import br.net.dwii.projeto.manutencao.model.dao.CategoriaDao;
-import br.net.dwii.projeto.manutencao.model.dao.ClienteDao;
-import br.net.dwii.projeto.manutencao.model.dao.FuncionarioDao;
-import br.net.dwii.projeto.manutencao.model.dao.OrcamentoDao;
 import br.net.dwii.projeto.manutencao.model.dao.SolicitacaoDao;
+import br.net.dwii.projeto.manutencao.model.dto.ClienteResumoDTO;
+import br.net.dwii.projeto.manutencao.model.dto.FuncionarioResumoDTO;
+import br.net.dwii.projeto.manutencao.model.dto.SolicitacaoDTO;
 
 @Service
-public class SolicitacaoService implements ICrud<Solicitacao>{
+public class SolicitacaoService {
+
     @Autowired
     private SolicitacaoDao solicitacaoDao;
 
     @Autowired
-    private ClienteDao clienteDao = new ClienteDao();
+    private ClienteService clienteService;
 
     @Autowired
-    private FuncionarioDao funcionarioDao = new FuncionarioDao();
+    private FuncionarioService funcionarioService;
 
     @Autowired
-    private CategoriaDao categoriaDao = new CategoriaDao();
+    private CategoriaService categoriaService;
 
-    @Autowired
-    private OrcamentoDao orcamentoDao = new OrcamentoDao();
-
-    @Override
-    public Solicitacao buscarPorId(int id) {
-        try {
-            return solicitacaoDao.getById(id);
-        } catch (Exception e) {
-            e.printStackTrace(); //comando usado para mostrar o rastreamento completo do erro no console quando uma exceção (Exception e) é capturada.
-            return null;
-        }    
+    private void validarSolicitacao(Solicitacao solicitacao) {
+        if (solicitacao.getEquipamento() == null || solicitacao.getEquipamento().isBlank()) {
+            throw new IllegalArgumentException("O campo 'equipamento' é obrigatório");
+        }
+        if (solicitacao.getDescricao() == null || solicitacao.getDescricao().isBlank()) {
+            throw new IllegalArgumentException("A descrição é obrigatória");
+        }
+        if (solicitacao.getCategoria() == null) {
+            throw new IllegalArgumentException("A categoria é obrigatória");
+        }
+        if (solicitacao.getCliente() == null) {
+            throw new IllegalArgumentException("O cliente é obrigatório");
+        }
+        if (solicitacao.getFuncionario() == null) {
+            throw new IllegalArgumentException("O funcionário é obrigatório");
+        }
     }
 
-    @Override
-    public Solicitacao buscarPorNome(String nome) {
-        throw new UnsupportedOperationException("Unimplemented method 'existeId'");
+    public SolicitacaoDTO inserirSolicitacao(SolicitacaoDTO dto) throws Exception {
+        Categoria categoria = categoriaService.consultarCategoria(dto.getCategoria().getId());
+        Funcionario funcionario = funcionarioService.consultarFuncionario(dto.getFuncionario().getId());
+        Cliente cliente = clienteService.consultarCliente(dto.getCliente().getId());
 
-    }
-
-    @Override
-    public boolean existeId(int id) {
-        return buscarPorId(id) != null;
-    }
-
-    @Override
-    public boolean existeNome(String nome) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'existeNome'");
-    }
-
-    public Solicitacao salvar(Solicitacao solicitacao) throws Exception{
-
-        if (solicitacao.getCliente() == null || solicitacao.getCliente().getId() == 0) {
-            throw new Exception("Cliente não informado na solicitação.");
-        }
-        if (solicitacao.getFuncionario() == null || solicitacao.getFuncionario().getId() == 0) {
-            throw new Exception("Funcionário responsável não informado.");
-        }
-        if (solicitacao.getCategoria() == null || solicitacao.getCategoria().getId() == 0) {
-            throw new Exception("Categoria inválida.");
-        }
-
-        Cliente cliente = clienteDao.consultar(solicitacao.getCliente().getId());
-        Funcionario funcionario = funcionarioDao.consultar(solicitacao.getFuncionario().getId());
-        Categoria categoria = categoriaDao.getById(solicitacao.getCategoria().getId());
-        Orcamento orcamento = null;
-
-        if (solicitacao.getOrcamento() != null && solicitacao.getOrcamento().getId() != 0) {
-            orcamento = orcamentoDao.getById(solicitacao.getOrcamento().getId());
-        }
-
-        if (cliente == null) throw new Exception("Cliente não encontrado.");
-        if (funcionario == null) throw new Exception("Funcionário não encontrado.");
-        if (categoria == null) throw new Exception("Categoria não encontrada.");
-
-        Solicitacao nova = new Solicitacao(
-            0,
-            solicitacao.getEquipamento(),
+        Solicitacao solicitacao = new Solicitacao(
+            -1,
+            dto.getEquipamento(),
             categoria,
-            solicitacao.getDescricao(),
-            solicitacao.getStatus().intValue(),
+            dto.getDescricao(),
+            dto.getStatus(),
             cliente,
             funcionario,
-            new Date(System.currentTimeMillis())
+            null 
         );
 
-        nova.setOrcamento(orcamento);
+        validarSolicitacao(solicitacao);
 
-        solicitacaoDao.add(nova);
+        solicitacaoDao.add(solicitacao);
 
-        return nova;
+        ClienteResumoDTO clienteResumo = new ClienteResumoDTO(
+            cliente.getNome(),        
+            cliente.getCpf(),
+            cliente.getTelefone(),
+            null
+        );
+
+        FuncionarioResumoDTO funcionarioResumo = new FuncionarioResumoDTO(
+            funcionario.getNome(),               
+             funcionario.getEmail(),   
+            funcionario.getCargo()   
+        );
+
+        return new SolicitacaoDTO(
+            solicitacao.getId(),
+            solicitacao.getEquipamento(),
+            solicitacao.getCategoria().getId(),
+            solicitacao.getDescricao(),
+            solicitacao.getStatus(),
+            null, 
+            null, 
+            null, 
+            funcionarioResumo,
+            clienteResumo
+        );
     }
 
-    @Override
-    public List<Solicitacao> listar() {
-          try {
-            return solicitacaoDao.getAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }  }
+    public SolicitacaoDTO consultarSolicitacao(int id) throws Exception {
+        Solicitacao solicitacao = solicitacaoDao.getById(id);
 
-    @Override
-    public boolean deletar(int id) {
-        Solicitacao solicitacao = buscarPorId(id);
-        try {
-            solicitacaoDao.delete(solicitacao);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        if (solicitacao == null) {
+            throw new Exception("Solicitação não encontrada.");
         }
+
+        ClienteResumoDTO clienteResumo = new ClienteResumoDTO(
+            solicitacao.getCliente().getNome(),
+            solicitacao.getCliente().getCpf(),
+            solicitacao.getCliente().getTelefone(),
+            null
+        );
+
+        FuncionarioResumoDTO funcionarioResumo = new FuncionarioResumoDTO(
+            solicitacao.getFuncionario().getNome(),
+            solicitacao.getFuncionario().getId(),
+            solicitacao.getFuncionario().getDataNascimento()
+        );
+
+        return new SolicitacaoDTO(
+            solicitacao.getId(),
+            solicitacao.getEquipamento(),
+            solicitacao.getCategoria().getId(),
+            solicitacao.getDescricao(),
+            solicitacao.getStatus(),
+            null,
+            null,
+            null,
+            funcionarioResumo,
+            clienteResumo
+        );
     }
 
-    @Override
-    public Solicitacao atualizar(Solicitacao solicitacao, int id) {
-        try {
-            Solicitacao existente = solicitacaoDao.getById(id);
+    public void deletarSolicitacao(int id) throws Exception {
+        Solicitacao solicitacao = solicitacaoDao.getById(id);
 
-            if (existente != null) {
-                existente.setEquipamento(solicitacao.getEquipamento());
-                existente.setCategoria(solicitacao.getCategoria());
-                existente.setDescricao(solicitacao.getDescricao());
-                existente.setStatus((Integer) solicitacao.getStatus());
-                existente.setCliente(solicitacao.getCliente());
-                existente.setFuncionario(solicitacao.getFuncionario());
-                existente.setOrcamento(solicitacao.getOrcamento());
-                existente.setHistorico(solicitacao.getHistorico());
-                existente.setDataAbertura(solicitacao.getDataAbertura());
-
-                solicitacaoDao.update(existente);
-
-                return existente;
-            } else {
-                System.err.println("Solicitação com ID " + id + " não encontrada.");
-                return null;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace(); 
-            return null;
+        if (solicitacao == null) {
+            throw new Exception("Solicitação não encontrada.");
         }
+
+        solicitacaoDao.delete(solicitacao);
     }
-    
 }

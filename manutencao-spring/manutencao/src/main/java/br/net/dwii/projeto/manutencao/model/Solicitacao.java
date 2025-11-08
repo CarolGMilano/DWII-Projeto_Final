@@ -59,11 +59,11 @@ public class Solicitacao {
         this.descricao = descricao;
     }
 
-    public Number getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

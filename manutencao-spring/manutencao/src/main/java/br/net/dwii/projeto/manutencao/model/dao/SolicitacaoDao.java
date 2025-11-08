@@ -176,7 +176,7 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
             ps.setString(1, objeto.getEquipamento());
             ps.setLong(2, objeto.getCategoria().getId());
             ps.setString(3, objeto.getDescricao());
-            ps.setInt(4, objeto.getStatus().intValue());
+            ps.setInt(4, objeto.getStatus());
             ps.setLong(5, objeto.getCliente().getId());
             ps.setLong(6, objeto.getFuncionario().getId());
             ps.setDate(7, new java.sql.Date(objeto.getDataAbertura().getTime()));
