@@ -25,7 +25,7 @@ public class HistoricoDao implements DaoI<Historico> {
             ps = conn.prepareStatement(sql);
             ps.setLong(1, objeto.getIdSolicitacao());   
             ps.setDate(2, objeto.getDataHora());
-            ps.setInt(3, objeto.getStatus().intValue());
+            ps.setInt(3, objeto.getStatus());
             ps.setLong(4, objeto.getFuncionario().getId());
             ps.executeUpdate();
         } catch (Exception e) {
@@ -61,8 +61,8 @@ public class HistoricoDao implements DaoI<Historico> {
                 Funcionario funcionarioDestino = funcionarioDao.consultar(rs.getInt("id_funcionario_destino")); 
 
                 Historico historico = new Historico(
-                    rs.getLong("id"),
-                    rs.getLong("id_solicitacao"),
+                    rs.getInt("id"),
+                    rs.getInt("id_solicitacao"),
                     rs.getDate("dataHora"),
                     rs.getInt("status"),
                     funcionario,
@@ -88,7 +88,7 @@ public class HistoricoDao implements DaoI<Historico> {
     }
 
     @Override
-    public Historico getById(long id) throws Exception {
+    public Historico getById(int id) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -97,7 +97,7 @@ public class HistoricoDao implements DaoI<Historico> {
         try{
             // conn = ConnectionFactory.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setLong(1, id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -105,8 +105,8 @@ public class HistoricoDao implements DaoI<Historico> {
                Funcionario funcionarioDestino = funcionarioDao.consultar(rs.getInt("id_funcionario_destino")); 
 
                 Historico historico = new Historico(
-                    rs.getLong("id"),
-                    rs.getLong("id_solicitacao"),
+                    rs.getInt("id"),
+                    rs.getInt("id_solicitacao"),
                     rs.getDate("dataHora"),
                     rs.getInt("status"),
                     funcionario,
@@ -144,7 +144,7 @@ public class HistoricoDao implements DaoI<Historico> {
             ps = conn.prepareStatement(sql);
             ps.setLong(1, objeto.getIdSolicitacao());   
             ps.setDate(2, objeto.getDataHora());
-            ps.setInt(3, objeto.getStatus().intValue());
+            ps.setInt(3, objeto.getStatus());
             ps.setLong(4, objeto.getFuncionario().getId());
             ps.setLong(5, objeto.getFuncionarioDestino().getId());
             ps.setLong(6, objeto.getId());

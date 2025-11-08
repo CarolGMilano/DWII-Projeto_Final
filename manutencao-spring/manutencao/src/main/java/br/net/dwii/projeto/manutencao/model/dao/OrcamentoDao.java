@@ -26,7 +26,7 @@ public class OrcamentoDao implements DaoI<Orcamento> {
     }
 
     @Override
-    public Orcamento getById(long id) throws Exception {
+    public Orcamento getById(int id) throws Exception {
         throw new UnsupportedOperationException("Unimplemented method 'getById'");
     }
 

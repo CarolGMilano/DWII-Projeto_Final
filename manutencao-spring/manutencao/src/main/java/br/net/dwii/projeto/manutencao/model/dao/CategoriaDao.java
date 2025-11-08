@@ -44,7 +44,7 @@ public class CategoriaDao implements DaoI<Categoria> {
             List<Categoria> categorias = new ArrayList<>();
 
             while(rs.next()){
-                long id = rs.getLong("id");
+                int id = rs.getInt("id");
                 String nome = rs.getString("nome");
 
                 Categoria categoria = new Categoria(id, nome);
@@ -72,7 +72,7 @@ public class CategoriaDao implements DaoI<Categoria> {
     }
 
     @Override
-    public Categoria getById(long id) throws Exception {
+    public Categoria getById(int id) throws Exception {
         String sql = "SELECT id, nome FROM categoria WHERE id = ?";
         Connection conn = null;
         PreparedStatement ps = null;
@@ -80,11 +80,11 @@ public class CategoriaDao implements DaoI<Categoria> {
         try {
             conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setLong(1, id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                long catId = rs.getLong("id");
+                int catId = rs.getInt("id");
                 String nome = rs.getString("nome");
                 return new Categoria(catId, nome);
             }
@@ -109,7 +109,7 @@ public class CategoriaDao implements DaoI<Categoria> {
             // conn = Conexao.getConexao();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getNome());
-            ps.setLong(2, objeto.getId());
+            ps.setInt(2, objeto.getId());
             ps.executeUpdate();
             ps.close();
 
@@ -126,7 +126,7 @@ public class CategoriaDao implements DaoI<Categoria> {
         try (Connection conn = ConnectionDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setLong(1, objeto.getId());
+            ps.setInt(1, objeto.getId());
             ps.executeUpdate();
             ps.close();
 
