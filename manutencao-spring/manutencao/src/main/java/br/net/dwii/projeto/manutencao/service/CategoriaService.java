@@ -29,7 +29,7 @@ public class CategoriaService implements ICrud<Categoria>{
         try {
             List<Categoria> categorias = categoriaDao.getAll();
             for (Categoria c : categorias) {
-                if (c.getNome().equalsIgnoreCase(nome)) {
+                if (c.getDescricao().equalsIgnoreCase(nome)) {
                     return c;
                 }
             }
@@ -75,7 +75,7 @@ public class CategoriaService implements ICrud<Categoria>{
        try {
             Categoria existente = categoriaDao.getById(id);
             if (existente != null) {
-                existente.setNome(categoria.getNome());
+                existente.setDescricao(categoria.getDescricao());
                 categoriaDao.update(existente);
                 return existente;
             }

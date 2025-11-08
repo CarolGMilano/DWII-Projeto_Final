@@ -1,109 +1,42 @@
 package br.net.dwii.projeto.manutencao.model;
 
-import java.sql.Date;
-import java.util.List;
-
 public class Solicitacao {
-    private int id;
-    private String equipamento;
-    private Categoria categoria;
-    private String descricao;
-    private int status;
-    private Cliente cliente;
-    private Funcionario funcionario;
-    private List<Historico> historico;
-    private Date dataAbertura;
-    private Orcamento orcamento;
+  private int id;
+  private String equipamento;
+  private int idCategoria;
+  private String descricao;
+  private int idStatus;
+  private int idFuncionario;
+  private int idCliente;
 
-    public Solicitacao(int id, String equipamento, Categoria categoria, String descricao, int status,
-            Cliente cliente, Funcionario funcionario, Date dataAbertura) {
-        this.id = id;
-        this.equipamento = equipamento;
-        this.categoria = categoria;
-        this.descricao = descricao;
-        this.status = status;
-        this.cliente = cliente;
-        this.funcionario = funcionario;
-        this.dataAbertura = dataAbertura;
-    }
+  public Solicitacao(int id, String equipamento, int idCategoria, String descricao, int idStatus, int idFuncionario, int idCliente) {
+    this.id = id;
+    this.equipamento = equipamento;
+    this.idCategoria = idCategoria;
+    this.descricao = descricao;
+    this.idStatus = idStatus;
+    this.idFuncionario = idFuncionario;
+    this.idCliente = idCliente;
+  }
+  
+  public int getId() { return id; }
+  public void setId(int id) { this.id = id; }
 
-    public int getId() {
-        return id;
-    }
+  public String getEquipamento() { return equipamento; }
+  public void setEquipamento(String equipamento) { this.equipamento = equipamento; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public int getIdCategoria() { return idCategoria; }
+  public void setIdCategoria(int idCategoria) { this.idCategoria = idCategoria; }
 
-    public String getEquipamento() {
-        return equipamento;
-    }
+  public String getDescricao() { return descricao; }
+  public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public void setEquipamento(String equipamento) {
-        this.equipamento = equipamento;
-    }
+  public int getIdStatus() { return idStatus; }
+  public void setIdStatus(int idStatus) { this.idStatus = idStatus; }
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Number getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Funcionario getFuncionario() {
-        return funcionario;
-    }
-
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
-    }
-
-    public List<Historico> getHistorico() {
-        return historico;
-    }
-
-    public void setHistorico(List<Historico> historico) {
-        this.historico = historico;
-    }
-
-    public Date getDataAbertura() {
-        return dataAbertura;
-    }
-
-    public void setDataAbertura(Date dataAbertura) {
-        this.dataAbertura = dataAbertura;
-    }
-
-    public Orcamento getOrcamento() {
-        return orcamento;
-    }
-
-    public void setOrcamento(Orcamento orcamento) {
-        this.orcamento = orcamento;
-    }
+  public int getIdFuncionario() { return idFuncionario; }
+  public void setIdFuncionario(int idFuncionario) { this.idFuncionario = idFuncionario; }
+  
+  public int getIdCliente() { return idCliente; }
+  public void setIdCliente(int idCliente) { this.idCliente = idCliente; }
 }
