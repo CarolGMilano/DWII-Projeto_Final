@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import br.net.dwii.projeto.manutencao.model.Orcamento;
 
+@Repository
 public class OrcamentoDao implements DaoI<Orcamento> {
 
     @Override

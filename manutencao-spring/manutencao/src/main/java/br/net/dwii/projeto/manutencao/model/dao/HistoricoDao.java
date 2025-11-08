@@ -6,10 +6,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import br.net.dwii.projeto.manutencao.model.Funcionario;
 import br.net.dwii.projeto.manutencao.model.Historico;
 
-
+@Repository
 public class HistoricoDao implements DaoI<Historico> {
     private FuncionarioDao funcionarioDao = new FuncionarioDao();
 

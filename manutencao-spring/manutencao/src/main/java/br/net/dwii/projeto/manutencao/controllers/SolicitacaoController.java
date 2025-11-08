@@ -12,24 +12,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.net.dwii.projeto.manutencao.model.Solicitacao;
 import br.net.dwii.projeto.manutencao.service.SolicitacaoService;
 
-
+@RestController
+@RequestMapping("/solicitacoes")
 public class SolicitacaoController {
     @Autowired    
     private SolicitacaoService solicitacaoService;
 
-    public static List<Solicitacao> solicitacaos = new ArrayList<>();
+    public static List<Solicitacao> solicitacoes = new ArrayList<>();
 
-    @GetMapping("/solicitacao")
-    public ResponseEntity<List<Solicitacao>> listarSolicitacaos() {
+    @GetMapping
+    public ResponseEntity<List<Solicitacao>> listarSolicitacoes() {
         solicitacaoService.listar();
-        return ResponseEntity.ok(solicitacaos);
+        return ResponseEntity.ok(solicitacoes);
     }
 
-    @GetMapping("/solicitacao/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Solicitacao> obtersolicitacaoPorId(@PathVariable("id") int id) {
         Solicitacao s = solicitacaoService.buscarPorId(id);
 
@@ -41,7 +44,7 @@ public class SolicitacaoController {
 
     }
 
-    @PostMapping("/solicitacao")
+    @PostMapping
     public ResponseEntity<Solicitacao> inserirsolicitacao(@RequestBody Solicitacao solicitacao) throws Exception {   
         Solicitacao s = solicitacaoService.salvar(solicitacao);
 
@@ -53,7 +56,7 @@ public class SolicitacaoController {
         
     }
 
-   @PutMapping("/solicitacao/{id}")
+   @PutMapping("/{id}")
     public ResponseEntity<Solicitacao> atualizarCategoria(@PathVariable("id") Integer id, @RequestBody Solicitacao categoria) {
         Solicitacao atualizada = solicitacaoService.atualizar(categoria, id);
 
@@ -65,7 +68,7 @@ public class SolicitacaoController {
     }
 
 
-    @DeleteMapping("/solicitacao/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Solicitacao> removerCategoria(@PathVariable("id") int id){
         var solicitacao = solicitacaoService.buscarPorId(id);
         boolean removida = solicitacaoService.deletar(id);

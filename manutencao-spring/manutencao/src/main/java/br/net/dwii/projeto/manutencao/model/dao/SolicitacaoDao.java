@@ -6,13 +6,15 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.model.Categoria;
 import br.net.dwii.projeto.manutencao.model.Cliente;
 import br.net.dwii.projeto.manutencao.model.Funcionario;
-import br.net.dwii.projeto.manutencao.model.Historico;
-import br.net.dwii.projeto.manutencao.model.Orcamento;
 import br.net.dwii.projeto.manutencao.model.Solicitacao;
 
+@Repository
 public class SolicitacaoDao implements DaoI<Solicitacao> {
 
     private ClienteDao clienteDao = new ClienteDao();
@@ -27,12 +29,12 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
         PreparedStatement ps = null;
         String sql = "INSERT INTO solicitacao (equipamento, id_categoria, descricao, status, id_cliente, id_funcionario, data_abertura, id_orcamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getEquipamento());
             ps.setLong(2, objeto.getCategoria().getId());
             ps.setString(3, objeto.getDescricao());
-            ps.setInt(4, objeto.getStatus().intValue());
+            ps.setInt(4, 1);
             ps.setLong(5, objeto.getCliente().getId());
             ps.setLong(6, objeto.getFuncionario().getId());
             ps.setDate(7, new java.sql.Date(objeto.getDataAbertura().getTime()));
@@ -61,7 +63,7 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
        String sql = "SELECT * FROM solicitacao";
 
        try{
-           // conn = ConnectionFactory.getConnection();
+           conn = ConnectionDB.getConnection();
            ps = conn.prepareStatement(sql);
            rs = ps.executeQuery();
 
@@ -116,7 +118,7 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
         String sql = "SELECT * FROM solicitacao WHERE id = ?";
 
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, id);
             rs = ps.executeQuery();
@@ -169,7 +171,7 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
         String sql = "UPDATE solicitacao SET equipamento = ?, id_categoria = ?, descricao = ?, status = ?, id_cliente = ?, id_funcionario = ?, data_abertura = ?, id_orcamento = ? WHERE id = ?";
 
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, objeto.getEquipamento());
             ps.setLong(2, objeto.getCategoria().getId());
@@ -198,12 +200,12 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
 
     @Override
     public void delete(Solicitacao objeto) throws Exception {
-        Connection conn = null;
+        Connection conn =null;
         PreparedStatement ps = null;
         String sql = "DELETE FROM solicitacao WHERE id = ?";
 
         try {
-            // conn = ConnectionFactory.getConnection();
+            conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setLong(1, objeto.getId());
             ps.executeUpdate();
