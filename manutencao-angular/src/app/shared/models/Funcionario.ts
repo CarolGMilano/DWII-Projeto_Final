@@ -1,7 +1,9 @@
-import { Usuario } from "./Usuario";
-
 export interface Funcionario {
-  id?: number; //Opcional, pois o ID vem do banco
-  usuario: Usuario;
+  id: number; 
+  nome: string;
+  email: string;
+  senha?: string;
+  novaSenha?: string;
+  tipo: number;
   dataNascimento: Date;
 }
