@@ -15,8 +15,9 @@ import br.net.dwii.projeto.manutencao.model.Usuario;
 @Repository
 public class UsuarioDao {
   private final String inserir = "INSERT INTO usuario (nome, email, senha, salt, idTipo, ativo) VALUES (?, ?, ?, ?, ?, ?)";
-  private final String alterar = "UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE id = ?";
+  private final String alterar = "UPDATE usuario SET nome = ?, email = ?, senha = ?, salt = ? WHERE id = ?";
   private final String consultar = "SELECT id, nome, email, idTipo, ativo FROM usuario WHERE id = ? AND ativo = true";
+  private final String consultaCompleta = "SELECT * FROM usuario WHERE id = ? AND ativo = true";
   private final String consultarPorEmail = "SELECT * FROM usuario WHERE email = ? AND ativo = true";
   private final String listar = "SELECT id, nome, email, senha, idTipo, ativo FROM usuario WHERE ativo = true AND idTipo = ?";
   private final String deletar = "UPDATE usuario SET ativo = false WHERE id = ?";
@@ -57,7 +58,8 @@ public class UsuarioDao {
       psAlterar.setString(1, usuario.getNome());
       psAlterar.setString(2, usuario.getEmail());
       psAlterar.setString(3, usuario.getSenha());
-      psAlterar.setInt(4, usuario.getId());
+      psAlterar.setString(4, usuario.getSalt());
+      psAlterar.setInt(5, usuario.getId());
 
       psAlterar.executeUpdate();
     } 
@@ -96,6 +98,37 @@ public class UsuarioDao {
     } 
   }
 
+    public Usuario consultaCompleta(int idUsuario) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psConsultaCompleta = connection.prepareStatement(consultaCompleta);
+    ) {
+      psConsultaCompleta.setInt(1, idUsuario);
+
+      try(ResultSet rsConsultar = psConsultaCompleta.executeQuery()){
+        if (rsConsultar.next()) {
+          Usuario usuario = new Usuario(
+            rsConsultar.getInt("id"),
+            rsConsultar.getString("nome"),
+            rsConsultar.getString("email"),
+            rsConsultar.getString("senha"),
+            rsConsultar.getString("salt"),
+            rsConsultar.getInt("idTipo"),
+            rsConsultar.getBoolean("ativo")
+          );
+
+          return usuario;
+        } else {
+          return null;
+        }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao consultar usuário", e);
+    } 
+  }
+
   public Usuario consultarPorEmail(String usuarioEmail) throws Exception {
     try (
       Connection connection = ConnectionDB.getConnection();
@@ -109,6 +142,37 @@ public class UsuarioDao {
             rsConsultar.getInt("id"),
             rsConsultar.getString("nome"),
             rsConsultar.getString("email"),
+            rsConsultar.getInt("idTipo"),
+            rsConsultar.getBoolean("ativo")
+          );
+
+          return usuario;
+        } else {
+          return null;
+        }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao consultar usuário por e-mail", e);
+    } 
+  }
+
+  public Usuario consultarPorEmailLogin(String usuarioEmail) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psConsultarPorEmail = connection.prepareStatement(consultarPorEmail);
+    ) {
+      psConsultarPorEmail.setString(1, usuarioEmail);
+
+      try(ResultSet rsConsultar = psConsultarPorEmail.executeQuery()){
+        if (rsConsultar.next()) {
+          Usuario usuario = new Usuario(
+            rsConsultar.getInt("id"),
+            rsConsultar.getString("nome"),
+            rsConsultar.getString("email"),
+            rsConsultar.getString("senha"),
+            rsConsultar.getString("salt"),
             rsConsultar.getInt("idTipo"),
             rsConsultar.getBoolean("ativo")
           );
