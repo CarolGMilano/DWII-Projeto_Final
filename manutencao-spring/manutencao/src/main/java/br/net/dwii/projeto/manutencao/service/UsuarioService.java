@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 
 import br.net.dwii.projeto.manutencao.model.Usuario;
 import br.net.dwii.projeto.manutencao.model.dao.UsuarioDao;
+import br.net.dwii.projeto.manutencao.model.dto.LoginDTO;
+import br.net.dwii.projeto.manutencao.model.dto.UsuarioLogadoDTO;
+import br.net.dwii.projeto.manutencao.model.exception.EmailDuplicadoException;
+import br.net.dwii.projeto.manutencao.model.exception.SenhaIncorretaException;
+import br.net.dwii.projeto.manutencao.model.exception.UsuarioNaoEncontradoException;
 
 @Service
 public class UsuarioService {
@@ -57,32 +62,39 @@ public class UsuarioService {
     return hashHexa.toString();
   }
 
-  private void validarUsuario(Usuario usuario) throws Exception {
+  private void validarUsuario(Usuario usuario) {
     if (usuario.getNome() == null || usuario.getNome().isBlank()) {
-      throw new Exception("Nome é obrigatório");
+      throw new IllegalArgumentException("Nome é obrigatório");
     }
 
     if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
-      throw new Exception("Email é obrigatório");
+      throw new IllegalArgumentException("Email é obrigatório");
     } else if (!usuario.getEmail().matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
-      throw new Exception("Email inválido");
-    }
-
-    if (usuario.getSenha() == null || usuario.getSenha().length() < 4) {
-      throw new Exception("Senha deve ter, pelo menos, 4 caracteres");
+      throw new IllegalArgumentException("Email inválido");
     }
   }
 
-  public boolean validarLogin(String email, String senhaInformada) throws Exception {
-    Usuario usuario = usuarioDao.consultarPorEmail(email);
+  public UsuarioLogadoDTO validarLogin(LoginDTO loginDTO) throws Exception {
+    Usuario usuario = usuarioDao.consultarPorEmailLogin(loginDTO.getEmail());
 
     if (usuario == null) {
-      throw new Exception("Usuário não encontrado!"); 
+      throw new UsuarioNaoEncontradoException(); 
     }
 
-    String hashTentativa = gerarHash(senhaInformada, usuario.getSalt());
+    String hashTentativa = gerarHash(loginDTO.getSenha(), usuario.getSalt());
 
-    return hashTentativa.equals(usuario.getSenha());
+    System.out.println("Senha fornecida: " + loginDTO.getSenha());
+    System.out.println("Hash tentativa: " + hashTentativa);
+    System.out.println("Hash banco: " + usuario.getSenha());
+
+    if(!hashTentativa.equals(usuario.getSenha())){
+      throw new SenhaIncorretaException();
+    } 
+
+    return new UsuarioLogadoDTO(
+      usuario.getId(), 
+      usuario.getTipo()
+    );
   }
 
   public void inserirUsuario(Usuario usuario) throws Exception {
@@ -91,32 +103,99 @@ public class UsuarioService {
     Usuario usuarioEncontrado = usuarioDao.consultarPorEmail(usuario.getEmail());
 
     if (usuarioEncontrado != null) {
-      throw new Exception("Email já cadastrado"); 
+      throw new EmailDuplicadoException(usuarioEncontrado.getEmail()); 
     }
 
     String salt = gerarSalt();
     usuario.setSalt(salt);
+    
+    /* 
+     * Segue a mesma lógica da senha aleatória adicionada ao frontend para testes
+     * A única mudança é o Math.abs que retira o sinal dos números, pois aqui a randomização pode vir com números negativos.
+     */
+    String senhaAleatoria = Long.toString(Math.abs(new java.util.Random().nextLong()), 36).substring(0, 4);
 
-    String senhaHash = gerarHash(usuario.getSenha(), salt);
+    String senhaHash = gerarHash(senhaAleatoria, salt);
     usuario.setSenha(senhaHash);
 
     usuarioDao.inserir(usuario);
+
+    System.out.println("Senha gerada para teste: " + senhaAleatoria);
   }
 
-  public void alterarUsuario(Usuario usuario) throws Exception {
+  public void alterarUsuario(Usuario usuario, String senha, String novaSenha) throws Exception {
     validarUsuario(usuario);
 
-    Usuario usuarioEncontrado = usuarioDao.consultarPorEmail(usuario.getEmail());
+    Usuario usuarioEncontrado = usuarioDao.consultar(usuario.getId());
 
-    if (usuarioEncontrado != null && usuarioEncontrado.getId() != usuario.getId()) {
-      throw new Exception("Email já cadastrado"); 
+    if (usuarioEncontrado == null) {
+      throw new UsuarioNaoEncontradoException(); 
     }
 
-    usuarioDao.alterar(usuario);
+    Usuario usuarioComMesmoEmail = usuarioDao.consultarPorEmail(usuario.getEmail());
+
+    if (usuarioComMesmoEmail != null && usuarioComMesmoEmail.getId() != usuario.getId()) {
+      throw new EmailDuplicadoException(usuario.getEmail());
+    }
+
+    Usuario usuarioAlterado = this.alterarSenha(usuario, senha, novaSenha);
+
+    usuarioDao.alterar(usuarioAlterado);
+  }
+
+  public Usuario alterarSenha(Usuario usuario, String senha, String novaSenha) throws Exception {
+    Usuario usuarioEncontrado = usuarioDao.consultaCompleta(usuario.getId());
+
+    if (novaSenha != null && !novaSenha.isBlank()) {
+      String hashAntiga = gerarHash(senha, usuarioEncontrado.getSalt());
+
+      if (!hashAntiga.equals(usuarioEncontrado.getSenha())) {
+        throw new SenhaIncorretaException();
+      }
+
+      String novoSalt = gerarSalt();
+      String novaHash = gerarHash(novaSenha, novoSalt);
+
+      return new Usuario(
+        usuarioEncontrado.getId(),
+        usuario.getNome(),
+        usuario.getEmail(),
+        novaHash,
+        novoSalt,
+        usuarioEncontrado.getTipo(),
+        usuarioEncontrado.getAtivo()
+      );
+    }
+
+    return new Usuario(
+      usuarioEncontrado.getId(),
+      usuario.getNome(),
+      usuario.getEmail(),
+      usuarioEncontrado.getSenha(),
+      usuarioEncontrado.getSalt(),
+      usuarioEncontrado.getTipo(),
+      usuarioEncontrado.getAtivo()
+    );
   }
 
   public Usuario consultarUsuario(int idUsuario) throws Exception {
-    return usuarioDao.consultar(idUsuario);
+    Usuario usuarioEncontrado = usuarioDao.consultar(idUsuario);
+
+    if(usuarioEncontrado == null){
+      throw new UsuarioNaoEncontradoException();
+    }
+
+    return usuarioEncontrado;
+  }
+
+  public Usuario consultaCompleta(int idUsuario) throws Exception {
+    Usuario usuarioEncontrado = usuarioDao.consultaCompleta(idUsuario);
+
+    if(usuarioEncontrado == null){
+      throw new UsuarioNaoEncontradoException();
+    }
+
+    return usuarioEncontrado;
   }
 
   public List<Usuario> listarUsuarios() throws Exception {
@@ -124,6 +203,12 @@ public class UsuarioService {
   }
 
   public void deletarUsuario(int idUsuario) throws Exception {
+    Usuario usuarioEncontrado = this.consultarUsuario(idUsuario);
+
+    if(usuarioEncontrado == null){
+      throw new UsuarioNaoEncontradoException();
+    }
+
     usuarioDao.deletar(idUsuario);
   }
 }

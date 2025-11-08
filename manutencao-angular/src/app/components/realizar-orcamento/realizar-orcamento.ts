@@ -32,7 +32,7 @@ export class RealizarOrcamento implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
-
+/*
     this.dadosService.getSolicitacao(this.solicitacao).subscribe({
       next: (res) => this.solicitacao = res,
       error: (err) => {
@@ -53,7 +53,7 @@ export class RealizarOrcamento implements OnInit {
         estado: EstadoSolicitacao.ABERTA
       };
       }
-    });
+    });*/
   }
 
   get itens(): FormArray {
@@ -95,14 +95,14 @@ export class RealizarOrcamento implements OnInit {
   enviarOrcamento() {
     const descricaoPreco = this.itens.value;
     const precoTotal = this.orcamentoForm.get('precoTotal')?.value ?? 0;
-
+/*
     this.dadosService.enviarOrcamento(this.solicitacao, precoTotal, descricaoPreco).subscribe({
       next: (res) => {
         console.log('Orçamento enviado com sucesso:', res);
         this.onSubmit.emit(res);
       },
       error: (err) => console.error('Erro ao enviar orçamento:', err)
-    });
+    });*/
   }
 
   voltar(){

@@ -9,6 +9,8 @@ import br.net.dwii.projeto.manutencao.model.Usuario;
 import br.net.dwii.projeto.manutencao.model.dto.ClienteDTO;
 import br.net.dwii.projeto.manutencao.model.dto.ClienteResumoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.EnderecoDTO;
+import br.net.dwii.projeto.manutencao.model.exception.ClienteNaoEncontradoException;
+import br.net.dwii.projeto.manutencao.model.exception.CpfDuplicadoException;
 import br.net.dwii.projeto.manutencao.model.dao.ClienteDao;
 
 @Service
@@ -22,28 +24,28 @@ public class ClienteService {
   @Autowired
   private EnderecoService enderecoService;
 
-  private void validarCliente(Cliente cliente) throws Exception {
+  private void validarCliente(Cliente cliente) {
     if (cliente.getCpf() == null || cliente.getCpf().isBlank()) {
-      throw new Exception("CPF é obrigatório");
+      throw new IllegalArgumentException("CPF é obrigatório");
     } else if (!cliente.getCpf().matches("\\d+")) {
-      throw new Exception("O CPF deve conter apenas números");
+      throw new IllegalArgumentException("O CPF deve conter apenas números");
     }
 
 
     if (cliente.getTelefone() == null || cliente.getTelefone().isBlank()) {
-      throw new Exception("Telefone é obrigatório");
+      throw new IllegalArgumentException("Telefone é obrigatório");
     } else if (!cliente.getTelefone().matches("\\d+")) {
-      throw new Exception("O telefone deve conter apenas números");
+      throw new IllegalArgumentException("O telefone deve conter apenas números");
     }
   }
 
-  public void inserirCliente(ClienteDTO clienteDTO) throws Exception {
+  public ClienteResumoDTO inserirCliente(ClienteDTO clienteDTO) throws Exception {
     
     Usuario usuario = new Usuario(
       -1,
       clienteDTO.getNome(),
       clienteDTO.getEmail(),
-      clienteDTO.getSenha(),
+      null,
       null,
       clienteDTO.getTipo(),
       true
@@ -63,7 +65,7 @@ public class ClienteService {
     Cliente clienteEncontrado = clienteDao.consultarPorCPF(cliente.getCpf());
     
     if (clienteEncontrado != null) {
-      throw new Exception("CPF já cadastrado"); 
+      throw new CpfDuplicadoException(clienteEncontrado.getCpf()); 
     }
         
     clienteDao.inserir(cliente);
@@ -80,12 +82,15 @@ public class ClienteService {
     );
 
     enderecoService.inserirEndereco(endereco);
+
+    return this.consultarClienteResumo(cliente.getId());
   }
 
   public ClienteDTO consultarCliente(int idCliente) throws Exception {
     Cliente clienteEncontrado = clienteDao.consultar(idCliente);
+
     if (clienteEncontrado == null) {
-      throw new Exception("Cliente não encontrado com ID: " + idCliente);
+      throw new ClienteNaoEncontradoException();
     }
     
     Usuario usuarioEncontrado = usuarioService.consultarUsuario(clienteEncontrado.getIdUsuario());
@@ -104,7 +109,6 @@ public class ClienteService {
       clienteEncontrado.getId(),
       usuarioEncontrado.getNome(),
       usuarioEncontrado.getEmail(),
-      usuarioEncontrado.getSenha(),
       usuarioEncontrado.getTipo(),
       clienteEncontrado.getCpf(),
       clienteEncontrado.getTelefone(),
@@ -114,8 +118,13 @@ public class ClienteService {
 
   public ClienteResumoDTO consultarClienteResumo(int idCliente) throws Exception {
     Cliente clienteEncontrado = clienteDao.consultar(idCliente);
+
+    if(clienteEncontrado == null){
+      throw new ClienteNaoEncontradoException();
+    }
+
     Usuario usuarioEncontrado = usuarioService.consultarUsuario(clienteEncontrado.getIdUsuario());
-    Endereco enderecoEncontrado = enderecoService.consultarEndereco(idCliente);
+    Endereco enderecoEncontrado = enderecoService.consultarEndereco(clienteEncontrado.getId());
 
     EnderecoDTO enderecoDTO = new EnderecoDTO(
       enderecoEncontrado.getCep(), 
@@ -128,6 +137,34 @@ public class ClienteService {
 
     return new ClienteResumoDTO(
       usuarioEncontrado.getNome(),
+      clienteEncontrado.getCpf(),
+      clienteEncontrado.getTelefone(),
+      enderecoDTO
+    );
+  }
+
+  public ClienteResumoDTO consultarPorUsuario(int idUsuario) throws Exception {
+    Cliente clienteEncontrado = clienteDao.consultarPorUsuario(idUsuario);
+
+    if(clienteEncontrado == null){
+      throw new ClienteNaoEncontradoException();
+    }
+
+    Usuario usuarioEncontrado = usuarioService.consultarUsuario(clienteEncontrado.getIdUsuario());
+    Endereco enderecoEncontrado = enderecoService.consultarEndereco(clienteEncontrado.getId());
+
+    EnderecoDTO enderecoDTO = new EnderecoDTO(
+      enderecoEncontrado.getCep(), 
+      enderecoEncontrado.getLogradouro(), 
+      enderecoEncontrado.getNumero(), 
+      enderecoEncontrado.getBairro(), 
+      enderecoEncontrado.getCidade(), 
+      enderecoEncontrado.getEstado()
+    );
+
+    return new ClienteResumoDTO(
+      usuarioEncontrado.getNome(),
+      usuarioEncontrado.getEmail(),
       clienteEncontrado.getCpf(),
       clienteEncontrado.getTelefone(),
       enderecoDTO

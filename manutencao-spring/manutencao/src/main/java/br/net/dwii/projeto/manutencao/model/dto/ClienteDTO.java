@@ -5,8 +5,8 @@ public class ClienteDTO extends UsuarioDTO {
   private String telefone;
   private EnderecoDTO endereco; 
 
-  public ClienteDTO(int id, String nome, String email, String senha, int tipo, String cpf, String telefone, EnderecoDTO endereco) {
-    super(id, nome, email, senha, tipo);
+  public ClienteDTO(int id, String nome, String email, int tipo, String cpf, String telefone, EnderecoDTO endereco) {
+    super(id, nome, email, tipo);
     this.cpf = cpf;
     this.telefone = telefone;
     this.endereco = endereco;

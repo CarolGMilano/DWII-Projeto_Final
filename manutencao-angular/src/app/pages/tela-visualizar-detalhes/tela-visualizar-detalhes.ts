@@ -13,7 +13,7 @@ import {
   Historico,
   StatusSolicitacaoObservacao,
   Funcionario,
-  Usuario, 
+  UsuarioLogado,
 } from "../../shared";
 
 import { ClienteService, FuncionarioService, LoginService, SolicitacaoFakeService } from '../../services';
@@ -38,7 +38,7 @@ export class TelaVisualizarDetalhes implements OnInit {
   StatusSolicitacaoObservacao = StatusSolicitacaoObservacao;
   StatusSolicitacao = StatusSolicitacao;
 
-  funcionarioLogado: Usuario | null = this.loginService.usuarioLogado;
+  funcionarioLogado: UsuarioLogado | null = this.loginService.usuarioLogado;
   
   manutencao: Manutencao = {
     idSolicitacao: undefined,
@@ -63,8 +63,20 @@ export class TelaVisualizarDetalhes implements OnInit {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
 
     this.funcionarioService.listarTodos().subscribe({
-      next: (dados) => this.funcionarios = dados,
-      error: (err) => console.error(err)
+      next: (funcionarios: Funcionario[] | null) => {
+        if(funcionarios == null){
+          this.funcionarios = [];
+        } else {
+          this.funcionarios = funcionarios;
+        }
+      },
+      error: (erro) => {
+        if (erro.status === 500) {
+          alert(`Erro interno: ${erro.error}`);
+        } else {
+          alert('Erro inesperado ao listar funcionários.');
+        }
+      }
     });
 
     this.solicitacaoFakeService.buscarPorId(this.id).subscribe({
@@ -78,7 +90,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       this.solicitacao.status === StatusSolicitacao.REDIRECIONADA;
 
     const usuarioResponsavel = 
-      this.solicitacao.funcionario?.usuario.id === this.funcionarioLogado?.id;
+      this.solicitacao.funcionario?.id === this.funcionarioLogado?.id;
 
     const orcamentoAceito = this.solicitacao.orcamento?.aprovada ?? false;
 
@@ -86,7 +98,7 @@ export class TelaVisualizarDetalhes implements OnInit {
       h => h.status === StatusSolicitacao.ARRUMADA
     );
 
-    console.log(this.solicitacao.funcionario?.usuario.id, this.funcionarioLogado?.id)
+    console.log(this.solicitacao.funcionario?.id, this.funcionarioLogado?.id)
 
     return statusValido && usuarioResponsavel && orcamentoAceito && manutencaoNaoFeita;
   }

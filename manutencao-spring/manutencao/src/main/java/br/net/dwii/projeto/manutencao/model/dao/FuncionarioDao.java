@@ -17,6 +17,7 @@ public class FuncionarioDao {
   private final String inserir = "INSERT INTO funcionario (idUsuario, dataNascimento) VALUES (?, ?)";
   private final String alterar = "UPDATE funcionario SET dataNascimento = ? WHERE id = ?";
   private final String consultar = "SELECT f.id, f.idUsuario, f.dataNascimento FROM funcionario f JOIN usuario u ON f.idUsuario = u.id WHERE f.id = ? AND u.ativo = true";
+  private final String consultarPorUsuario = "SELECT f.id, f.idUsuario, f.dataNascimento FROM funcionario f JOIN usuario u ON f.idUsuario = u.id WHERE f.idUsuario = ? AND u.ativo = true";
   private final String listar = "SELECT f.id, f.idUsuario, f.dataNascimento FROM funcionario f JOIN usuario u ON f.idUsuario = u.id WHERE u.ativo = true";
 
   public void inserir(Funcionario funcionario) throws Exception {
@@ -83,6 +84,33 @@ public class FuncionarioDao {
     catch (Exception e) {
       e.printStackTrace();
       throw new Exception("Erro ao consultar funcionário", e);
+    } 
+  }
+
+  public Funcionario consultarPorUsuario(int idUsuario) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psConsultarPorUsuario = connection.prepareStatement(consultarPorUsuario);
+    ) {
+      psConsultarPorUsuario.setInt(1, idUsuario);
+
+      try(ResultSet rsConsultarPorUsuario = psConsultarPorUsuario.executeQuery()){
+        if (rsConsultarPorUsuario.next()) {
+          Funcionario funcionario = new Funcionario(
+            rsConsultarPorUsuario.getInt("id"),
+            rsConsultarPorUsuario.getInt("idUsuario"),
+            rsConsultarPorUsuario.getDate("dataNascimento")
+          );
+
+          return funcionario;
+        } else {
+          return null;
+        }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao consultar por usuário funcionário", e);
     } 
   }
 

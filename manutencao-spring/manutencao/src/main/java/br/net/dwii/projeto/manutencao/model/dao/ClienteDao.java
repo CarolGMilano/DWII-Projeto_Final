@@ -16,6 +16,7 @@ import br.net.dwii.projeto.manutencao.model.Cliente;
 public class ClienteDao {
   private final String inserir = "INSERT INTO cliente (idUsuario, cpf, telefone) VALUES (?, ?, ?)";
   private final String consultar = "SELECT c.id, c.idUsuario, c.cpf, c.telefone FROM cliente c JOIN usuario u ON c.idUsuario = u.id WHERE c.id = ? AND u.ativo = true";
+  private final String consultarPorUsuario = "SELECT c.id, c.idUsuario, c.cpf, c.telefone FROM cliente c JOIN usuario u ON c.idUsuario = u.id WHERE c.idUsuario = ? AND u.ativo = true";
   private final String consultarPorCPF = "SELECT c.id, c.idUsuario, c.cpf, c.telefone FROM cliente c JOIN usuario u ON c.idUsuario = u.id WHERE c.cpf = ? AND u.ativo = true";
   private final String listar = "SELECT c.id, c.idUsuario, c.cpf, c.telefone FROM cliente c JOIN usuario u ON c.idUsuario = u.id WHERE u.ativo = true";
   
@@ -104,6 +105,34 @@ public class ClienteDao {
     catch (Exception e) {
       e.printStackTrace();
       throw new Exception("Erro ao consultar cliente pelo CPF", e);
+    } 
+  }
+
+  public Cliente consultarPorUsuario(int idUsuario) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psConsultarPorUsuario = connection.prepareStatement(consultarPorUsuario);
+    ) {
+      psConsultarPorUsuario.setInt(1, idUsuario);
+
+      try(ResultSet rsConsultar = psConsultarPorUsuario.executeQuery()){
+        if (rsConsultar.next()) {
+          Cliente cliente = new Cliente(
+            rsConsultar.getInt("id"),
+            rsConsultar.getInt("idUsuario"),
+            rsConsultar.getString("cpf"),
+            rsConsultar.getString("telefone")
+          );
+
+          return cliente;
+        } else {
+          return null;
+        }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao consultar cliente pelo id do usuário", e);
     } 
   }
 

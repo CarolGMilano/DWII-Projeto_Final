@@ -1,5 +1,5 @@
 export * from './Login';
-export * from './Usuario';
+export * from './UsuarioLogado';
 export * from './Cliente';
 export * from './ClienteResumo';
 export * from './Endereco';

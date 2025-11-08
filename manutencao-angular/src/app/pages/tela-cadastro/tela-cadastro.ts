@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-import { SharedModule, CepStatus, Cliente, Endereco, TipoUsuario, Usuario } from '../../shared';
+import { SharedModule, CepStatus, Cliente, Endereco, TipoUsuario } from '../../shared';
 import { EnderecoService, ClienteService } from '../../services';
 
 @Component({
@@ -22,13 +22,6 @@ export class TelaCadastro {
 
   clientes: Cliente[] = [];
 
-  usuario: Usuario = {
-    nome: '',
-    email: '',
-    senha: '',
-    tipo: TipoUsuario.CLIENTE
-  };
-
   endereco: Endereco = {
     cep: '',
     logradouro: '',
@@ -39,7 +32,9 @@ export class TelaCadastro {
   };
 
   cliente: Cliente = {
-    usuario: this.usuario,
+    nome: '',
+    email: '',
+    tipo: TipoUsuario.CLIENTE,
     cpf: '',
     telefone: '',
     endereco: this.endereco
@@ -96,17 +91,12 @@ export class TelaCadastro {
   
   salvar(){
     if (!this.formCadastro.form.valid) return;
-    
-    //Senha aleatória para teste sem backend
-    const senhaAleatoria = Math.random().toString(36).slice(-4);
 
     const cliente: Cliente = {
-      usuario: {
-        nome: this.cliente.usuario.nome,
-        email: this.cliente.usuario.email,
-        senha: senhaAleatoria,
-        tipo: this.cliente.usuario.tipo
-      },
+      id: -1,
+      nome: this.cliente.nome,
+      email: this.cliente.email,
+      tipo: this.cliente.tipo,
       cpf: this.cliente.cpf,
       telefone: this.cliente.telefone,
       endereco: {
@@ -120,9 +110,19 @@ export class TelaCadastro {
     }
 
     this.clienteService.inserir(cliente).subscribe({
-      next: () => {
-        console.log('Cliente cadastrado com sucesso!');
+      next: (resposta) => {
+        alert('Cliente cadastrado com sucesso!');
+
         this.router.navigate(['']);
+      },
+      error: (erro) => {
+        if (erro.status === 409) {
+          alert(`Conflito: ${erro.error}`);
+        } else if (erro.status === 500) {
+          alert(`Erro interno: ${erro.error}`);
+        } else {
+          alert('Erro inesperado ao cadastrar cliente.');
+        }
       }
     });
   }

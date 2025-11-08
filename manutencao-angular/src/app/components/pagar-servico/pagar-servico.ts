@@ -20,7 +20,7 @@ export class PagarServico implements OnInit{
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
-
+/*
     this.dadosService.getSolicitacao(this.solicitacao).subscribe({
       next: (res) => this.solicitacao = res,
       error: (err) => console.error('Erro ao buscar solicitação:', err)
@@ -29,7 +29,7 @@ export class PagarServico implements OnInit{
     this.dadosService.atualizarStatus(this.solicitacao, EstadoSolicitacao.PAGA).subscribe({
       next: (res) => this.solicitacao = res,
       error: (err) => console.error('Erro ao atualizar status:', err)
-    });
+    });*/
   }
 
   showModal(modal: HTMLDialogElement) {

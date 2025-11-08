@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import br.net.dwii.projeto.manutencao.model.Endereco;
 import br.net.dwii.projeto.manutencao.model.dao.EnderecoDao;
+import br.net.dwii.projeto.manutencao.model.exception.EnderecoNaoEncontradoException;
 
 @Service
 public class EnderecoService {
@@ -12,27 +13,27 @@ public class EnderecoService {
   @Autowired
   private EnderecoDao enderecoDao;
 
-  private void validarEndereco(Endereco endereco) throws Exception {
+  private void validarEndereco(Endereco endereco) {
     if (endereco.getCep() == null || endereco.getCep().isBlank()) {
-      throw new Exception("CEP é obrigatório");
+      throw new IllegalArgumentException("CEP é obrigatório");
     } else if (!endereco.getCep().matches("\\d+")) {
-      throw new Exception("O CEP deve conter apenas números");
+      throw new IllegalArgumentException("O CEP deve conter apenas números");
     }
 
     if (endereco.getLogradouro() == null || endereco.getLogradouro().isBlank()) {
-      throw new Exception("Logradouro é obrigatório");
+      throw new IllegalArgumentException("Logradouro é obrigatório");
     } 
 
     if (endereco.getBairro() == null || endereco.getBairro().isBlank()) {
-      throw new Exception("Bairro é obrigatório");
+      throw new IllegalArgumentException("Bairro é obrigatório");
     } 
 
     if (endereco.getCidade() == null || endereco.getCidade().isBlank()) {
-      throw new Exception("Cidade é obrigatória");
+      throw new IllegalArgumentException("Cidade é obrigatória");
     } 
 
     if (endereco.getEstado() == null || endereco.getEstado().isBlank()) {
-      throw new Exception("Estado é obrigatório");
+      throw new IllegalArgumentException("Estado é obrigatório");
     } 
   }
 
@@ -43,6 +44,12 @@ public class EnderecoService {
   }
 
   public Endereco consultarEndereco(int idCliente) throws Exception {
+    Endereco enderecoEncontrado = enderecoDao.consultar(idCliente);
+
+    if(enderecoEncontrado == null){
+      throw new EnderecoNaoEncontradoException();
+    }
+
     return enderecoDao.consultar(idCliente);
   }
 }
