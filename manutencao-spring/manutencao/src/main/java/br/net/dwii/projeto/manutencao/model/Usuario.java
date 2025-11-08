@@ -48,4 +48,10 @@ public class Usuario {
 
 	public Boolean getAtivo() { return ativo; }
 	public void setAtivo(Boolean ativo) { this.ativo = ativo; }
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", salt=" + salt
+				+ ", tipo=" + tipo + ", ativo=" + ativo + "]";
+	}
 }

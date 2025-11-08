@@ -10,7 +10,7 @@ public class ConnectionDB {
     private static final String password = "root";
 
     private static Connection conn;
-    
+    /*
     public static Connection getConnection() {
 
         try {
@@ -24,9 +24,9 @@ public class ConnectionDB {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
     
-    /* 
+    
     public static Connection getConnection() {
         try {
             return DriverManager.getConnection(url, user, password);
@@ -35,5 +35,4 @@ public class ConnectionDB {
             return null;
         }
     }
-    */
 }
