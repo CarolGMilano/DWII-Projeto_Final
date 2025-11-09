@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.net.dwii.projeto.manutencao.intefaces.ICrud;
 import br.net.dwii.projeto.manutencao.model.Categoria;
 import br.net.dwii.projeto.manutencao.model.Cliente;
 import br.net.dwii.projeto.manutencao.model.Funcionario;
@@ -20,7 +19,7 @@ import br.net.dwii.projeto.manutencao.model.dto.HistoricoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.SolicitacaoDTO;
 
 @Service
-public class SolicitacaoService implements ICrud<Solicitacao> {
+public class SolicitacaoService {
 
     @Autowired
     private SolicitacaoDao solicitacaoDao;
@@ -37,7 +36,6 @@ public class SolicitacaoService implements ICrud<Solicitacao> {
     @Autowired
     private OrcamentoDao orcamentoDao;
 
-    @Override
     public Solicitacao buscarPorId(int id) {
         try {
             return solicitacaoDao.getById(id);
@@ -47,21 +45,13 @@ public class SolicitacaoService implements ICrud<Solicitacao> {
         }
     }
 
-    @Override
     public Solicitacao buscarPorNome(String nome) {
         throw new UnsupportedOperationException("Unimplemented method 'existeId'");
 
     }
 
-    @Override
     public boolean existeId(int id) {
         return buscarPorId(id) != null;
-    }
-
-    @Override
-    public boolean existeNome(String nome) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'existeNome'");
     }
 
     public Solicitacao salvar(SolicitacaoDTO solicitacao) throws Exception {
@@ -111,7 +101,6 @@ public class SolicitacaoService implements ICrud<Solicitacao> {
         return nova;
     }
 
-    @Override
     public List<Solicitacao> listar() {
         try {
             return solicitacaoDao.getAll();
@@ -121,7 +110,6 @@ public class SolicitacaoService implements ICrud<Solicitacao> {
         }
     }
 
-    @Override
     public boolean deletar(int id) {
         Solicitacao solicitacao = buscarPorId(id);
 
@@ -139,7 +127,6 @@ public class SolicitacaoService implements ICrud<Solicitacao> {
         }
     }
 
-    @Override
     public Solicitacao atualizar(Solicitacao solicitacao, int id) {
         try {
             Solicitacao existente = solicitacaoDao.getById(id);
@@ -167,11 +154,6 @@ public class SolicitacaoService implements ICrud<Solicitacao> {
             e.printStackTrace();
             return null;
         }
-    }
-
-    @Override
-    public Solicitacao salvar(Solicitacao entidade) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

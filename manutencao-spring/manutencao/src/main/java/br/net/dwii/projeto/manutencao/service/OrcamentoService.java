@@ -25,7 +25,7 @@ public class OrcamentoService {
     public void inserirOrcamento(int idSolicitacao, OrcamentoDTO dto) throws Exception {
         try {
             Orcamento orcamento = new Orcamento(
-                -1,
+                dto.getId(),
                 idSolicitacao,
                 dto.getValorTotal(),
                 dto.getAprovada(),

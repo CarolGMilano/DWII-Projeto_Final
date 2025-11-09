@@ -25,7 +25,7 @@ public class SolicitacaoDao implements DaoI<Solicitacao> {
     public void add(Solicitacao objeto) throws Exception {
         Connection conn = null;
         PreparedStatement ps = null;
-        String sql = "INSERT INTO solicitacao (equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO solicitacao (equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             conn = ConnectionDB.getConnection();
             ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
