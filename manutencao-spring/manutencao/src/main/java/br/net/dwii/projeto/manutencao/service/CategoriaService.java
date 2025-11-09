@@ -10,16 +10,17 @@ import br.net.dwii.projeto.manutencao.model.Categoria;
 import br.net.dwii.projeto.manutencao.model.dao.CategoriaDao;
 
 @Service
-public class CategoriaService implements ICrud<Categoria>{
+public class CategoriaService implements ICrud<Categoria> {
+
     @Autowired
     private CategoriaDao categoriaDao;
 
-   @Override
+    @Override
     public Categoria buscarPorId(int id) {
-       try {
+        try {
             return categoriaDao.getById(id);
         } catch (Exception e) {
-            e.printStackTrace(); //comando usado para mostrar o rastreamento completo do erro no console quando uma exceção (Exception e) é capturada.
+            e.printStackTrace();
             return null;
         }
     }
@@ -27,16 +28,11 @@ public class CategoriaService implements ICrud<Categoria>{
     @Override
     public Categoria buscarPorNome(String nome) {
         try {
-            List<Categoria> categorias = categoriaDao.getAll();
-            for (Categoria c : categorias) {
-                if (c.getDescricao().equalsIgnoreCase(nome)) {
-                    return c;
-                }
-            }
+            return categoriaDao.getByNome(nome);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -52,6 +48,10 @@ public class CategoriaService implements ICrud<Categoria>{
     @Override
     public Categoria salvar(Categoria categoria) {
         try {
+            if (existeNome(categoria.getDescricao())) {
+                System.out.println("Categoria já existente: " + categoria.getDescricao());
+                return null;
+            }
             categoriaDao.add(categoria);
             return categoria;
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class CategoriaService implements ICrud<Categoria>{
 
     @Override
     public Categoria atualizar(Categoria categoria, int id) {
-       try {
+        try {
             Categoria existente = categoriaDao.getById(id);
             if (existente != null) {
                 existente.setDescricao(categoria.getDescricao());
@@ -88,6 +88,10 @@ public class CategoriaService implements ICrud<Categoria>{
     @Override
     public boolean deletar(int id) {
         Categoria categoria = buscarPorId(id);
+        if (categoria == null) {
+            return false;
+        }
+
         try {
             categoriaDao.delete(categoria);
             return true;
@@ -96,5 +100,4 @@ public class CategoriaService implements ICrud<Categoria>{
             return false;
         }
     }
-    
 }
