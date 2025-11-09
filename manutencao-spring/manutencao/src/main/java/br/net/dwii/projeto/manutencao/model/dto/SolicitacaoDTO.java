@@ -2,6 +2,9 @@ package br.net.dwii.projeto.manutencao.model.dto;
 
 import java.util.List;
 
+import br.net.dwii.projeto.manutencao.model.Cliente;
+import br.net.dwii.projeto.manutencao.model.Funcionario;
+
 public class SolicitacaoDTO {
   private int id;
   private String equipamento;
@@ -11,12 +14,12 @@ public class SolicitacaoDTO {
   private List<HistoricoDTO> historico;
   private OrcamentoDTO orcamento;
   private ManutencaoDTO manutencao;
-  private FuncionarioResumoDTO funcionario;
-  private ClienteResumoDTO cliente;
+  private Funcionario funcionario;
+  private Cliente cliente;
 
   public SolicitacaoDTO(int id, String equipamento, int categoria, String descricao, int status,
-      List<HistoricoDTO> historico, OrcamentoDTO orcamento, ManutencaoDTO manutencao, FuncionarioResumoDTO funcionario,
-      ClienteResumoDTO cliente) {
+      List<HistoricoDTO> historico, OrcamentoDTO orcamento, ManutencaoDTO manutencao, Funcionario funcionario,
+      Cliente cliente) {
     this.id = id;
     this.equipamento = equipamento;
     this.categoria = categoria;
@@ -53,9 +56,9 @@ public class SolicitacaoDTO {
   public ManutencaoDTO getManutencao() { return manutencao; }
   public void setManutencao(ManutencaoDTO manutencao) { this.manutencao = manutencao; }
 
-  public FuncionarioResumoDTO getFuncionario() { return funcionario; }
-  public void setFuncionario(FuncionarioResumoDTO funcionario) { this.funcionario = funcionario; }
+  public Funcionario getFuncionario() { return funcionario; }
+  public void setFuncionario(Funcionario funcionario) { this.funcionario = funcionario; }
 
-  public ClienteResumoDTO getCliente() { return cliente; }
-  public void setCliente(ClienteResumoDTO cliente) { this.cliente = cliente; }
+  public Cliente getCliente() { return cliente; }
+  public void setCliente(Cliente cliente) { this.cliente = cliente; }
 }

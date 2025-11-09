@@ -5,21 +5,29 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import br.net.dwii.projeto.manutencao.model.Servico;
 import br.net.dwii.projeto.manutencao.model.dto.ServicoDTO;
 import br.net.dwii.projeto.manutencao.service.ServicoService;
 
 @RestController
-@RequestMapping("/servico")
-@CrossOrigin(origins = "*")
+@RequestMapping("/orcamentos/{idOrcamento}")
+@CrossOrigin
 public class ServicoController {
 
     @Autowired
     private ServicoService servicoService;
 
-    @PostMapping("/orcamento/{idOrcamento}")
+    @PostMapping("/servicos")
     public ResponseEntity<?> inserirServico(
             @PathVariable int idOrcamento,
             @RequestBody ServicoDTO dto) {
@@ -31,7 +39,7 @@ public class ServicoController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/servicos/{id}")
     public ResponseEntity<?> atualizarServico(
             @PathVariable int id,
             @RequestBody ServicoDTO dto) {
@@ -43,7 +51,7 @@ public class ServicoController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/servicos/{id}")
     public ResponseEntity<?> deletarServico(@PathVariable int id) {
         try {
             servicoService.deletarServico(id);
@@ -53,7 +61,7 @@ public class ServicoController {
         }
     }
 
-    @DeleteMapping("/orcamento/{idOrcamento}")
+    @DeleteMapping("/servicos")
     public ResponseEntity<?> deletarPorOrcamento(@PathVariable int idOrcamento) {
         try {
             servicoService.deletarServicosPorOrcamento(idOrcamento);
@@ -63,7 +71,7 @@ public class ServicoController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/servicos/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable int id) {
         try {
             Servico servico = servicoService.buscarPorId(id);
@@ -76,7 +84,7 @@ public class ServicoController {
         }
     }
 
-    @GetMapping("/orcamento/{idOrcamento}")
+    @GetMapping("/servicos")
     public ResponseEntity<?> listarPorOrcamento(@PathVariable int idOrcamento) {
         try {
             List<Servico> servicos = servicoService.listarPorOrcamento(idOrcamento);
