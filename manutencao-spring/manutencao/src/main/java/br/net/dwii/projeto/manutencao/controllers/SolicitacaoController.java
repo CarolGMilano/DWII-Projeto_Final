@@ -1,6 +1,5 @@
 package br.net.dwii.projeto.manutencao.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.net.dwii.projeto.manutencao.model.Solicitacao;
+import br.net.dwii.projeto.manutencao.model.dto.SolicitacaoDTO;
 import br.net.dwii.projeto.manutencao.service.SolicitacaoService;
 
 @RestController
@@ -24,16 +24,14 @@ public class SolicitacaoController {
     @Autowired    
     private SolicitacaoService solicitacaoService;
 
-    public static List<Solicitacao> solicitacoes = new ArrayList<>();
-
     @GetMapping
     public ResponseEntity<List<Solicitacao>> listarSolicitacoes() {
-        solicitacaoService.listar();
-        return ResponseEntity.ok(solicitacoes);
+        List<Solicitacao> lista = solicitacaoService.listar();
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Solicitacao> obtersolicitacaoPorId(@PathVariable("id") int id) {
+    public ResponseEntity<Solicitacao> obterSolicitacaoPorId(@PathVariable("id") int id) {
         Solicitacao s = solicitacaoService.buscarPorId(id);
 
         if (s == null) {
@@ -45,20 +43,20 @@ public class SolicitacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Solicitacao> inserirsolicitacao(@RequestBody Solicitacao solicitacao) throws Exception {   
+    public ResponseEntity<Solicitacao> inserirsolicitacao(@RequestBody SolicitacaoDTO solicitacao) throws Exception {   
         Solicitacao s = solicitacaoService.salvar(solicitacao);
 
         if (s == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(solicitacao);
+            return ResponseEntity.status(HttpStatus.CREATED).body(s);
         }
         
     }
 
    @PutMapping("/{id}")
-    public ResponseEntity<Solicitacao> atualizarCategoria(@PathVariable("id") Integer id, @RequestBody Solicitacao categoria) {
-        Solicitacao atualizada = solicitacaoService.atualizar(categoria, id);
+    public ResponseEntity<Solicitacao> atualizarSolicitacao(@PathVariable("id") Integer id, @RequestBody Solicitacao solicitacao) {
+        Solicitacao atualizada = solicitacaoService.atualizar(solicitacao, id);
 
         if (atualizada == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -69,7 +67,7 @@ public class SolicitacaoController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Solicitacao> removerCategoria(@PathVariable("id") int id){
+    public ResponseEntity<Solicitacao> removerSolicitacao(@PathVariable("id") int id){
         var solicitacao = solicitacaoService.buscarPorId(id);
         boolean removida = solicitacaoService.deletar(id);
 
