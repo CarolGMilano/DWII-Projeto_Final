@@ -22,7 +22,7 @@
                 <select id="categoria" formControlName="categoria" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 ">
                   <option value="" disabled selected>Selecione uma categoria</option>
                     @for (cat of categorias; track cat.id) {
-                      <option [value]="cat.nome">{{ cat.nome }}</option>
+                      <option [value]="cat.descricao">{{ cat.descricao }}</option>
                     }
                 </select>
               </div>
@@ -42,7 +42,7 @@
       <div class="mt-6 flex items-center justify-end gap-x-6">
         <button type="submit"
           [disabled]="!criarSolicitacao.valid"
-          class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
+          class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer" >
           Abrir Solicitação
         </button>
       </div>

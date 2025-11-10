@@ -18,7 +18,7 @@
         @for (categoria of categorias; track categoria.id){
           <tr class="hover:bg-gray-50 transition-colors">
             <td class="px-4 py-2 text-sm text-gray-800">{{ categoria.id }}</td>
-            <td class="px-4 py-2 text-sm text-gray-800">{{ categoria.nome }}</td>
+            <td class="px-4 py-2 text-sm text-gray-800">{{ categoria.descricao }}</td>
             <td class="px-4 py-2 flex gap-2">
               <button type="button" class="p-2 rounded-md bg-gray-100 hover:bg-gray-300 transition-colors" (click)="abrirEditar(categoria)">
                 <svg width="20" height="20" fill="none" class="stroke-gray-600 hover:stroke-gray-800" viewBox="0 0 8 8">

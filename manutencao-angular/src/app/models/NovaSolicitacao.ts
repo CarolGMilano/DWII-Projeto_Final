@@ -5,5 +5,6 @@ export interface NovaSolicitacaoModel{
     equipamento: string;
     categoria: Categoria;
     descricao: string;
-    estado: EstadoSolicitacao;
+    status: EstadoSolicitacao;
+    cliente: number;
 }

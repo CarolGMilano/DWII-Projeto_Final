@@ -8,26 +8,26 @@ import { Categoria } from '../../models/Categoria';
 })
 
 export class CategoriaService {
-  private apiUrl = ''; 
+  private apiUrl = "http://localhost:8080/categorias"; 
   
   constructor(private http: HttpClient) {}
 
+  // get categorias(): Observable<Categoria[]> {
+  //   const mockCategorias: Categoria[] = [
+  //     { id: 1, nome: 'Celular' },
+  //     { id: 2, nome: 'Computador' },
+  //     { id: 3, nome: 'Impressora' },
+  //     { id: 4, nome: 'Televisão' }
+  //   ];
+  //   return of(mockCategorias); // transforma em Observable
+  // }
+  
   get categorias(): Observable<Categoria[]> {
-    const mockCategorias: Categoria[] = [
-      { id: 1, nome: 'Celular' },
-      { id: 2, nome: 'Computador' },
-      { id: 3, nome: 'Impressora' },
-      { id: 4, nome: 'Televisão' }
-    ];
-    return of(mockCategorias); // transforma em Observable
+    return this.http.get<Categoria[]>(this.apiUrl);
   }
-  /*
-  get categorias(): Observable<Categoria[]> {
-    return this.http.get<Categoria[]>(this.apiUrl + '/categorias');
-  }
-  */
+  
   postCategoria(categoria: Categoria): Observable<Categoria> {
-    return this.http.post<Categoria>(this.apiUrl + '/categorias', categoria);
+    return this.http.post<Categoria>(this.apiUrl, categoria);
   }
 
   putCategoria(id: number, categoria: string): Observable<Categoria> {

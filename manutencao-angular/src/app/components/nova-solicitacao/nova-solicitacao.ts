@@ -26,24 +26,27 @@ export class NovaSolicitacao implements OnInit {
 
   ngOnInit(): void {
     this.categoriaService.categorias.subscribe({
-      next: (dados) => this.categorias = dados,
+      next: (dados) => console.log(this.categorias = dados),
       error: (err) => console.error('Erro ao carregar categorias:', err)
     });
+    
+    console.log(this.categorias)
   }
-
+  
   criarSolicitacao = new FormGroup({
     equipamento: new FormControl('', Validators.required),
     categoria: new FormControl('', Validators.required),
     descricao: new FormControl('', Validators.required)
   });
-
+  
   enviarSolicitacao() {
     const rawValue = this.criarSolicitacao.getRawValue();
     let categoriaEncontrada: Categoria | undefined;
 
     this.categorias.forEach(cat => {
-      if (cat.nome === rawValue.categoria) {
+      if (cat.descricao === rawValue.categoria) {
         categoriaEncontrada = cat;
+        console.log(cat)
       }
     });
 
@@ -52,15 +55,33 @@ export class NovaSolicitacao implements OnInit {
       return;
     }
 
+    if (!rawValue.equipamento) {
+      console.error('Equipamento não informado', rawValue.equipamento);
+      return;
+    }
+
+    if (!rawValue.descricao) {
+      console.error('Descrição não informada', rawValue.descricao);
+      return;
+    }
+
+    const cliente = localStorage.getItem("usuarioLogado");
+
     const novaSolicitacao: NovaSolicitacaoModel = {
-      equipamento: rawValue.equipamento ?? '',
+      equipamento: rawValue.equipamento,
       categoria: categoriaEncontrada,
-      descricao: rawValue.descricao ?? '',
-      estado: EstadoSolicitacao.ABERTA
+      descricao: rawValue.descricao,
+      status: EstadoSolicitacao.ABERTA,
+      cliente: Number(cliente) // verificar se está certo
     };
-/*
+
     this.solicitacaoService.postSolicitacao(novaSolicitacao).subscribe({
       next: (resposta) => {
+
+        if (!resposta) {
+          console.error('Resposta nula', resposta);
+          return;
+        }
         console.log('Solicitação criada com sucesso:', resposta);
 
         this.onSubmit.emit(resposta);
@@ -71,6 +92,5 @@ export class NovaSolicitacao implements OnInit {
         alert('Erro ao criar solicitação. Tente novamente.');
       },
     });
-*/
   }
 }

@@ -118,6 +118,7 @@ public class OrcamentoDao implements DaoI<Orcamento> {
             ps.setString(4, orcamento.getMsgRejeicao());
             ps.setInt(5, orcamento.getId());
 
+            System.out.println("DEBUG -> Aprovado recebido: " + orcamento.getAprovado());
             ps.executeUpdate();
 
         } catch (Exception e) {

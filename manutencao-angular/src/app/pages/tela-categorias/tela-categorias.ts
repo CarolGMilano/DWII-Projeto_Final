@@ -41,7 +41,7 @@ export class TelaCategorias implements OnInit {
 
   abrirEditar(categoria: Categoria) {
     this.categoriaSelecionada = categoria;
-    this.categoriaForm.patchValue({ nome: categoria.nome });
+    this.categoriaForm.patchValue({ nome: categoria.descricao });
     this.modoFormulario = 'editar';
     this.mostrarFormulario = true;
   }
@@ -64,7 +64,7 @@ export class TelaCategorias implements OnInit {
     const nome = this.categoriaForm.get('nome')?.value ?? '';
     const novaCategoria: Categoria = {
       id: this.categoriaSelecionada?.id,
-      nome: ''
+      descricao: ''
     };
 
     if (this.modoFormulario === 'adicionar') {
@@ -73,7 +73,7 @@ export class TelaCategorias implements OnInit {
         this.cancelar();
       });
     } else if (this.modoFormulario === 'editar' && novaCategoria.id) {
-      this.categoriaService.putCategoria(novaCategoria.id, novaCategoria.nome).subscribe(() => {
+      this.categoriaService.putCategoria(novaCategoria.id, novaCategoria.descricao).subscribe(() => {
         this.onSubmit.emit(novaCategoria);
         this.cancelar();
       });
