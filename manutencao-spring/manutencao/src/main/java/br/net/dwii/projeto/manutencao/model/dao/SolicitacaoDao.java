@@ -20,6 +20,8 @@ public class SolicitacaoDao {
   private final String alterarFuncionario = "UPDATE solicitacao SET idFuncionario = ? WHERE id = ?";
   private final String listar = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idFuncionario = ?";
   private final String listarAbertas = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idStatus = 1";
+  private final String listarPorCliente = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idCliente = ? AND idStatus != 8";
+  private final String listarPorClienteFinalizadas = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idCliente = ? AND idStatus = 8";
 
   public void inserir(Solicitacao solicitacao) throws Exception {
     try (
@@ -109,7 +111,71 @@ public class SolicitacaoDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new Exception("Erro ao listar solicitações", e);
+      throw new Exception("Erro ao listar solicitações por funcionário", e);
+    } 
+  }
+
+  public List<Solicitacao> listarPorCliente(int idCliente) throws Exception {    
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psListar = connection.prepareStatement(listarPorCliente);
+    ) {
+      psListar.setInt(1, idCliente);
+
+      List<Solicitacao> solicitacoes = new ArrayList<>();
+
+      try (ResultSet rsListar = psListar.executeQuery()) {
+        while (rsListar.next()) {
+          Solicitacao solicitacao = new Solicitacao(
+            rsListar.getInt("id"),
+            rsListar.getString("equipamento"),
+            rsListar.getInt("idCategoria"),
+            rsListar.getString("descricao"),
+            rsListar.getInt("idStatus"),
+            rsListar.getInt("idFuncionario"),
+            rsListar.getInt("idCliente")
+          );
+
+          solicitacoes.add(solicitacao);
+        }
+        return solicitacoes;
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao listar solicitações por cliente", e);
+    } 
+  }
+
+  public List<Solicitacao> listarPorClienteFinalizadas(int idCliente) throws Exception {    
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psListar = connection.prepareStatement(listarPorClienteFinalizadas);
+    ) {
+      psListar.setInt(1, idCliente);
+
+      List<Solicitacao> solicitacoes = new ArrayList<>();
+
+      try (ResultSet rsListar = psListar.executeQuery()) {
+        while (rsListar.next()) {
+          Solicitacao solicitacao = new Solicitacao(
+            rsListar.getInt("id"),
+            rsListar.getString("equipamento"),
+            rsListar.getInt("idCategoria"),
+            rsListar.getString("descricao"),
+            rsListar.getInt("idStatus"),
+            rsListar.getInt("idFuncionario"),
+            rsListar.getInt("idCliente")
+          );
+
+          solicitacoes.add(solicitacao);
+        }
+        return solicitacoes;
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao listar solicitações finalizadas por cliente", e);
     } 
   }
 

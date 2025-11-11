@@ -72,6 +72,28 @@ public class SolicitacaoController {
     }
   }
 
+  @GetMapping("/solicitacoes/cliente")
+  public ResponseEntity<?> listarPorCliente(@RequestParam int id) {
+    try {
+      List<SolicitacaoResumoDTO> solicitacoes = solicitacaoService.listarPorCliente(id);
+
+      return ResponseEntity.ok(solicitacoes);
+    } catch (Exception e){
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar solicitações do cliente: " + e.getMessage());
+    }
+  }
+
+  @GetMapping("/solicitacoes/cliente-finalizadas")
+  public ResponseEntity<?> listarPorClienteFinalizadas(@RequestParam int id) {
+    try {
+      List<SolicitacaoResumoDTO> solicitacoes = solicitacaoService.listarPorClienteFinalizadas(id);
+
+      return ResponseEntity.ok(solicitacoes);
+    } catch (Exception e){
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar solicitações finalizadas do cliente: " + e.getMessage());
+    }
+  }
+
   //Orçada
   @PostMapping("/solicitacoes/{idSolicitacao}/orcamento")
   public ResponseEntity<?> orçarSolicitacao(@PathVariable("idSolicitacao") int idSolicitacao, @RequestBody SolicitacaoDTO solicitacaoDTO){

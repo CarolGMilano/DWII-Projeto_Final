@@ -177,6 +177,76 @@ public class SolicitacaoService {
     return solicitacoesResumoDTO;
   }
 
+  public List<SolicitacaoResumoDTO> listarPorCliente(int idUsuario) throws Exception {
+    ClienteResumoDTO clienteLogado = clienteService.consultarPorUsuario(idUsuario);
+    int idCliente = clienteService.consultarIdPorCPF(clienteLogado.getCpf());
+    
+    List<Solicitacao> solicitacoes = solicitacaoDao.listarPorCliente(idCliente);
+    List<SolicitacaoResumoDTO> solicitacoesResumoDTO = new ArrayList<>();
+
+    for (Solicitacao solicitacao : solicitacoes) {
+      List<HistoricoDTO> historicos = historicoService.listarHistorico(solicitacao.getId());
+      ClienteResumoDTO clienteEncontrado = clienteService.consultarClienteResumo(solicitacao.getIdCliente());
+
+      LocalDateTime dataAbertura = null;
+
+      for (HistoricoDTO historico : historicos) {
+        if (historico.getStatus() == 1) {
+          dataAbertura = historico.getDataHora();
+
+          break; 
+        }
+      }
+
+      solicitacoesResumoDTO.add(
+        new SolicitacaoResumoDTO(
+          solicitacao.getId(), 
+          solicitacao.getEquipamento(), 
+          solicitacao.getIdStatus(), 
+          dataAbertura, 
+          clienteEncontrado
+        )
+      );
+    }
+
+    return solicitacoesResumoDTO;
+  }
+
+  public List<SolicitacaoResumoDTO> listarPorClienteFinalizadas(int idUsuario) throws Exception {
+    ClienteResumoDTO clienteLogado = clienteService.consultarPorUsuario(idUsuario);
+    int idCliente = clienteService.consultarIdPorCPF(clienteLogado.getCpf());
+    
+    List<Solicitacao> solicitacoes = solicitacaoDao.listarPorClienteFinalizadas(idCliente);
+    List<SolicitacaoResumoDTO> solicitacoesResumoDTO = new ArrayList<>();
+
+    for (Solicitacao solicitacao : solicitacoes) {
+      List<HistoricoDTO> historicos = historicoService.listarHistorico(solicitacao.getId());
+      ClienteResumoDTO clienteEncontrado = clienteService.consultarClienteResumo(solicitacao.getIdCliente());
+
+      LocalDateTime dataAbertura = null;
+
+      for (HistoricoDTO historico : historicos) {
+        if (historico.getStatus() == 1) {
+          dataAbertura = historico.getDataHora();
+
+          break; 
+        }
+      }
+
+      solicitacoesResumoDTO.add(
+        new SolicitacaoResumoDTO(
+          solicitacao.getId(), 
+          solicitacao.getEquipamento(), 
+          solicitacao.getIdStatus(), 
+          dataAbertura, 
+          clienteEncontrado
+        )
+      );
+    }
+
+    return solicitacoesResumoDTO;
+  }
+
   public SolicitacaoDTO orçarSolicitacao(SolicitacaoDTO solicitacaoDTO) throws Exception {
     Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoDTO.getId());
 
