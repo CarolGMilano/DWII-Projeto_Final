@@ -1,194 +1,87 @@
-// package br.net.dwii.projeto.manutencao.model.dao;
+package br.net.dwii.projeto.manutencao.model.dao;
 
-// import java.sql.Connection;
-// import java.sql.PreparedStatement;
-// import java.sql.ResultSet;
-// import java.util.ArrayList;
-// import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-// import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Repository;
 
-// import br.net.dwii.projeto.manutencao.model.Funcionario;
-// import br.net.dwii.projeto.manutencao.model.Historico;
+import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
+import br.net.dwii.projeto.manutencao.model.Historico;
 
-// @Repository
-// public class HistoricoDao implements DaoI<Historico> {
-//     private FuncionarioDao funcionarioDao = new FuncionarioDao();
+@Repository
+public class HistoricoDao {
+  private final String inserir = "INSERT INTO historico (idSolicitacao, dataHora, idStatus, idFuncionario, idFuncionarioDestino) VALUES (?, ?, ?, ?, ?)";
+  private final String listar = "SELECT id, idSolicitacao, dataHora, idStatus, idFuncionario, idFuncionarioDestino FROM historico WHERE idSolicitacao = ?";
 
-//     @Override
-//     public void add(Historico objeto) throws Exception {
-//         Connection conn = null;
-//         PreparedStatement ps = null;
-//         String sql = "INSERT INTO historico (id_solicitacao,dataHora, status, idFuncionario ) VALUES (?, ?, ?)";   
-        
-//         try {
-//             // conn = ConnectionFactory.getConnection();
+  public void inserir(Historico historico) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psInserir = connection.prepareStatement(inserir, Statement.RETURN_GENERATED_KEYS);
+    ) {
+      psInserir.setInt(1, historico.getIdSolicitacao());
+      psInserir.setTimestamp(2, historico.getDataHora());
+      psInserir.setInt(3, historico.getIdStatus());
 
-//             ps = conn.prepareStatement(sql);
-//             ps.setLong(1, objeto.getIdSolicitacao());   
-//             ps.setDate(2, objeto.getDataHora());
-//             ps.setInt(3, objeto.getStatus());
-//             ps.setLong(4, objeto.getFuncionario().getId());
-//             ps.executeUpdate();
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//             throw new UnsupportedOperationException("Unimplemented method 'add'");
-//         } 
-//         finally {
-//             if (ps != null) {
-//                 ps.close();
-//             }
-//             if (conn != null) {
-//                 conn.close();
-//             }
-//         }
-//     }
+      if (historico.getIdFuncionario() != null) {
+        psInserir.setInt(4, historico.getIdFuncionario());
+      } else {
+        psInserir.setNull(4, java.sql.Types.INTEGER);
+      }
 
-//     @Override
-//     public List<Historico> getAll() throws Exception {
-//         Connection conn = null;
-//         PreparedStatement ps = null;
-//         ResultSet rs = null;
-//         String sql = "SELECT * FROM historico";
+      if (historico.getIdFuncionarioDestino() != null) {
+        psInserir.setInt(5, historico.getIdFuncionarioDestino());
+      } else {
+        psInserir.setNull(5, java.sql.Types.INTEGER);
+      }
+      
+      psInserir.executeUpdate();
 
-//         try{
-//             // conn = ConnectionFactory.getConnection();
-//             ps = conn.prepareStatement(sql);
-//             rs = ps.executeQuery();
+      try(ResultSet rsInserir = psInserir.getGeneratedKeys()){
+        if(rsInserir.next()){
+          int id = rsInserir.getInt(1);
 
-//             List<Historico> historicoList = new ArrayList();
+          historico.setId(id);
+        }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao inserir histórico", e);
+    } 
+  }
 
-//             while (rs.next()) {
-//                Funcionario funcionario = funcionarioDao.consultar(rs.getInt("id_funcionario")); 
-//                 Funcionario funcionarioDestino = funcionarioDao.consultar(rs.getInt("id_funcionario_destino")); 
+  public List<Historico> listar(int idSolicitacao) throws Exception {    
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psListar = connection.prepareStatement(listar);
+    ) {
+      psListar.setInt(1, idSolicitacao);
 
-//                 Historico historico = new Historico(
-//                     rs.getInt("id"),
-//                     rs.getInt("id_solicitacao"),
-//                     rs.getDate("dataHora"),
-//                     rs.getInt("status"),
-//                     funcionario,
-//                     funcionarioDestino
-//                 );
-//                 historicoList.add(historico);
-//             }
-//             return historicoList;
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//             throw new UnsupportedOperationException("Unimplemented method 'getAll'");
-//         } finally {
-//             if (rs != null) {
-//                 rs.close();
-//             }
-//             if (ps != null) {
-//                 ps.close();
-//             }
-//             if (conn != null) {
-//                 conn.close();
-//             }
-//         }
-//     }
+      List<Historico> historicos = new ArrayList<>();
 
-//     @Override
-//     public Historico getById(int id) throws Exception {
-//         Connection conn = null;
-//         PreparedStatement ps = null;
-//         ResultSet rs = null;
-//         String sql = "SELECT * FROM historico WHERE id = ?";
+      try (ResultSet rsListar = psListar.executeQuery()) {
+        while (rsListar.next()) {
+          Historico historico = new Historico(
+            rsListar.getInt("id"),
+            rsListar.getInt("idSolicitacao"),
+            rsListar.getTimestamp("dataHora"),
+            rsListar.getInt("idStatus"),
+            rsListar.getInt("idFuncionario"),
+            rsListar.getInt("idFuncionarioDestino")
+          );
 
-//         try{
-//             // conn = ConnectionFactory.getConnection();
-//             ps = conn.prepareStatement(sql);
-//             ps.setInt(1, id);
-//             rs = ps.executeQuery();
-
-//             if (rs.next()) {
-//                Funcionario funcionario = funcionarioDao.consultar(rs.getInt("id_funcionario")); 
-//                Funcionario funcionarioDestino = funcionarioDao.consultar(rs.getInt("id_funcionario_destino")); 
-
-//                 Historico historico = new Historico(
-//                     rs.getInt("id"),
-//                     rs.getInt("id_solicitacao"),
-//                     rs.getDate("dataHora"),
-//                     rs.getInt("status"),
-//                     funcionario,
-//                     funcionarioDestino
-//                 );
-//                 return historico;
-//             } else {
-//                 return null;
-//             }
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//             throw new UnsupportedOperationException("Unimplemented method 'getById'");
-//         } finally {
-//             if (rs != null) {
-//                 rs.close();
-//             }
-//             if (ps != null) {
-//                 ps.close();
-//             }
-//             if (conn != null) {
-//                 conn.close();
-//             }
-//         }
-//     }
-
-//     @Override
-//     public void update(Historico objeto) throws Exception {
-//         Connection conn = null;
-//         PreparedStatement ps = null;
-//         String sql = "UPDATE historico SET id_solicitacao = ?, dataHora = ?, status = ?, id_funcionario = ?, id_funcionario_destino = ? WHERE id = ?";
-
-//         try {
-//             // conn = ConnectionFactory.getConnection();
-
-//             ps = conn.prepareStatement(sql);
-//             ps.setLong(1, objeto.getIdSolicitacao());   
-//             ps.setDate(2, objeto.getDataHora());
-//             ps.setInt(3, objeto.getStatus());
-//             ps.setLong(4, objeto.getFuncionario().getId());
-//             ps.setLong(5, objeto.getFuncionarioDestino().getId());
-//             ps.setLong(6, objeto.getId());
-//             ps.executeUpdate();
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//             throw new UnsupportedOperationException("Unimplemented method 'update'");
-//         } 
-//         finally {
-//             if (ps != null) {
-//                 ps.close();
-//             }
-//             if (conn != null) {
-//                 conn.close();
-//             }
-//         }
-//     }
-
-//     @Override
-//     public void delete(Historico objeto) throws Exception {
-//         Connection conn = null;
-//         PreparedStatement ps = null;
-//         String sql = "DELETE FROM historico WHERE id = ?";
-        
-//         try {
-//             // conn = ConnectionFactory.getConnection();
-
-//             ps = conn.prepareStatement(sql);
-//             ps.setLong(1, objeto.getId());   
-//             ps.executeUpdate();
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//             throw new UnsupportedOperationException("Unimplemented method 'delete'");
-//         } 
-//         finally {
-//             if (ps != null) {
-//                 ps.close();
-//             }
-//             if (conn != null) {
-//                 conn.close();
-//             }
-//         }
-//     }
-    
-// }
+          historicos.add(historico);
+        }
+        return historicos;
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao listar histórico", e);
+    } 
+  }
+}

@@ -1,22 +1,22 @@
 package br.net.dwii.projeto.manutencao.model.dto;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class HistoricoDTO {
-  private Date dataHora;
+  private Timestamp dataHora;
   private int status;
   private FuncionarioResumoDTO funcionario;
   private FuncionarioResumoDTO funcionarioDestino;
 
-  public HistoricoDTO(Date dataHora, int status, FuncionarioResumoDTO funcionario, FuncionarioResumoDTO funcionarioDestino) {
+  public HistoricoDTO(Timestamp dataHora, int status, FuncionarioResumoDTO funcionario, FuncionarioResumoDTO funcionarioDestino) {
     this.dataHora = dataHora;
     this.status = status;
     this.funcionario = funcionario;
     this.funcionarioDestino = funcionarioDestino;
   }
 
-  public Date getDataHora() { return dataHora; }
-  public void setDataHora(Date dataHora) { this.dataHora = dataHora; }
+  public Timestamp getDataHora() { return dataHora; }
+  public void setDataHora(Timestamp dataHora) { this.dataHora = dataHora; }
 
   public int getStatus() { return status; }
   public void setStatus(int status) { this.status = status; }

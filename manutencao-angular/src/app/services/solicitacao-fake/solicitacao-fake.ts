@@ -11,7 +11,7 @@ import { Solicitacao } from '../../shared';
 export class SolicitacaoFakeService {
   private readonly _httpClient = inject(HttpClient)
   
-  BASE_URL = "http://localhost:3000/solicitacao";
+  BASE_URL = "http://localhost:8080/solicitacoes";
 
   httpOptions = {
     headers: new HttpHeaders({

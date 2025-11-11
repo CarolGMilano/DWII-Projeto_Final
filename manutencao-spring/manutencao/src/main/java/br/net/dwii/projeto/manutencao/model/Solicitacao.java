@@ -6,10 +6,10 @@ public class Solicitacao {
   private int idCategoria;
   private String descricao;
   private int idStatus;
-  private int idFuncionario;
+  private Integer idFuncionario;
   private int idCliente;
 
-  public Solicitacao(int id, String equipamento, int idCategoria, String descricao, int idStatus, int idFuncionario, int idCliente) {
+  public Solicitacao(int id, String equipamento, int idCategoria, String descricao, int idStatus, Integer idFuncionario, int idCliente) {
     this.id = id;
     this.equipamento = equipamento;
     this.idCategoria = idCategoria;
@@ -34,8 +34,8 @@ public class Solicitacao {
   public int getIdStatus() { return idStatus; }
   public void setIdStatus(int idStatus) { this.idStatus = idStatus; }
 
-  public int getIdFuncionario() { return idFuncionario; }
-  public void setIdFuncionario(int idFuncionario) { this.idFuncionario = idFuncionario; }
+  public Integer getIdFuncionario() { return idFuncionario; }
+  public void setIdFuncionario(Integer idFuncionario) { this.idFuncionario = idFuncionario; }
   
   public int getIdCliente() { return idCliente; }
   public void setIdCliente(int idCliente) { this.idCliente = idCliente; }

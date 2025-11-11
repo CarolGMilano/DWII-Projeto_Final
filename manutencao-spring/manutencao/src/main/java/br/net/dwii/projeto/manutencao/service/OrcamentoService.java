@@ -1,81 +1,90 @@
 package br.net.dwii.projeto.manutencao.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.net.dwii.projeto.manutencao.model.Orcamento;
-import br.net.dwii.projeto.manutencao.model.Servico;
 import br.net.dwii.projeto.manutencao.model.dao.OrcamentoDao;
-import br.net.dwii.projeto.manutencao.model.dao.ServicoDao;
 import br.net.dwii.projeto.manutencao.model.dto.OrcamentoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.ServicoDTO;
 
 @Service
 public class OrcamentoService {
+  @Autowired
+  private OrcamentoDao orcamentoDao;
 
-    @Autowired
-    private OrcamentoDao orcamentoDao;
+  @Autowired
+  private ServicoService servicoService;
 
-    @Autowired
-    private ServicoDao servicoDao;
+  private void validarOrcamento(Orcamento orcamento) {
+    //Como ele não é um boolean primitivo, preciso descobrir se o falso é um false verdadeiro ou um null.
+    Boolean status = orcamento.getAprovado();
 
-    public void inserirOrcamento(int idSolicitacao, OrcamentoDTO dto) throws Exception {
-        try {
-            Orcamento orcamento = new Orcamento(
-                dto.getId(),
-                idSolicitacao,
-                dto.getValorTotal(),
-                dto.getAprovada(),
-                dto.getMsgRejeicao()
-            );
-
-
-            orcamentoDao.add(orcamento);
-            int idOrcamento = orcamento.id;
-
-            List<ServicoDTO> servicosDTO = dto.getServicos();
-            if (servicosDTO != null && !servicosDTO.isEmpty()) {
-                for (ServicoDTO s : servicosDTO) {
-                    Servico servico = new Servico(
-                        -1,
-                        idOrcamento,
-                        s.getDescricao(),
-                        s.getPreco()
-                    );
-                    servicoDao.add(servico);
-                }
-            }
-        } catch (SQLException e) {
-            throw new Exception("Erro ao inserir orçamento: " + e.getMessage(), e);
-        }
+    if (Boolean.FALSE.equals(status) && (orcamento.getMsgRejeicao() == null || orcamento.getMsgRejeicao().isBlank())) {
+      throw new IllegalArgumentException("Mensagem de rejeição é obrigatória para orçamentos reprovados");
     }
 
-    public Orcamento buscarPorId(int id) throws Exception {
-        try {
-            return orcamentoDao.getById(id);
-        } catch (SQLException e) {
-            throw new Exception("Erro ao buscar orçamento: " + e.getMessage(), e);
-        }
+    if (orcamento.getValorTotal() <= 0) {
+      throw new IllegalArgumentException("Valor total deve ser maior que zero");
+    }
+  }
+
+  public OrcamentoDTO inserirOrcamento(OrcamentoDTO orcamentoDTO, int idSolicitacao) throws Exception {
+    Orcamento orcamento = new Orcamento(
+      -1,
+      idSolicitacao,
+      orcamentoDTO.getValorTotal(),
+      orcamentoDTO.getAprovada(),
+      orcamentoDTO.getMsgRejeicao()
+    );
+
+    validarOrcamento(orcamento);
+    
+    orcamentoDao.inserir(orcamento);
+
+    if (orcamentoDTO.getServicos() != null) {
+      for (ServicoDTO servicoDTO : orcamentoDTO.getServicos()) {
+        servicoService.inserirServico(servicoDTO, orcamento.getId());
+      }
     }
 
-    public void atualizarOrcamento(Orcamento orcamento) throws Exception {
-        try {
-            orcamentoDao.update(orcamento);
-        } catch (SQLException e) {
-            throw new Exception("Erro ao atualizar orçamento: " + e.getMessage(), e);
-        }
+    return this.consultarOrcamento(idSolicitacao);
+  }   
+
+  public OrcamentoDTO consultarOrcamento(int idSolicitacao) throws Exception {
+    Orcamento orcamentoEncontrado = orcamentoDao.consultar(idSolicitacao);
+
+    if (orcamentoEncontrado == null) {
+      return null;
     }
 
-    public void deletarOrcamento(int idOrcamento) throws Exception {
-        try {
-            servicoDao.deleteByOrcamentoId(idOrcamento);
-            Orcamento orcamento = orcamentoDao.getById(idOrcamento);
-            orcamentoDao.delete(orcamento);
-        } catch (SQLException e) {
-            throw new Exception("Erro ao deletar orçamento: " + e.getMessage(), e);
-        }
-    }
+    List<ServicoDTO> servicosEncontrados = servicoService.listarServicos(orcamentoEncontrado.getId());
+
+    return new OrcamentoDTO(
+      servicosEncontrados, 
+      orcamentoEncontrado.getValorTotal(), 
+      orcamentoEncontrado.getAprovado(), 
+      orcamentoEncontrado.getMsgRejeicao()
+    );
+  }
+
+  public OrcamentoDTO alterarAprovacao(OrcamentoDTO orcamentoDTO, int idSolicitacao) throws Exception {
+    Orcamento orcamentoEncontrado = orcamentoDao.consultar(idSolicitacao);
+    
+    Orcamento novoOrcamento = new Orcamento(
+      orcamentoEncontrado.getId(),
+      orcamentoEncontrado.getIdSolicitacao(),
+      orcamentoEncontrado.getValorTotal(),
+      orcamentoDTO.getAprovada(),
+      orcamentoDTO.getMsgRejeicao()
+    );
+
+    validarOrcamento(novoOrcamento);
+
+    orcamentoDao.alterarAprovacao(novoOrcamento);
+
+    return this.consultarOrcamento(idSolicitacao);
+  }
 }

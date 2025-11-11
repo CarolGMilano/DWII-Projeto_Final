@@ -1,17 +1,17 @@
 package br.net.dwii.projeto.manutencao.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Historico {
   private int id;
   private int idSolicitacao;
-  private Date dataHora;
+  private Timestamp dataHora;
   private int idStatus;
-  private int idFuncionario;
-  private int idFuncionarioDestino;
+  private Integer idFuncionario;
+  private Integer idFuncionarioDestino;
   
-  public Historico(int id, int idSolicitacao, Date dataHora, int idStatus, int idFuncionario,
-      int idFuncionarioDestino) {
+  public Historico(int id, int idSolicitacao, Timestamp dataHora, int idStatus, Integer idFuncionario,
+      Integer idFuncionarioDestino) {
     this.id = id;
     this.idSolicitacao = idSolicitacao;
     this.dataHora = dataHora;
@@ -26,15 +26,15 @@ public class Historico {
   public int getIdSolicitacao() { return idSolicitacao; }
   public void setIdSolicitacao(int idSolicitacao) { this.idSolicitacao = idSolicitacao; }
 
-  public Date getDataHora() { return dataHora; }
-  public void setDataHora(Date dataHora) { this.dataHora = dataHora; }
+  public Timestamp getDataHora() { return dataHora; }
+  public void setDataHora(Timestamp dataHora) { this.dataHora = dataHora; }
 
   public int getIdStatus() { return idStatus; }
   public void setIdStatus(int idStatus) { this.idStatus = idStatus; }
 
-  public int getIdFuncionario() { return idFuncionario; }
-  public void setIdFuncionario(int idFuncionario) { this.idFuncionario = idFuncionario; }
+  public Integer getIdFuncionario() { return idFuncionario; }
+  public void setIdFuncionario(Integer idFuncionario) { this.idFuncionario = idFuncionario; }
 
-  public int getIdFuncionarioDestino() { return idFuncionarioDestino; }
-  public void setIdFuncionarioDestino(int idFuncionarioDestino) { this.idFuncionarioDestino = idFuncionarioDestino; }
+  public Integer getIdFuncionarioDestino() { return idFuncionarioDestino; }
+  public void setIdFuncionarioDestino(Integer idFuncionarioDestino) { this.idFuncionarioDestino = idFuncionarioDestino; }
 }

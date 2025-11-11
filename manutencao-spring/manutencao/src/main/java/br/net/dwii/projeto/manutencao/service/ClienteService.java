@@ -86,6 +86,16 @@ public class ClienteService {
     return this.consultarClienteResumo(cliente.getId());
   }
 
+  public int consultarIdPorCPF(String cpf) throws  Exception{
+    Cliente clienteEncontrado = clienteDao.consultarPorCPF(cpf);
+
+    if (clienteEncontrado == null) {
+      throw new ClienteNaoEncontradoException();
+    }
+
+    return clienteEncontrado.getId();
+  }
+  
   public ClienteDTO consultarCliente(int idCliente) throws Exception {
     Cliente clienteEncontrado = clienteDao.consultar(idCliente);
 
@@ -137,6 +147,7 @@ public class ClienteService {
 
     return new ClienteResumoDTO(
       usuarioEncontrado.getNome(),
+      usuarioEncontrado.getEmail(),
       clienteEncontrado.getCpf(),
       clienteEncontrado.getTelefone(),
       enderecoDTO
