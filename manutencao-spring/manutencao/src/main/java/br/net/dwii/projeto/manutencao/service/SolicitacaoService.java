@@ -1,6 +1,6 @@
 package br.net.dwii.projeto.manutencao.service;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,7 +119,7 @@ public class SolicitacaoService {
       List<HistoricoDTO> historicos = historicoService.listarHistorico(solicitacao.getId());
       ClienteResumoDTO clienteEncontrado = clienteService.consultarClienteResumo(solicitacao.getIdCliente());
 
-      Timestamp dataAbertura = null;
+      LocalDateTime dataAbertura = null;
 
       for (HistoricoDTO historico : historicos) {
         if (historico.getStatus() == 1) {
@@ -153,7 +153,7 @@ public class SolicitacaoService {
       List<HistoricoDTO> historicos = historicoService.listarHistorico(solicitacao.getId());
       ClienteResumoDTO clienteEncontrado = clienteService.consultarClienteResumo(solicitacao.getIdCliente());
 
-      Timestamp dataAbertura = null;
+      LocalDateTime dataAbertura = null;
 
       for (HistoricoDTO historico : historicos) {
         if (historico.getStatus() == 1) {

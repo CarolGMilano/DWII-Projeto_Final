@@ -1,15 +1,15 @@
 package br.net.dwii.projeto.manutencao.model.dto;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class SolicitacaoResumoDTO {
   private int id;
   private String equipamento;
   private int status;
-  private Timestamp dataAbertura;
+  private LocalDateTime dataAbertura;
   private ClienteResumoDTO cliente;
 
-  public SolicitacaoResumoDTO(int id, String equipamento, int status, Timestamp dataAbertura, ClienteResumoDTO cliente) {
+  public SolicitacaoResumoDTO(int id, String equipamento, int status, LocalDateTime dataAbertura, ClienteResumoDTO cliente) {
     this.id = id;
     this.equipamento = equipamento;
     this.status = status;
@@ -28,6 +28,6 @@ public class SolicitacaoResumoDTO {
   public int getStatus() { return status; }
   public void setStatus(int status) { this.status = status; }
   
-  public Timestamp getDataAbertura() { return dataAbertura; }
-  public void setDataAbertura(Timestamp dataAbertura) { this.dataAbertura = dataAbertura; }
+  public LocalDateTime getDataAbertura() { return dataAbertura; }
+  public void setDataAbertura(LocalDateTime dataAbertura) { this.dataAbertura = dataAbertura; }
 }

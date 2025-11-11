@@ -1,5 +1,6 @@
 package br.net.dwii.projeto.manutencao.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class HistoricoService {
     Historico historico = new Historico(
       -1,
       idSolicitacao,
-      historicoDTO.getDataHora(),
+      Timestamp.valueOf(historicoDTO.getDataHora()),
       historicoDTO.getStatus(),
       idFuncionario,
       idFuncionarioDestino
@@ -61,7 +62,7 @@ public class HistoricoService {
 
       historicos.add(
         new HistoricoDTO(
-          historico.getDataHora(),
+          historico.getDataHora().toLocalDateTime(),
           historico.getIdStatus(),
           funcionario,
           funcionarioDestino
