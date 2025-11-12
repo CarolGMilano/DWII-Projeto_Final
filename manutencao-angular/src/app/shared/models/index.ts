@@ -6,6 +6,7 @@ export * from './Endereco';
 export * from './Funcionario';
 export * from './FuncionarioResumo';
 export * from './Solicitacao';
+export * from './SolicitacaoResumo';
 export * from './Orcamento';
 export * from './Historico';
 export * from './Manutencao';

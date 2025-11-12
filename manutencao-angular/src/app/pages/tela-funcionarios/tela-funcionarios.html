@@ -118,7 +118,7 @@
         
               @if(modoFormulario != 'adicionar'){
                 <div class="col-span-6 mt-1.5">
-                  <input id="senha" placeholder="Senha antiga" type="text" name="senha" [(ngModel)]="funcionario.senha" #senha="ngModel" minlength="4" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
+                  <input id="senha" placeholder="Senha antiga" type="password" name="senha" [(ngModel)]="funcionario.senha" #senha="ngModel" [required]="!!funcionario.novaSenha" minlength="4" class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
                   [ngClass]="{
                   'border-1 border-red-500': (senhaIncorreta),
                   'border-yellow-500': senha.errors?.['minlength'] && (senha.touched || formFuncionario.submitted),
@@ -128,29 +128,30 @@
   
                   @if (senha.invalid && (senha.touched || formFuncionario.submitted)) {
                     @if (senha.errors?.['required']) {
-                      <span class="pl-2 text-red-600 text-xs">A senha é obrigatória</span>
+                      <span class="pl-2 text-red-600 text-xs">Digite sua senha para confirmar</span>
                     } @else if (senha.errors?.['minlength']) {
                       <span class="pl-2 text-yellow-600 text-xs">A senha deve ter, pelo menos, 4 digitos</span>
                     } 
                   } 
+
+                  @if (senhaIncorreta) {
+                    <span class="pl-2 text-red-600 text-xs">Senha incorreta. Tente novamente.</span>
+                  }
                 </div> 
 
                 <div class="col-span-6 mt-1.5">
-                  <input id="novaSenha" placeholder="Nova senha" type="text" name="novaSenha" [(ngModel)]="funcionario.novaSenha" #novaSenha="ngModel" minlength="4" required class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
+                  <input id="novaSenha" placeholder="Nova senha" type="password" name="novaSenha" [(ngModel)]="funcionario.novaSenha" #novaSenha="ngModel" minlength="4" class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-gray-400 outline-none focus:border-gray-800"
                   [ngClass]="{
-                  'border-1 border-red-500': ((novaSenha.errors?.['required'] && (novaSenha.touched || formFuncionario.submitted) && (novaSenha.touched || formFuncionario.submitted))),
                   'border-yellow-500': novaSenha.errors?.['minlength'] && (novaSenha.touched || formFuncionario.submitted),
                   'border-green-500': novaSenha.valid && novaSenha.touched,
                   'border-gray-300': novaSenha.pristine
                   }" />
   
                   @if (novaSenha.invalid && (novaSenha.touched || formFuncionario.submitted)) {
-                    @if (novaSenha.errors?.['required']) {
-                      <span class="pl-2 text-red-600 text-xs">A novaSenha é obrigatória</span>
-                    } @else if (novaSenha.errors?.['minlength']) {
-                      <span class="pl-2 text-yellow-600 text-xs">A novaSenha deve ter, pelo menos, 4 digitos</span>
-                    } 
-                  } 
+                    @if (novaSenha.errors?.['minlength']) {
+                      <span class="pl-2 text-yellow-600 text-xs">A nova senha deve ter pelo menos 4 dígitos</span>
+                    }
+                  }
                 </div> 
               }
         
@@ -160,13 +161,14 @@
                   placeholder="Data" 
                   type="date" 
                   name="data" 
-                  [(ngModel)]="funcionario.dataNascimento" 
+                  [(ngModel)]="dataNascimentoStr" 
+                  (blur)="validarData()"
                   #data="ngModel" 
                   required 
                   class="w-full rounded-md bg-white pl-4 py-2 pr-3 text-sm font-light text-gray-900 placeholder:text-gray-600 border border-1 border-gray-400 outline-none focus:border-gray-800"
                   [ngClass]="{
-                  'border-red-500 border-1': data.invalid && (data.touched || formFuncionario.submitted),
-                  'border-green-500 border-2': data.valid && data.dirty,
+                  'border-red-500 border-1': dataInvalida,
+                  'border-green-500 border-1': data.valid && data.dirty,
                   'border-gray-300': data.pristine
                   }" />
 
@@ -174,6 +176,10 @@
                   @if (data.errors?.['required']) {
                     <span class="pl-2 text-red-600 text-xs">A data é obrigatória</span>
                   } 
+                } 
+
+                @if (dataErroMsg) {
+                  <span class="pl-2 text-red-600 text-xs">{{ dataErroMsg }}</span>
                 } 
               </div>
             </div>
@@ -183,7 +189,7 @@
             <button type="button" (click)="cancelar()" class="py-1.5 px-4 rounded-md flex items-center justify-center group bg-white text-black font-normal text-base hover:bg-gray-200 hover:text-gray-800 hover:cursor-pointer">Cancelar</button>
 
             <div class="relative group inline-block">
-              <button type="submit" [disabled]="!formFuncionario.valid" class="py-1.5 px-4 rounded-md flex items-center justify-center group bg-gray-800 text-white font-normal text-base hover:bg-gray-700 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed">Salvar</button>
+              <button type="submit" [disabled]="modoFormulario === 'adicionar' ? !formFuncionario.valid || dataInvalida !== false : false" class="py-1.5 px-4 rounded-md flex items-center justify-center group bg-gray-800 text-white font-normal text-base hover:bg-gray-700 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed">Salvar</button>
 
               @if (!formFuncionario.valid) {
                 <div class="absolute left-2 translate-x-1/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 bg-black text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-indigo-400">
