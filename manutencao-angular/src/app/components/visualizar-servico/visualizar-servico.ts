@@ -3,6 +3,7 @@ import { SolicitacaoModel } from '../../models/Solicitacao';
 import { SolicitacaoService } from '../../services';
 import { ActivatedRoute } from '@angular/router';
 import { HistoricoSolicitacao } from '../../models/HistoricoSolicitacao';
+import { CategoriaService } from '../../services/categoria/categoria';
 
 @Component({
   selector: 'app-visualizar-servico',
@@ -18,6 +19,7 @@ export class VisualizarServico  implements OnInit{
   historico!: HistoricoSolicitacao[];
 
   private dadosService = inject(SolicitacaoService);
+  private dadosCategoria = inject(CategoriaService);
   private route = inject(ActivatedRoute);
 
   ngOnInit(): void {
@@ -31,14 +33,16 @@ export class VisualizarServico  implements OnInit{
     if (this.solicitacao) {
       console.log(this.solicitacao.equipamento);
     }
-
+    
+    console.log(this.solicitacao?.categoria.descricao);
     this.dadosService.getSolicitacao(id).subscribe({
       next: (res) => {
-        this.solicitacao = res;
+        this.solicitacao = res as unknown as SolicitacaoModel;
         console.log('Solicitação carregada:', this.solicitacao);
       },
       error: (err) => console.error('Erro ao buscar solicitação:', err)
     });
+
 
     // this.dadosService.getHistorico(id).subscribe({
     //   next: (res) => this.historico = res,

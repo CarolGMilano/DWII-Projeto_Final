@@ -4,7 +4,7 @@ import { ClienteResumo, Funcionario, Historico, Manutencao, Orcamento } from "./
 export interface Solicitacao {
   id?: number;
   equipamento: string;
-  categoria: Categoria; //number
+  categoria: Categoria;
   descricao: string;
   status: number;
   historico: Historico[];

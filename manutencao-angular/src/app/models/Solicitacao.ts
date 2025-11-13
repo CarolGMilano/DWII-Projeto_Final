@@ -12,4 +12,9 @@ export interface SolicitacaoModel {
   status: EstadoSolicitacao;
   funcionario: number;
   cliente: number;
+
+  descricaoPreco?: { descricao: string; preco: number }[];
+  precoTotal?: number;
+  pago?: boolean;
+  data?: Date;
 }

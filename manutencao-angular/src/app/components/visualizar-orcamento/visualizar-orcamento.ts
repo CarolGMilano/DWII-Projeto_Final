@@ -10,7 +10,7 @@ import { MoedaBrPipe } from '../../pipes/moeda/moeda-pipe-pipe';
 
 @Component({
   selector: 'app-visualizar-orcamento',
-  imports: [FormsModule, ReactiveFormsModule, RouterModule, RouterLink, MoedaBrPipe],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, RouterLink],
   templateUrl: './visualizar-orcamento.html',
   styleUrl: './visualizar-orcamento.css'
 })

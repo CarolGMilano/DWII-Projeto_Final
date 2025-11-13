@@ -25,7 +25,12 @@ export class CategoriaService {
   get categorias(): Observable<Categoria[]> {
     return this.http.get<Categoria[]>(this.apiUrl);
   }
+
+  categoria(id:number): Observable<Categoria> {
+    return this.http.get<Categoria>(`this.apiUrl/${id}`);
+  }
   
+
   postCategoria(categoria: Categoria): Observable<Categoria> {
     return this.http.post<Categoria>(this.apiUrl, categoria);
   }

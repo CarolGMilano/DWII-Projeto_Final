@@ -56,18 +56,20 @@ public class SolicitacaoService {
 
     public Solicitacao salvar(SolicitacaoDTO solicitacao) throws Exception {
 
-        if (solicitacao.getCliente() == null || solicitacao.getCliente().getId() == 0) {
+        System.out.println(solicitacao);
+
+        if (solicitacao.getCliente() == null || solicitacao.getCliente().getIdUsuario() == 0) {
             throw new Exception("Cliente não informado na solicitação.");
         }
-        if (solicitacao.getFuncionario() == null || solicitacao.getFuncionario().getId() == 0) {
+        if (solicitacao.getFuncionario() == null || solicitacao.getFuncionario().getIdUsuario() == 0) {
             throw new Exception("Funcionário responsável não informado.");
         }
         if (solicitacao.getCategoria() == 0) {
             throw new Exception("Categoria inválida.");
         }
 
-        Cliente cliente = clienteDao.consultar(solicitacao.getCliente().getId());
-        Funcionario funcionario = funcionarioDao.consultar(solicitacao.getFuncionario().getId());
+        Cliente cliente = clienteDao.consultar(solicitacao.getCliente().getIdUsuario());
+        Funcionario funcionario = funcionarioDao.consultar(solicitacao.getFuncionario().getIdUsuario());
         Categoria categoria = categoriaDao.getById(solicitacao.getCategoria());
         List<HistoricoDTO> historico = new ArrayList<>();
 
@@ -91,8 +93,8 @@ public class SolicitacaoService {
                 solicitacao.getCategoria(),
                 solicitacao.getDescricao(),
                 solicitacao.getStatus(),
-                solicitacao.getFuncionario().getId(),
-                solicitacao.getCliente().getId()
+                solicitacao.getFuncionario().getIdUsuario(),
+                solicitacao.getCliente().getIdUsuario()
         );
 
         // nova.setOrcamento(orcamento);

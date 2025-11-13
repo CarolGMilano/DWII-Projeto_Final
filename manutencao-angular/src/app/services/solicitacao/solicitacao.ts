@@ -72,7 +72,7 @@ export class SolicitacaoService {
 
   getSolicitacao(id: number): Observable<Solicitacao | null> {
     return this.http.get<Solicitacao>(
-      this.BASE_URL + "/" + id,
+       `${this.BASE_URL}/${id}`,
       this.httpOptions).pipe(
         map((resp: HttpResponse<Solicitacao>) => {
           if (resp.status === 200 || resp.status === 201) {
