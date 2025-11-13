@@ -2,12 +2,19 @@ import { Data } from "@angular/router";
 import { EstadoSolicitacao } from "./EnumEstadoSolicitacao";
 import { NovaSolicitacaoModel } from "./NovaSolicitacao";
 import { OrcamentoModel } from "./Orcamento";
+import { Categoria } from "./Categoria";
 
-export interface SolicitacaoModel extends NovaSolicitacaoModel {
-  id: number
-  descricaoPreco?: Array<{ descricao: string; preco: number }>;
+export interface SolicitacaoModel {
+  id: number;
+  equipamento: string;
+  categoria: Categoria;
+  descricao: string;
+  status: EstadoSolicitacao;
+  funcionario: number;
+  cliente: number;
+
+  descricaoPreco?: { descricao: string; preco: number }[];
   precoTotal?: number;
-  pago: false;
-  data:Data;
-  rejOrcamento?: string;
+  pago?: boolean;
+  data?: Date;
 }

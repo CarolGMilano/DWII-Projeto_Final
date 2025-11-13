@@ -24,19 +24,19 @@ export class SolicitacaoService {
 
   constructor(private http: HttpClient) { }
 
-  getCategorias(): Observable<Categoria[]> {
-    return this.http.get<Categoria[]>(
-      this.BASE_URL + "/categorias", 
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<Categoria[]>) => {
-          return resp.body ?? [];
-      }),
-      catchError((e, c) => {
-        console.error('Erro ao buscar categorias:', e);
-        return of([]);
-      })
-    );
-  }
+  // getCategorias(): Observable<Categoria[]> {
+  //   return this.http.get<Categoria[]>(
+  //     this.BASE_URL + "/categorias", 
+  //     this.httpOptions).pipe(
+  //       map((resp: HttpResponse<Categoria[]>) => {
+  //         return resp.body ?? [];
+  //     }),
+  //     catchError((e, c) => {
+  //       console.error('Erro ao buscar categorias:', e);
+  //       return of([]);
+  //     })
+  //   );
+  // }
 
   postSolicitacao(novaSolicitacao: NovaSolicitacaoModel): Observable<NovaSolicitacaoModel  | null> {
     return this.http.post<NovaSolicitacaoModel>(
@@ -70,9 +70,9 @@ export class SolicitacaoService {
     );
   }
 
-  getSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao  | null> {
+  getSolicitacao(id: number): Observable<Solicitacao | null> {
     return this.http.get<Solicitacao>(
-      this.BASE_URL + "/" + solicitacao.id,
+       `${this.BASE_URL}/${id}`,
       this.httpOptions).pipe(
         map((resp: HttpResponse<Solicitacao>) => {
           if (resp.status === 200 || resp.status === 201) {

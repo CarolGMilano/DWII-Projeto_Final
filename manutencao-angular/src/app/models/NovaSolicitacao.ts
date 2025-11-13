@@ -3,7 +3,9 @@ import { EstadoSolicitacao } from "./EnumEstadoSolicitacao";
 
 export interface NovaSolicitacaoModel{
     equipamento: string;
-    categoria: Categoria;
+    categoria: number;
     descricao: string;
-    estado: EstadoSolicitacao;
+    status: EstadoSolicitacao;
+    cliente: { id: number };
+    funcionario?: { id: number } | null;
 }

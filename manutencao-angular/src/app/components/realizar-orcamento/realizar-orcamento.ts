@@ -9,7 +9,7 @@ import { MoedaBrPipe } from '../../pipes/moeda/moeda-pipe-pipe';
 
 @Component({
   selector: 'app-realizar-orcamento',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoedaBrPipe],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './realizar-orcamento.html',
   styleUrl: './realizar-orcamento.css'
 })
