@@ -1,3 +1,4 @@
+import { Categoria } from "../../models/Categoria";
 import { ClienteResumo, FuncionarioResumo, Historico, Manutencao, Orcamento } from "./index";
 
 export interface Solicitacao {

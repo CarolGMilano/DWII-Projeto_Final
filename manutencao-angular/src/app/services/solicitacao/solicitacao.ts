@@ -15,7 +15,7 @@ import { Solicitacao } from '../../shared';
 
 export class SolicitacaoService {
   // private apiUrl = '';
-  BASE_URL = "http://localhost:8080/solicitacoes";
+  BASE_URL = "http://localhost:8080/solicitacoes/cliente";
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
