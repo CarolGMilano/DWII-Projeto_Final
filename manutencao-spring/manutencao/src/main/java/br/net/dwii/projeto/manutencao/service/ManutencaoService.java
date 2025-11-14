@@ -12,16 +12,6 @@ public class ManutencaoService {
   @Autowired
   private ManutencaoDao manutencaoDao;
 
-  private void validarManutencao(Manutencao manutencao) {
-    if (manutencao.getDescricao() == null || manutencao.getDescricao().isBlank()) {
-      throw new IllegalArgumentException("Descrição é obrigatória");
-    } 
-
-    if (manutencao.getOrientacao() == null || manutencao.getOrientacao().isBlank()) {
-      throw new IllegalArgumentException("Orientação é obrigatória");
-    }
-  }
-
   public ManutencaoDTO inserirManutencao(ManutencaoDTO manutencaoDTO, int idSolicitacao) throws Exception {
     Manutencao manutencao = new Manutencao(
       -1, 
@@ -29,8 +19,6 @@ public class ManutencaoService {
       manutencaoDTO.getDescricao(), 
       manutencaoDTO.getOrientacao()
     );
-
-    validarManutencao(manutencao);
 
     manutencaoDao.inserir(manutencao);
 

@@ -8,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.net.dwii.projeto.manutencao.model.Solicitacao;
+import br.net.dwii.projeto.manutencao.model.SolicitacaoStatusEnum;
 import br.net.dwii.projeto.manutencao.model.dao.SolicitacaoDao;
 import br.net.dwii.projeto.manutencao.model.dto.ClienteResumoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.FuncionarioResumoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.HistoricoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.ManutencaoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.OrcamentoDTO;
+import br.net.dwii.projeto.manutencao.model.dto.ServicoDTO;
 import br.net.dwii.projeto.manutencao.model.dto.SolicitacaoDTO;
+import br.net.dwii.projeto.manutencao.model.dto.SolicitacaoEntradaDTO;
 import br.net.dwii.projeto.manutencao.model.dto.SolicitacaoResumoDTO;
 import br.net.dwii.projeto.manutencao.model.exception.SolicitacaoNaoEncontradaException;
 
@@ -49,16 +52,48 @@ public class SolicitacaoService {
     }
   }
 
-  public SolicitacaoDTO inserirSolicitacao(SolicitacaoDTO solicitacaoDTO) throws Exception {
-    
-    int idCliente = clienteService.consultarIdPorCPF(solicitacaoDTO.getCliente().getCpf());
+  private void validarOrcamento(OrcamentoDTO orcamento) {
+    //Como ele não é um boolean primitivo, preciso descobrir se o falso é um false verdadeiro ou um null.
+    Boolean status = orcamento.getAprovada();
+
+    if (Boolean.FALSE.equals(status) && (orcamento.getMsgRejeicao() == null || orcamento.getMsgRejeicao().isBlank())) {
+      throw new IllegalArgumentException("Mensagem de rejeição é obrigatória para orçamentos reprovados");
+    }
+
+    if (orcamento.getValorTotal() <= 0) {
+      throw new IllegalArgumentException("Valor total deve ser maior que zero");
+    }
+  }
+
+  private void validarServico(ServicoDTO servico) {
+    if (servico.getDescricao() == null || servico.getDescricao().isBlank()) {
+      throw new IllegalArgumentException("Descrição é obrigatória");
+    }
+
+    if (servico.getPreco() <= 0) {
+      throw new IllegalArgumentException("Preço deve ser maior que zero");
+    }
+  }
+
+  private void validarManutencao(ManutencaoDTO manutencao) {
+    if (manutencao.getDescricao() == null || manutencao.getDescricao().isBlank()) {
+      throw new IllegalArgumentException("Descrição é obrigatória");
+    } 
+
+    if (manutencao.getOrientacao() == null || manutencao.getOrientacao().isBlank()) {
+      throw new IllegalArgumentException("Orientação é obrigatória");
+    }
+  }
+
+  public SolicitacaoDTO inserirSolicitacao(SolicitacaoEntradaDTO solicitacaoEntradaDTO) throws Exception {
+    int idCliente = clienteService.consultarPorUsuario(solicitacaoEntradaDTO.getCliente());
 
     Solicitacao solicitacao = new Solicitacao(
       -1, 
-      solicitacaoDTO.getEquipamento(), 
-      solicitacaoDTO.getCategoria(), 
-      solicitacaoDTO.getDescricao(), 
-      solicitacaoDTO.getStatus(), 
+      solicitacaoEntradaDTO.getEquipamento(), 
+      solicitacaoEntradaDTO.getCategoria(), 
+      solicitacaoEntradaDTO.getDescricao(), 
+      SolicitacaoStatusEnum.ABERTA.getValor(), 
       -1, 
       idCliente
     );
@@ -67,13 +102,24 @@ public class SolicitacaoService {
 
     solicitacaoDao.inserir(solicitacao);
 
+    HistoricoDTO historico = new HistoricoDTO(
+      LocalDateTime.now(),
+      solicitacao.getIdStatus(),
+      null,
+      null
+    );
+
+    historicoService.inserirHistorico(historico, solicitacao.getId());
+
+
+/* 
     List<HistoricoDTO> historicos = solicitacaoDTO.getHistorico();
 
     if (historicos != null && !historicos.isEmpty()) {
       HistoricoDTO ultimoHistorico = historicos.get(historicos.size() - 1);
 
       historicoService.inserirHistorico(ultimoHistorico, solicitacao.getId());
-    }
+    }*/
 
     return this.consultarSolicitacaoCompleta(solicitacao.getId());
   }
@@ -111,8 +157,8 @@ public class SolicitacaoService {
     );
   }
 
-  public List<SolicitacaoResumoDTO> listarAbertas() throws Exception {
-    List<Solicitacao> solicitacoes = solicitacaoDao.listarAbertas();
+  public List<SolicitacaoResumoDTO> listar() throws Exception {
+    List<Solicitacao> solicitacoes = solicitacaoDao.listar();
     List<SolicitacaoResumoDTO> solicitacoesResumoDTO = new ArrayList<>();
 
     for (Solicitacao solicitacao : solicitacoes) {
@@ -122,7 +168,7 @@ public class SolicitacaoService {
       LocalDateTime dataAbertura = null;
 
       for (HistoricoDTO historico : historicos) {
-        if (historico.getStatus() == 1) {
+        if (historico.getStatus() == SolicitacaoStatusEnum.ABERTA.getValor()) {
           dataAbertura = historico.getDataHora();
 
           break; 
@@ -144,9 +190,9 @@ public class SolicitacaoService {
   }
 
   public List<SolicitacaoResumoDTO> listarPorFuncionario(int idUsuario) throws Exception {
-    FuncionarioResumoDTO funcionarioEncontrado = funcionarioService.consultarPorUsuario(idUsuario); 
+    int idFuncionario = funcionarioService.consultarPorUsuario(idUsuario); 
     
-    List<Solicitacao> solicitacoes = solicitacaoDao.listar(funcionarioEncontrado.getId());
+    List<Solicitacao> solicitacoes = solicitacaoDao.listarPorFuncionario(idFuncionario);
     List<SolicitacaoResumoDTO> solicitacoesResumoDTO = new ArrayList<>();
 
     for (Solicitacao solicitacao : solicitacoes) {
@@ -178,8 +224,7 @@ public class SolicitacaoService {
   }
 
   public List<SolicitacaoResumoDTO> listarPorCliente(int idUsuario) throws Exception {
-    ClienteResumoDTO clienteLogado = clienteService.consultarPorUsuario(idUsuario);
-    int idCliente = clienteService.consultarIdPorCPF(clienteLogado.getCpf());
+    int idCliente = clienteService.consultarPorUsuario(idUsuario);
     
     List<Solicitacao> solicitacoes = solicitacaoDao.listarPorCliente(idCliente);
     List<SolicitacaoResumoDTO> solicitacoesResumoDTO = new ArrayList<>();
@@ -191,7 +236,7 @@ public class SolicitacaoService {
       LocalDateTime dataAbertura = null;
 
       for (HistoricoDTO historico : historicos) {
-        if (historico.getStatus() == 1) {
+        if (historico.getStatus() == SolicitacaoStatusEnum.ABERTA.getValor()) {
           dataAbertura = historico.getDataHora();
 
           break; 
@@ -212,240 +257,183 @@ public class SolicitacaoService {
     return solicitacoesResumoDTO;
   }
 
-  public List<SolicitacaoResumoDTO> listarPorClienteFinalizadas(int idUsuario) throws Exception {
-    ClienteResumoDTO clienteLogado = clienteService.consultarPorUsuario(idUsuario);
-    int idCliente = clienteService.consultarIdPorCPF(clienteLogado.getCpf());
-    
-    List<Solicitacao> solicitacoes = solicitacaoDao.listarPorClienteFinalizadas(idCliente);
-    List<SolicitacaoResumoDTO> solicitacoesResumoDTO = new ArrayList<>();
+  public SolicitacaoDTO orçarSolicitacao(SolicitacaoEntradaDTO solicitacaoEntradaDTO) throws Exception {
+    validarOrcamento(solicitacaoEntradaDTO.getOrcamento());
 
-    for (Solicitacao solicitacao : solicitacoes) {
-      List<HistoricoDTO> historicos = historicoService.listarHistorico(solicitacao.getId());
-      ClienteResumoDTO clienteEncontrado = clienteService.consultarClienteResumo(solicitacao.getIdCliente());
-
-      LocalDateTime dataAbertura = null;
-
-      for (HistoricoDTO historico : historicos) {
-        if (historico.getStatus() == 1) {
-          dataAbertura = historico.getDataHora();
-
-          break; 
-        }
-      }
-
-      solicitacoesResumoDTO.add(
-        new SolicitacaoResumoDTO(
-          solicitacao.getId(), 
-          solicitacao.getEquipamento(), 
-          solicitacao.getIdStatus(), 
-          dataAbertura, 
-          clienteEncontrado
-        )
-      );
+    for(ServicoDTO servico : solicitacaoEntradaDTO.getOrcamento().getServicos()){
+      validarServico(servico);
     }
 
-    return solicitacoesResumoDTO;
-  }
-
-  public SolicitacaoDTO orçarSolicitacao(SolicitacaoDTO solicitacaoDTO) throws Exception {
-    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoDTO.getId());
+    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoEntradaDTO.getId());
 
     if(solicitacaoEncontrada == null){
       throw new SolicitacaoNaoEncontradaException();
     }
 
-    Solicitacao solicitacao = new Solicitacao(
-      solicitacaoEncontrada.getId(), 
-      solicitacaoEncontrada.getEquipamento(), 
-      solicitacaoEncontrada.getIdCategoria(), 
-      solicitacaoEncontrada.getDescricao(), 
-      2, 
-      solicitacaoDTO.getFuncionario().getId(), 
-      solicitacaoEncontrada.getIdCliente()
+    int idFuncionario = funcionarioService.consultarPorUsuario(solicitacaoEntradaDTO.getFuncionario()); 
+    FuncionarioResumoDTO funcionarioEncontrado = funcionarioService.consultarFuncionarioResumo(idFuncionario);
+
+    solicitacaoEncontrada.setIdStatus(SolicitacaoStatusEnum.ORCADA.getValor());
+    solicitacaoEncontrada.setIdFuncionario(idFuncionario);
+
+    solicitacaoDao.alterarStatus(solicitacaoEncontrada);
+    solicitacaoDao.alterarFuncionario(solicitacaoEncontrada);
+
+    orcamentoService.inserirOrcamento(solicitacaoEntradaDTO.getOrcamento(), solicitacaoEncontrada.getId());
+
+    HistoricoDTO historico = new HistoricoDTO(
+      LocalDateTime.now(),
+      solicitacaoEncontrada.getIdStatus(),
+      funcionarioEncontrado,
+      null
     );
 
-    solicitacaoDao.alterarStatus(solicitacao);
-    solicitacaoDao.alterarFuncionario(solicitacao);
-
-    orcamentoService.inserirOrcamento(solicitacaoDTO.getOrcamento(), solicitacaoEncontrada.getId());
+    historicoService.inserirHistorico(historico, solicitacaoEncontrada.getId());
     
-    List<HistoricoDTO> historicos = solicitacaoDTO.getHistorico();
-
-    if (historicos != null && !historicos.isEmpty()) {
-      HistoricoDTO ultimoHistorico = historicos.get(0);
-
-      ultimoHistorico.setStatus(2);
-
-      historicoService.inserirHistorico(ultimoHistorico, solicitacao.getId());
-    }
-
-    return consultarSolicitacaoCompleta(solicitacao.getId());
+    return consultarSolicitacaoCompleta(solicitacaoEncontrada.getId());
   }
 
-  public SolicitacaoDTO finalizarOrcamento(SolicitacaoDTO solicitacaoDTO, int status, Boolean aprovada) throws Exception {
-    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoDTO.getId());
+  public SolicitacaoDTO finalizarOrcamento(SolicitacaoEntradaDTO solicitacaoEntradaDTO, int status) throws Exception {
+    validarOrcamento(solicitacaoEntradaDTO.getOrcamento());
 
+    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoEntradaDTO.getId());
+    
     if(solicitacaoEncontrada == null){
       throw new SolicitacaoNaoEncontradaException();
     }
+    
+    OrcamentoDTO orcamentoDTO = orcamentoService.consultarOrcamento(solicitacaoEncontrada.getId());
+    
+    solicitacaoEncontrada.setIdStatus(status);
 
-    Solicitacao solicitacao = new Solicitacao(
-      solicitacaoEncontrada.getId(),
-      solicitacaoEncontrada.getEquipamento(),
-      solicitacaoEncontrada.getIdCategoria(),
-      solicitacaoEncontrada.getDescricao(),
+    solicitacaoDao.alterarStatus(solicitacaoEncontrada);
+
+    if(status == SolicitacaoStatusEnum.APROVADA.getValor()){
+      orcamentoDTO.setAprovada(true);
+      orcamentoDTO.setMsgRejeicao(null);
+    } else if(status == SolicitacaoStatusEnum.REJEITADA.getValor()) {
+      orcamentoDTO.setAprovada(false);
+      orcamentoDTO.setMsgRejeicao(solicitacaoEntradaDTO.getOrcamento().getMsgRejeicao());
+    }
+
+    orcamentoService.alterarAprovacao(orcamentoDTO, solicitacaoEncontrada.getId());
+
+    HistoricoDTO historico = new HistoricoDTO(
+      LocalDateTime.now(),
       status,
-      solicitacaoEncontrada.getIdFuncionario(),
-      solicitacaoEncontrada.getIdCliente()
+      null,
+      null
     );
 
-    solicitacaoDao.alterarStatus(solicitacao);
+    historicoService.inserirHistorico(historico, solicitacaoEncontrada.getId());
 
-    OrcamentoDTO orcamentoDTO = solicitacaoDTO.getOrcamento();
-    orcamentoDTO.setAprovada(aprovada);
-    orcamentoService.alterarAprovacao(orcamentoDTO, solicitacao.getId());
-
-    List<HistoricoDTO> historicos = solicitacaoDTO.getHistorico();
-
-    if (historicos != null && !historicos.isEmpty()) {
-      HistoricoDTO ultimoHistorico = historicos.get(0);
-
-      ultimoHistorico.setStatus(status);
-
-      historicoService.inserirHistorico(ultimoHistorico, solicitacao.getId());
-    }
-
-    return this.consultarSolicitacaoCompleta(solicitacao.getId());
+    return this.consultarSolicitacaoCompleta(solicitacaoEncontrada.getId());
   }
 
-  public SolicitacaoDTO redirecionarSolicitacao(SolicitacaoDTO solicitacaoDTO) throws Exception {
-    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoDTO.getId());
+  public SolicitacaoDTO redirecionarSolicitacao(SolicitacaoEntradaDTO solicitacaoEntradaDTO) throws Exception {
+    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoEntradaDTO.getId());
 
     if(solicitacaoEncontrada == null){
       throw new SolicitacaoNaoEncontradaException();
     }
 
-    Solicitacao solicitacao = new Solicitacao(
-      solicitacaoEncontrada.getId(),
-      solicitacaoEncontrada.getEquipamento(),
-      solicitacaoEncontrada.getIdCategoria(),
-      solicitacaoEncontrada.getDescricao(),
-      5,
-      solicitacaoDTO.getFuncionario().getId(),
-      solicitacaoEncontrada.getIdCliente()
+    FuncionarioResumoDTO funcionarioOrigem = funcionarioService.consultarFuncionarioResumo(solicitacaoEncontrada.getIdFuncionario());
+    FuncionarioResumoDTO funcionarioDestino = funcionarioService.consultarFuncionarioResumo(solicitacaoEntradaDTO.getFuncionario());
+
+    solicitacaoEncontrada.setIdStatus(SolicitacaoStatusEnum.REDIRECIONADA.getValor());
+    solicitacaoEncontrada.setIdFuncionario(solicitacaoEntradaDTO.getFuncionario());
+    
+    solicitacaoDao.alterarStatus(solicitacaoEncontrada);
+    solicitacaoDao.alterarFuncionario(solicitacaoEncontrada);
+
+    HistoricoDTO historico = new HistoricoDTO(
+      LocalDateTime.now(),
+      solicitacaoEncontrada.getIdStatus(),
+      funcionarioOrigem,
+      funcionarioDestino
     );
+    
+    historicoService.inserirHistorico(historico, solicitacaoEncontrada.getId());
 
-    solicitacaoDao.alterarStatus(solicitacao);
-    solicitacaoDao.alterarFuncionario(solicitacao);
-
-    List<HistoricoDTO> historicos = solicitacaoDTO.getHistorico();
-
-    if (historicos != null && !historicos.isEmpty()) {
-      HistoricoDTO ultimoHistorico = historicos.get(0);
-
-      ultimoHistorico.setStatus(5);
-
-      historicoService.inserirHistorico(ultimoHistorico, solicitacao.getId());
-    }
-
-    return this.consultarSolicitacaoCompleta(solicitacao.getId());
+    return this.consultarSolicitacaoCompleta(solicitacaoEncontrada.getId());
   }
 
-  public SolicitacaoDTO arrumarSolicitacao(SolicitacaoDTO solicitacaoDTO) throws Exception {
-    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoDTO.getId());
+  public SolicitacaoDTO arrumarSolicitacao(SolicitacaoEntradaDTO solicitacaoEntradaDTO) throws Exception {
+    validarManutencao(solicitacaoEntradaDTO.getManutencao());
+
+    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoEntradaDTO.getId());
 
     if(solicitacaoEncontrada == null){
       throw new SolicitacaoNaoEncontradaException();
     }
 
-    Solicitacao solicitacao = new Solicitacao(
-      solicitacaoEncontrada.getId(),
-      solicitacaoEncontrada.getEquipamento(),
-      solicitacaoEncontrada.getIdCategoria(),
-      solicitacaoEncontrada.getDescricao(),
-      6,
-      solicitacaoEncontrada.getIdFuncionario(),
-      solicitacaoEncontrada.getIdCliente()
+    int idFuncionario = funcionarioService.consultarPorUsuario(solicitacaoEntradaDTO.getFuncionario()); 
+    FuncionarioResumoDTO funcionarioEncontrado = funcionarioService.consultarFuncionarioResumo(idFuncionario);
+
+    solicitacaoEncontrada.setIdStatus(SolicitacaoStatusEnum.ARRUMADA.getValor());
+
+    solicitacaoDao.alterarStatus(solicitacaoEncontrada);
+
+    manutencaoService.inserirManutencao(solicitacaoEntradaDTO.getManutencao(), solicitacaoEncontrada.getId());
+
+    HistoricoDTO historico = new HistoricoDTO(
+      LocalDateTime.now(),
+      solicitacaoEncontrada.getIdStatus(),
+      funcionarioEncontrado,
+      null
     );
 
-    solicitacaoDao.alterarStatus(solicitacao);
+    historicoService.inserirHistorico(historico, solicitacaoEncontrada.getId());
 
-    manutencaoService.inserirManutencao(solicitacaoDTO.getManutencao(), solicitacaoEncontrada.getId());
-
-    List<HistoricoDTO> historicos = solicitacaoDTO.getHistorico();
-
-    if (historicos != null && !historicos.isEmpty()) {
-      HistoricoDTO ultimoHistorico = historicos.get(0);
-
-      ultimoHistorico.setStatus(6);
-
-      historicoService.inserirHistorico(ultimoHistorico, solicitacao.getId());
-    }
-
-    return this.consultarSolicitacaoCompleta(solicitacao.getId());
+    return this.consultarSolicitacaoCompleta(solicitacaoEncontrada.getId());
   }
 
-  public SolicitacaoDTO pagarSolicitacao(SolicitacaoDTO solicitacaoDTO) throws Exception {
-    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoDTO.getId());
+  public SolicitacaoDTO pagarSolicitacao(SolicitacaoEntradaDTO solicitacaoEntradaDTO) throws Exception {
+    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoEntradaDTO.getId());
   
     if(solicitacaoEncontrada == null){
       throw new SolicitacaoNaoEncontradaException();
     }
   
-    Solicitacao solicitacao = new Solicitacao(
-      solicitacaoEncontrada.getId(),
-      solicitacaoEncontrada.getEquipamento(),
-      solicitacaoEncontrada.getIdCategoria(),
-      solicitacaoEncontrada.getDescricao(),
-      7,
-      solicitacaoEncontrada.getIdFuncionario(),
-      solicitacaoEncontrada.getIdCliente()
+    solicitacaoEncontrada.setIdStatus(SolicitacaoStatusEnum.PAGA.getValor());
+  
+    solicitacaoDao.alterarStatus(solicitacaoEncontrada);
+  
+    HistoricoDTO historico = new HistoricoDTO(
+      LocalDateTime.now(),
+      solicitacaoEncontrada.getIdStatus(),
+      null,
+      null
     );
+
+    historicoService.inserirHistorico(historico, solicitacaoEncontrada.getId());
   
-    solicitacaoDao.alterarStatus(solicitacao);
-  
-    List<HistoricoDTO> historicos = solicitacaoDTO.getHistorico();
-  
-    if (historicos != null && !historicos.isEmpty()) {
-      HistoricoDTO ultimoHistorico = historicos.get(0);
-  
-      ultimoHistorico.setStatus(7);
-  
-      historicoService.inserirHistorico(ultimoHistorico, solicitacao.getId());
-    }
-  
-    return this.consultarSolicitacaoCompleta(solicitacao.getId());
+    return this.consultarSolicitacaoCompleta(solicitacaoEncontrada.getId());
   }
 
-  public SolicitacaoDTO finalizarSolicitacao(SolicitacaoDTO solicitacaoDTO) throws Exception {
-    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoDTO.getId());
+  public SolicitacaoDTO finalizarSolicitacao(SolicitacaoEntradaDTO solicitacaoEntradaDTO) throws Exception {
+    Solicitacao solicitacaoEncontrada = solicitacaoDao.consultar(solicitacaoEntradaDTO.getId());
   
     if(solicitacaoEncontrada == null){
       throw new SolicitacaoNaoEncontradaException();
     }
+
+    int idFuncionario = funcionarioService.consultarPorUsuario(solicitacaoEntradaDTO.getFuncionario()); 
+    FuncionarioResumoDTO funcionarioEncontrado = funcionarioService.consultarFuncionarioResumo(idFuncionario);
   
-    Solicitacao solicitacao = new Solicitacao(
-      solicitacaoEncontrada.getId(),
-      solicitacaoEncontrada.getEquipamento(),
-      solicitacaoEncontrada.getIdCategoria(),
-      solicitacaoEncontrada.getDescricao(),
-      8,
-      solicitacaoEncontrada.getIdFuncionario(),
-      solicitacaoEncontrada.getIdCliente()
+    solicitacaoEncontrada.setIdStatus(SolicitacaoStatusEnum.FINALIZADA.getValor());
+  
+    solicitacaoDao.alterarStatus(solicitacaoEncontrada);
+  
+    HistoricoDTO historico = new HistoricoDTO(
+      LocalDateTime.now(),
+      solicitacaoEncontrada.getIdStatus(),
+      funcionarioEncontrado,
+      null
     );
+
+    historicoService.inserirHistorico(historico, solicitacaoEncontrada.getId());
   
-    solicitacaoDao.alterarStatus(solicitacao);
-  
-    List<HistoricoDTO> historicos = solicitacaoDTO.getHistorico();
-  
-    if (historicos != null && !historicos.isEmpty()) {
-      HistoricoDTO ultimoHistorico = historicos.get(0);
-  
-      ultimoHistorico.setStatus(8);
-  
-      historicoService.inserirHistorico(ultimoHistorico, solicitacao.getId());
-    }
-  
-    return this.consultarSolicitacaoCompleta(solicitacao.getId());
+    return this.consultarSolicitacaoCompleta(solicitacaoEncontrada.getId());
   }
 }

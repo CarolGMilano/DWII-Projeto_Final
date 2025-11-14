@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 
-import { Solicitacao, SolicitacaoResumo } from '../../shared';
+import { Solicitacao, SolicitacaoResumo, SolicitacaoEntrada, StatusSolicitacao } from '../../shared';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,24 @@ export class SolicitacaoFakeService {
     })
   }
   
+  listar(): Observable<SolicitacaoResumo[] | null> {
+    return this._httpClient.get<SolicitacaoResumo[]>(
+      `${this.BASE_URL}`, 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<SolicitacaoResumo[]>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return [];
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    );
+  }
+
   listarPorCliente(id: number): Observable<SolicitacaoResumo[] | null> {
     return this._httpClient.get<SolicitacaoResumo[]>(
       `${this.BASE_URL}/cliente?id=${id}`, 
@@ -38,45 +56,17 @@ export class SolicitacaoFakeService {
     );
   }
 
-  listarFinalizadasPorCliente(id: number): Observable<SolicitacaoResumo[] | null> {
-    return this._httpClient.get<SolicitacaoResumo[]>(
-      `${this.BASE_URL}/cliente-finalizadas?id=${id}`, 
-      this.httpOptions
-    ).pipe(
-      map((resposta: HttpResponse<SolicitacaoResumo[]>) => {
-        if(resposta.status == 200){
-          return resposta.body;
-        } else {
-          return [];
-        }
-      }),
-      catchError((erro) => {
-        return throwError(() => erro);
-      })
-    );
-  }
-
-  listarAbertas(): Observable<SolicitacaoResumo[] | null> {
-    return this._httpClient.get<SolicitacaoResumo[]>(
-      `${this.BASE_URL}/abertas`, 
-      this.httpOptions
-    ).pipe(
-      map((resposta: HttpResponse<SolicitacaoResumo[]>) => {
-        if(resposta.status == 200){
-          return resposta.body;
-        } else {
-          return [];
-        }
-      }),
-      catchError((erro) => {
-        return throwError(() => erro);
-      })
+  listarFinalizados(idUsuario: number): Observable<SolicitacaoResumo[]> {
+    return this.listarPorCliente(idUsuario).pipe(
+      map(lista => (lista ?? []).filter(
+        solicitacao => solicitacao.status === StatusSolicitacao.FINALIZADA
+      ))
     );
   }
 
   listarTodosPorFuncionario(id: number): Observable<SolicitacaoResumo[] | null> {
     return this._httpClient.get<SolicitacaoResumo[]>(
-      `${this.BASE_URL}/por-usuario?id=${id}`, 
+      `${this.BASE_URL}/funcionario?id=${id}`, 
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<SolicitacaoResumo[]>) => {
@@ -110,10 +100,10 @@ export class SolicitacaoFakeService {
     );
   }
   
-  inserirSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao | null> {
+  inserirSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
     return this._httpClient.post<Solicitacao>(
       this.BASE_URL, 
-      JSON.stringify(solicitacao), 
+      JSON.stringify(solicitacaoEntrada), 
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Solicitacao>) => {
@@ -129,10 +119,10 @@ export class SolicitacaoFakeService {
     )
   }
 
-  orcarSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao | null> {
+  orcarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
     return this._httpClient.post<Solicitacao>(
-      `${this.BASE_URL}/${solicitacao.id}/orcamento`, 
-      JSON.stringify(solicitacao),
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/orcamento`, 
+      JSON.stringify(solicitacaoEntrada),
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Solicitacao>) => {
@@ -148,10 +138,10 @@ export class SolicitacaoFakeService {
     )
   } 
 
-  aprovarSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao | null> {
+  aprovarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
     return this._httpClient.put<Solicitacao>(
-      `${this.BASE_URL}/${solicitacao.id}/aprovar-orcamento`, 
-      JSON.stringify(solicitacao),
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/aprovar`, 
+      JSON.stringify(solicitacaoEntrada),
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Solicitacao>) => {
@@ -167,10 +157,10 @@ export class SolicitacaoFakeService {
     )
   }
 
-  rejeitarSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao | null> {
+  rejeitarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
     return this._httpClient.put<Solicitacao>(
-      `${this.BASE_URL}/${solicitacao.id}/rejeitar-orcamento`, 
-      JSON.stringify(solicitacao),
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/rejeitar`, 
+      JSON.stringify(solicitacaoEntrada),
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Solicitacao>) => {
@@ -186,10 +176,10 @@ export class SolicitacaoFakeService {
     )
   }
 
-  redirecionarSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao | null> {
+  redirecionarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
     return this._httpClient.put<Solicitacao>(
-      `${this.BASE_URL}/${solicitacao.id}/redirecionar`, 
-      JSON.stringify(solicitacao),
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/redirecionar`, 
+      JSON.stringify(solicitacaoEntrada),
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Solicitacao>) => {
@@ -205,10 +195,10 @@ export class SolicitacaoFakeService {
     )
   }
 
-  arrumarSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao | null> {
+  arrumarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
     return this._httpClient.post<Solicitacao>(
-      `${this.BASE_URL}/${solicitacao.id}/manutencao`, 
-      JSON.stringify(solicitacao),
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/manutencao`, 
+      JSON.stringify(solicitacaoEntrada),
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Solicitacao>) => {
@@ -224,10 +214,10 @@ export class SolicitacaoFakeService {
     )
   } 
 
-  pagarSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao | null> {
+  pagarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
     return this._httpClient.put<Solicitacao>(
-      `${this.BASE_URL}/${solicitacao.id}/pagar`, 
-      JSON.stringify(solicitacao),
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/pagar`, 
+      JSON.stringify(solicitacaoEntrada),
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Solicitacao>) => {
@@ -243,10 +233,10 @@ export class SolicitacaoFakeService {
     )
   }
 
-  finalizarSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao | null> {
+  finalizarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
     return this._httpClient.put<Solicitacao>(
-      `${this.BASE_URL}/${solicitacao.id}/finalizar`, 
-      JSON.stringify(solicitacao),
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/finalizar`, 
+      JSON.stringify(solicitacaoEntrada),
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Solicitacao>) => {

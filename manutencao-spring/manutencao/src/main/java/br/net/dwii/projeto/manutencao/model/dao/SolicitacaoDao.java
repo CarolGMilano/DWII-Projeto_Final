@@ -18,10 +18,9 @@ public class SolicitacaoDao {
   private final String consultar = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE id = ?";  
   private final String alterarStatus = "UPDATE solicitacao SET idStatus = ? WHERE id = ?";
   private final String alterarFuncionario = "UPDATE solicitacao SET idFuncionario = ? WHERE id = ?";
-  private final String listar = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idFuncionario = ?";
-  private final String listarAbertas = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idStatus = 1";
-  private final String listarPorCliente = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idCliente = ? AND idStatus != 8";
-  private final String listarPorClienteFinalizadas = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idCliente = ? AND idStatus = 8";
+  private final String listar = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao";
+  private final String listarPorFuncionario = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idFuncionario = ?";
+  private final String listarPorCliente = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idCliente = ?";
 
   public void inserir(Solicitacao solicitacao) throws Exception {
     try (
@@ -83,31 +82,28 @@ public class SolicitacaoDao {
     } 
   }
 
-  public List<Solicitacao> listar(int idFuncionario) throws Exception {    
+  public List<Solicitacao> listar() throws Exception {    
     try(
       Connection connection = ConnectionDB.getConnection();
       PreparedStatement psListar = connection.prepareStatement(listar);
+      ResultSet rsListar = psListar.executeQuery();
     ) {
-      psListar.setInt(1, idFuncionario);
-
       List<Solicitacao> solicitacoes = new ArrayList<>();
 
-      try (ResultSet rsListar = psListar.executeQuery()) {
-        while (rsListar.next()) {
-          Solicitacao solicitacao = new Solicitacao(
-            rsListar.getInt("id"),
-            rsListar.getString("equipamento"),
-            rsListar.getInt("idCategoria"),
-            rsListar.getString("descricao"),
-            rsListar.getInt("idStatus"),
-            rsListar.getInt("idFuncionario"),
-            rsListar.getInt("idCliente")
-          );
+      while (rsListar.next()) {
+        Solicitacao solicitacao = new Solicitacao(
+          rsListar.getInt("id"),
+          rsListar.getString("equipamento"),
+          rsListar.getInt("idCategoria"),
+          rsListar.getString("descricao"),
+          rsListar.getInt("idStatus"),
+          rsListar.getInt("idFuncionario"),
+          rsListar.getInt("idCliente")
+        );
 
-          solicitacoes.add(solicitacao);
-        }
-        return solicitacoes;
+        solicitacoes.add(solicitacao);
       }
+      return solicitacoes;
     } 
     catch (Exception e) {
       e.printStackTrace();
@@ -147,12 +143,12 @@ public class SolicitacaoDao {
     } 
   }
 
-  public List<Solicitacao> listarPorClienteFinalizadas(int idCliente) throws Exception {    
+  public List<Solicitacao> listarPorFuncionario(int idFuncionario) throws Exception {    
     try(
       Connection connection = ConnectionDB.getConnection();
-      PreparedStatement psListar = connection.prepareStatement(listarPorClienteFinalizadas);
+      PreparedStatement psListar = connection.prepareStatement(listarPorFuncionario);
     ) {
-      psListar.setInt(1, idCliente);
+      psListar.setInt(1, idFuncionario);
 
       List<Solicitacao> solicitacoes = new ArrayList<>();
 
@@ -175,38 +171,7 @@ public class SolicitacaoDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new Exception("Erro ao listar solicitações finalizadas por cliente", e);
-    } 
-  }
-
-  public List<Solicitacao> listarAbertas() throws Exception {    
-    try(
-      Connection connection = ConnectionDB.getConnection();
-      PreparedStatement psListarAbertas = connection.prepareStatement(listarAbertas);
-      ResultSet rsListarAbertas = psListarAbertas.executeQuery();
-    ) {
-
-      List<Solicitacao> solicitacoes = new ArrayList<>();
-
-      while (rsListarAbertas.next()) {
-        Solicitacao solicitacao = new Solicitacao(
-          rsListarAbertas.getInt("id"),
-          rsListarAbertas.getString("equipamento"),
-          rsListarAbertas.getInt("idCategoria"),
-          rsListarAbertas.getString("descricao"),
-          rsListarAbertas.getInt("idStatus"),
-          rsListarAbertas.getInt("idFuncionario"),
-          rsListarAbertas.getInt("idCliente")
-        );
-
-        solicitacoes.add(solicitacao);
-      }
-      return solicitacoes;
-      
-    } 
-    catch (Exception e) {
-      e.printStackTrace();
-      throw new Exception("Erro ao listar solicitações abertas", e);
+      throw new Exception("Erro ao listar solicitações do funcionário", e);
     } 
   }
 
@@ -238,7 +203,7 @@ public class SolicitacaoDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new Exception("Erro ao alterar status da solicitação", e);
+      throw new Exception("Erro ao alterar o funcionário da solicitação", e);
     }
   }
 }

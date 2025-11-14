@@ -59,25 +59,7 @@ export class FuncionarioService {
 
   buscarPorId(id: number): Observable<FuncionarioResumo | null> {
     return this._httpClient.get<FuncionarioResumo>(
-      `${this.BASE_URL}/${id}`, 
-      this.httpOptions
-    ).pipe(
-      map((resposta: HttpResponse<FuncionarioResumo>) => {
-        if(resposta.status == 200){
-          return resposta.body;
-        } else {
-          return null;
-        }
-      }),
-      catchError((erro) => {
-        return throwError(() => erro);
-      })
-    );
-  }
-
-  buscarPorUsuario(id: number): Observable<FuncionarioResumo | null> {
-    return this._httpClient.get<Funcionario>(
-      `${this.BASE_URL}/por-usuario?id=${id}`, 
+      `${this.BASE_URL}/id?id=${id}`, 
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<FuncionarioResumo>) => {

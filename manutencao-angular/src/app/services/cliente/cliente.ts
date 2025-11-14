@@ -60,7 +60,7 @@ export class ClienteService {
 
   buscarPorId(id: number): Observable<Cliente | null> {
     return this._httpClient.get<Cliente>(
-      `${this.BASE_URL}/${id}`, 
+      `${this.BASE_URL}/id?id=${id}`, 
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Cliente>) => {
@@ -76,7 +76,7 @@ export class ClienteService {
     );   
   }
 
-  buscarPorUsuario(id: number): Observable<Cliente | null> {
+  /*buscarPorUsuario(id: number): Observable<Cliente | null> {
     return this._httpClient.get<Cliente>(
       `${this.BASE_URL}/por-usuario?id=${id}`, 
       this.httpOptions
@@ -92,5 +92,5 @@ export class ClienteService {
         return throwError(() => erro);
       })
     );   
-  }
+  }*/
 }

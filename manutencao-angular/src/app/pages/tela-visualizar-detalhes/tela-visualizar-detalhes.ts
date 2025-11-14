@@ -10,15 +10,14 @@ import {
   StatusSolicitacaoLabel, 
   StatusSolicitacaoCor, 
   Manutencao, 
-  Historico,
   StatusSolicitacaoObservacao,
   Funcionario,
   UsuarioLogado,
   FuncionarioResumo,
+  SolicitacaoEntrada,
 } from "../../shared";
 
 import { ClienteService, FuncionarioService, LoginService, SolicitacaoFakeService } from '../../services';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-tela-visualizar-detalhes',
@@ -52,8 +51,6 @@ export class TelaVisualizarDetalhes implements OnInit {
 
   mostrarFormulario: boolean = false;
   mostrarRedirecionamento: boolean = false;
-
-  solicitacoes: Solicitacao[] = [];
 
   private route = inject(ActivatedRoute);
 
@@ -90,7 +87,7 @@ export class TelaVisualizarDetalhes implements OnInit {
     });
 
     if (this.usuarioLogado && this.usuarioLogado.id != null) {
-      this.funcionarioService.buscarPorUsuario(this.usuarioLogado.id).subscribe({
+      this.funcionarioService.buscarPorId(this.usuarioLogado.id).subscribe({
         next: (funcionario) => {
           if (funcionario) {
             this.funcionarioLogado = funcionario
@@ -184,44 +181,20 @@ export class TelaVisualizarDetalhes implements OnInit {
   salvarRedirecionamento(){
     if (Number(this.funcionarioDestinoSelecionado) === -1) return;
 
-    forkJoin({
-      solicitacao: this.solicitacaoService.buscarPorId(this.id),
-      funcionarioDestino: this.funcionarioService.buscarPorId(Number(this.funcionarioDestinoSelecionado))
-    }).subscribe({
-      next: ({ solicitacao, funcionarioDestino }) => {
-        if (!funcionarioDestino || !solicitacao) return
+    const solicitacaoRedirecionada: SolicitacaoEntrada = {
+      id: this.solicitacao.id,
+      funcionario: this.funcionarioDestinoSelecionado
+    };
 
-        const agora = new Date();
-        const fuso = -3;
-
-        const historico: Historico = {
-          dataHora: new Date(agora.getTime() + fuso * 60 * 60 * 1000),
-          status: StatusSolicitacao.REDIRECIONADA,
-          funcionario: this.funcionarioLogado,
-          funcionarioDestino: funcionarioDestino
-        };
-
-        const solicitacaoAtualizada: Solicitacao = {
-          ...solicitacao,
-          historico: [historico],
-          status: historico.status,
-          funcionario: funcionarioDestino
-        };
-
-        this.solicitacaoService.redirecionarSolicitacao(solicitacaoAtualizada).subscribe({
-          next: (resposta) => {
-            if (resposta) {
-              this.solicitacao = resposta;
-              this.cancelarRedirecionamento();
-            }
-          },
-          error: (erro) => {
-            alert(`Erro ao redirecionar solicitação: ${erro}`);
-          }
-        });
+    this.solicitacaoService.redirecionarSolicitacao(solicitacaoRedirecionada).subscribe({
+      next: (resposta) => {
+        if (resposta) {
+          this.solicitacao = resposta;
+          this.cancelarRedirecionamento();
+        }
       },
       error: (erro) => {
-        alert(`Erro ao buscar dados: ${erro}`);
+        alert(`Erro ao redirecionar solicitação: ${erro}`);
       }
     });
   }
@@ -229,95 +202,44 @@ export class TelaVisualizarDetalhes implements OnInit {
   salvarManutencao() {
     if (!this.formManutencao.form.valid) return;
 
-    this.solicitacaoService.buscarPorId(this.id).subscribe({
-      next: (solicitacao) => {
-        if (!solicitacao) return;
+    const manutencao: Manutencao = {
+      descricao: this.manutencao.descricao,
+      orientacao: this.manutencao.orientacao
+    } 
 
-        const manutencao: Manutencao = {
-          descricao: this.manutencao.descricao,
-          orientacao: this.manutencao.orientacao
-        };
+    const solicitacaoArrumada = {
+      id: this.solicitacao.id,
+      manutencao: manutencao
+    };
 
-        const agora = new Date();
-        const fuso = -3;
+    this.solicitacaoService.arrumarSolicitacao(solicitacaoArrumada).subscribe({
+      next: (resposta) => {
+        if (resposta) {
+          this.solicitacao = resposta;
 
-        const historico: Historico = {
-          dataHora: new Date(agora.getTime() + fuso * 60 * 60 * 1000),
-          status: StatusSolicitacao.ARRUMADA,
-          funcionario: this.funcionarioLogado
-        };
-
-
-        const solicitacaoAtualizada = {
-          ...solicitacao,
-          manutencao,
-          status: historico.status,
-          historico: [historico]
-        };
-
-        console.log("solicitacao pra manutencao", solicitacaoAtualizada)
-        this.solicitacaoService.arrumarSolicitacao(solicitacaoAtualizada).subscribe({
-          next: (resposta) => {
-            if (resposta) {
-              this.solicitacao = resposta;
-              this.cancelarManutencao();
-            }
-          },
-          error: (erro) => {
-            alert('Ocorreu um erro ao salvar a manutenção. Tente novamente.');
-          }
-        });
+          this.cancelarManutencao();
+        }
       },
       error: (erro) => {
-        alert('Erro ao buscar dados da solicitação.');
+        alert('Ocorreu um erro ao salvar a manutenção. Tente novamente.');
       }
     });
   }
 
   finalizarSolicitacao() {
-    this.solicitacaoService.buscarPorId(this.id).subscribe({
-      next: (solicitacao) => {
-        if (!solicitacao) return;
+    const solicitacaoFinalizada: SolicitacaoEntrada = {
+      id: this.solicitacao.id
+    };
 
-        const agora = new Date();
-        const fuso = -3;
-
-        const historico: Historico = {
-          dataHora: new Date(agora.getTime() + fuso * 60 * 60 * 1000),
-          status: StatusSolicitacao.FINALIZADA,
-          funcionario: this.funcionarioLogado
-        };
-
-        const solicitacaoAtualizada = {
-          ...solicitacao,
-          status: historico.status,
-          historico: [historico]
-        };
-
-        this.solicitacaoService.finalizarSolicitacao(solicitacaoAtualizada).subscribe({
-          next: (resposta) => {
-            if (resposta) {
-              this.solicitacao = resposta;
-            }
-          },
-          error: (erro) => {
-            alert('Ocorreu um erro ao finalizar solicitação. Tente novamente.');
-          }
-        });
+    this.solicitacaoService.finalizarSolicitacao(solicitacaoFinalizada).subscribe({
+      next: (resposta) => {
+        if (resposta) {
+          this.solicitacao = resposta;
+        }
       },
       error: (erro) => {
-        alert('Erro ao buscar dados da solicitação.');
+        alert('Ocorreu um erro ao finalizar solicitação. Tente novamente.');
       }
     });
   }
-
-/*
-  listarTodos(): void {
-    this.solicitacaoService.listarTodos().subscribe({
-      next: (solicitacoes) => {
-        this.solicitacoes = solicitacoes;
-      },
-      error: (err) => console.error('Erro ao listar solicitações', err)
-    });
-  }*/
 }

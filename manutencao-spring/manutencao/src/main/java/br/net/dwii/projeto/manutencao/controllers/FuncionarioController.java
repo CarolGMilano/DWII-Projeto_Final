@@ -71,8 +71,8 @@ public class FuncionarioController {
     }
   }
 
-  @GetMapping("/funcionarios/{id}")
-  public ResponseEntity<?> consultar(@PathVariable("id") int id) {
+  @GetMapping("/funcionarios/id")
+  public ResponseEntity<?> consultar(@RequestParam int id) {
     try {
       FuncionarioResumoDTO funcionarioEncontrado = funcionarioService.consultarFuncionarioResumo(id);
 
@@ -81,19 +81,6 @@ public class FuncionarioController {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     } catch (Exception e){
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar funcionários: " + e.getMessage());
-    }
-  }
-
-  @GetMapping("/funcionarios/por-usuario")
-  public ResponseEntity<?> consultarFuncionarioPorUsuario(@RequestParam int id){
-    try{
-      FuncionarioResumoDTO funcionarioEncontrado = funcionarioService.consultarPorUsuario(id);
-
-      return ResponseEntity.ok(funcionarioEncontrado);
-    } catch (FuncionarioNaoEncontradoException e) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
   }
 
@@ -111,5 +98,4 @@ public class FuncionarioController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar funcionários: " + e.getMessage());
     }
   }
-  
 }

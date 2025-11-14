@@ -11,7 +11,6 @@ import { ClienteService, LoginService, SolicitacaoFakeService } from '../../serv
 })
 export class TelaHistorico implements OnInit {
   private solicitacaoService = inject(SolicitacaoFakeService);
-  private clienteService = inject(ClienteService);
   private loginService = inject(LoginService);
 
   mostrarDetalhes: boolean = false;
@@ -64,13 +63,9 @@ export class TelaHistorico implements OnInit {
   }
 
   listarFinalizados(idUsuario: number) {
-    this.solicitacaoService.listarFinalizadasPorCliente(idUsuario).subscribe({
+    this.solicitacaoService.listarFinalizados(idUsuario).subscribe({
       next: (solicitacoes: SolicitacaoResumo[] | null) => {
-        if(solicitacoes == null){
-          this.solicitacoes = [];
-        } else {
-          this.solicitacoes = solicitacoes;
-        }
+        this.solicitacoes = solicitacoes ?? [];
       },
       error: (erro) => {
         if (erro.status === 500) {

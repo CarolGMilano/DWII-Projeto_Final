@@ -15,16 +15,6 @@ public class ServicoService {
   @Autowired
   private ServicoDao servicoDao;
 
-  private void validarServico(Servico servico) {
-    if (servico.getDescricao() == null || servico.getDescricao().isBlank()) {
-      throw new IllegalArgumentException("Descrição é obrigatória");
-    }
-
-    if (servico.getPreco() <= 0) {
-      throw new IllegalArgumentException("Preço deve ser maior que zero");
-    }
-  }
-
   public void inserirServico(ServicoDTO servicoDTO, int idOrcamento) throws Exception{
     Servico servico = new Servico(
       -1, 
@@ -33,14 +23,11 @@ public class ServicoService {
       servicoDTO.getPreco()
     );
 
-    validarServico(servico);
-
     servicoDao.inserir(servico);
   }
 
   public List<ServicoDTO> listarServicos(int idOrcamento) throws Exception {
     List<ServicoDTO> servicos = new ArrayList<>();
-    System.out.println("entrei em listar servico");
 
     for(Servico servico : servicoDao.listar(idOrcamento)){
       servicos.add(
@@ -50,8 +37,6 @@ public class ServicoService {
         )
       );
     }
-
-    System.out.println(servicos);
 
     return servicos;
   }

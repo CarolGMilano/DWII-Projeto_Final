@@ -18,29 +18,22 @@ public class OrcamentoService {
   @Autowired
   private ServicoService servicoService;
 
-  private void validarOrcamento(Orcamento orcamento) {
-    //Como ele não é um boolean primitivo, preciso descobrir se o falso é um false verdadeiro ou um null.
-    Boolean status = orcamento.getAprovado();
-
-    if (Boolean.FALSE.equals(status) && (orcamento.getMsgRejeicao() == null || orcamento.getMsgRejeicao().isBlank())) {
-      throw new IllegalArgumentException("Mensagem de rejeição é obrigatória para orçamentos reprovados");
-    }
-
-    if (orcamento.getValorTotal() <= 0) {
-      throw new IllegalArgumentException("Valor total deve ser maior que zero");
-    }
-  }
-
   public OrcamentoDTO inserirOrcamento(OrcamentoDTO orcamentoDTO, int idSolicitacao) throws Exception {
+    double valorTotal = 0.0;
+
+    if (orcamentoDTO.getServicos() != null) {
+      for (ServicoDTO servicoDTO : orcamentoDTO.getServicos()) {
+        valorTotal += servicoDTO.getPreco();
+      }
+    }
+
     Orcamento orcamento = new Orcamento(
       -1,
       idSolicitacao,
-      orcamentoDTO.getValorTotal(),
+      valorTotal,
       orcamentoDTO.getAprovada(),
       orcamentoDTO.getMsgRejeicao()
     );
-
-    validarOrcamento(orcamento);
     
     orcamentoDao.inserir(orcamento);
 
@@ -73,17 +66,10 @@ public class OrcamentoService {
   public OrcamentoDTO alterarAprovacao(OrcamentoDTO orcamentoDTO, int idSolicitacao) throws Exception {
     Orcamento orcamentoEncontrado = orcamentoDao.consultar(idSolicitacao);
     
-    Orcamento novoOrcamento = new Orcamento(
-      orcamentoEncontrado.getId(),
-      orcamentoEncontrado.getIdSolicitacao(),
-      orcamentoEncontrado.getValorTotal(),
-      orcamentoDTO.getAprovada(),
-      orcamentoDTO.getMsgRejeicao()
-    );
+    orcamentoEncontrado.setAprovado(orcamentoDTO.getAprovada());
+    orcamentoEncontrado.setMsgRejeicao(orcamentoDTO.getMsgRejeicao());
 
-    validarOrcamento(novoOrcamento);
-
-    orcamentoDao.alterarAprovacao(novoOrcamento);
+    orcamentoDao.alterarAprovacao(orcamentoEncontrado);
 
     return this.consultarOrcamento(idSolicitacao);
   }

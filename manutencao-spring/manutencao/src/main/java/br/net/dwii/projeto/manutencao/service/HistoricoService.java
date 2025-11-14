@@ -44,7 +44,6 @@ public class HistoricoService {
     historicoDao.inserir(historico);
   }
 
-
   public List<HistoricoDTO> listarHistorico(int idSolicitacao) throws Exception {
     List<HistoricoDTO> historicos = new ArrayList<>();
 
