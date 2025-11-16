@@ -107,7 +107,7 @@ public class SolicitacaoDao {
     } 
     catch (Exception e) {
       e.printStackTrace();
-      throw new Exception("Erro ao listar solicitações por funcionário", e);
+      throw new Exception("Erro ao listar solicitações", e);
     } 
   }
 

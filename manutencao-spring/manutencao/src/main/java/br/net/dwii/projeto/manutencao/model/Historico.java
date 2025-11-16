@@ -9,15 +9,17 @@ public class Historico {
   private int idStatus;
   private Integer idFuncionario;
   private Integer idFuncionarioDestino;
+  private String msgRejeicao;
   
   public Historico(int id, int idSolicitacao, Timestamp dataHora, int idStatus, Integer idFuncionario,
-      Integer idFuncionarioDestino) {
+      Integer idFuncionarioDestino, String msgRejeicao) {
     this.id = id;
     this.idSolicitacao = idSolicitacao;
     this.dataHora = dataHora;
     this.idStatus = idStatus;
     this.idFuncionario = idFuncionario;
     this.idFuncionarioDestino = idFuncionarioDestino;
+    this.msgRejeicao = msgRejeicao;
   }
 
   public int getId() { return id; }
@@ -37,4 +39,7 @@ public class Historico {
 
   public Integer getIdFuncionarioDestino() { return idFuncionarioDestino; }
   public void setIdFuncionarioDestino(Integer idFuncionarioDestino) { this.idFuncionarioDestino = idFuncionarioDestino; }
+ 
+  public String getMsgRejeicao() { return msgRejeicao; }
+  public void setMsgetMsgRejeicao(String msgRejeicao) { this.msgRejeicao = msgRejeicao; }
 }

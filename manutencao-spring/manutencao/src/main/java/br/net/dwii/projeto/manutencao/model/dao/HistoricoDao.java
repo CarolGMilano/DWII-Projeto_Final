@@ -14,8 +14,8 @@ import br.net.dwii.projeto.manutencao.model.Historico;
 
 @Repository
 public class HistoricoDao {
-  private final String inserir = "INSERT INTO historico (idSolicitacao, dataHora, idStatus, idFuncionario, idFuncionarioDestino) VALUES (?, ?, ?, ?, ?)";
-  private final String listar = "SELECT id, idSolicitacao, dataHora, idStatus, idFuncionario, idFuncionarioDestino FROM historico WHERE idSolicitacao = ?";
+  private final String inserir = "INSERT INTO historico (idSolicitacao, dataHora, idStatus, idFuncionario, idFuncionarioDestino, msgRejeicao) VALUES (?, ?, ?, ?, ?, ?)";
+  private final String listar = "SELECT id, idSolicitacao, dataHora, idStatus, idFuncionario, idFuncionarioDestino, msgRejeicao FROM historico WHERE idSolicitacao = ?";
 
   public void inserir(Historico historico) throws Exception {
     try (
@@ -36,6 +36,12 @@ public class HistoricoDao {
         psInserir.setInt(5, historico.getIdFuncionarioDestino());
       } else {
         psInserir.setNull(5, java.sql.Types.INTEGER);
+      }
+
+      if (historico.getMsgRejeicao() != null) {
+          psInserir.setString(6, historico.getMsgRejeicao());
+      } else {
+          psInserir.setNull(6, java.sql.Types.VARCHAR);
       }
       
       psInserir.executeUpdate();
@@ -71,7 +77,8 @@ public class HistoricoDao {
             rsListar.getTimestamp("dataHora"),
             rsListar.getInt("idStatus"),
             rsListar.getInt("idFuncionario"),
-            rsListar.getInt("idFuncionarioDestino")
+            rsListar.getInt("idFuncionarioDestino"),
+            rsListar.getString("msgRejeicao")
           );
 
           historicos.add(historico);
