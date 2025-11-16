@@ -13,190 +13,197 @@ import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.model.Solicitacao;
 
 @Repository
-public class SolicitacaoDao implements DaoI<Solicitacao> {
+public class SolicitacaoDao {
+  private final String inserir = "INSERT INTO solicitacao (equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente) VALUES (?, ?, ?, ?, ?, ?)";
+  private final String consultar = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE id = ?";  
+  private final String alterarStatus = "UPDATE solicitacao SET idStatus = ? WHERE id = ?";
+  private final String alterarFuncionario = "UPDATE solicitacao SET idFuncionario = ? WHERE id = ?";
+  private final String listar = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao";
+  private final String listarPorFuncionario = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idFuncionario = ?";
+  private final String listarPorCliente = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idCliente = ?";
 
-    private ClienteDao clienteDao = new ClienteDao();
-    private CategoriaDao categoriaDao = new CategoriaDao();
-    // private HistoricoDao historicoDao = new HistoricoDao();
-    // private OrcamentoDao orcamentoDao = new OrcamentoDao();
-    private FuncionarioDao funcionarioDao = new FuncionarioDao();
+  public void inserir(Solicitacao solicitacao) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psInserir = connection.prepareStatement(inserir, Statement.RETURN_GENERATED_KEYS);
+    ) {
+      psInserir.setString(1, solicitacao.getEquipamento());
+      psInserir.setInt(2, solicitacao.getIdCategoria());
+      psInserir.setString(3, solicitacao.getDescricao());
+      psInserir.setInt(4, solicitacao.getIdStatus());
+      //Ao inserir, o id do funcionário sempre será null. Pois nenhum funcionário pegou a responsabilidade ainda.
+      psInserir.setNull(5, java.sql.Types.INTEGER);
+      psInserir.setInt(6, solicitacao.getIdCliente());
 
-    @Override
-    public void add(Solicitacao objeto) throws Exception {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        String sql = "INSERT INTO solicitacao (equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente) VALUES (?, ?, ?, ?, ?, ?)";
-        try {
-            conn = ConnectionDB.getConnection();
-            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, objeto.getEquipamento());
-            ps.setLong(2, objeto.getIdCategoria());
-            ps.setString(3, objeto.getDescricao());
-            ps.setInt(4, objeto.getIdStatus());
-            ps.setLong(5, objeto.getIdFuncionario());
-            ps.setLong(6, objeto.getIdCliente());
+      psInserir.executeUpdate();
 
-            ps.executeUpdate();
+      try(ResultSet rsInserir = psInserir.getGeneratedKeys()){
+        if(rsInserir.next()){
+          int id = rsInserir.getInt(1);
 
-            try (ResultSet rsInserir = ps.getGeneratedKeys()) {
-                if (rsInserir.next()) {
-                    int id = rsInserir.getInt(1);
-
-                    objeto.setId(id);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
+          solicitacao.setId(id);
         }
-    }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao inserir solicitação", e);
+    } 
+  }
+  
+  public Solicitacao consultar(int idSolicitacao) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psConsultar = connection.prepareStatement(consultar);
+    ) {
+      psConsultar.setInt(1, idSolicitacao);
 
-    @Override
-    public List<Solicitacao> getAll() throws Exception {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        String sql = "SELECT * FROM solicitacao";
+      try(ResultSet rsConsultar = psConsultar.executeQuery()){
+        if (rsConsultar.next()) {
+          Solicitacao solicitacao = new Solicitacao(
+            rsConsultar.getInt("id"),
+            rsConsultar.getString("equipamento"),
+            rsConsultar.getInt("idCategoria"),
+            rsConsultar.getString("descricao"),
+            rsConsultar.getInt("idStatus"),
+            rsConsultar.getInt("idFuncionario"),
+            rsConsultar.getInt("idCliente")
+          );
 
-        try {
-            conn = ConnectionDB.getConnection();
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-
-            List<Solicitacao> solicitacoes = new ArrayList();
-
-            while (rs.next()) {
-                Solicitacao solicitacao = new Solicitacao(
-                        rs.getInt("id"),
-                        rs.getString("equipamento"),
-                        rs.getInt("idCategoria"),
-                        rs.getString("descricao"),
-                        rs.getInt("idStatus"),
-                        rs.getInt("idFuncionario"),
-                        rs.getInt("idCliente")
-                );
-
-                solicitacoes.add(solicitacao);
-            }
-            return solicitacoes;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new UnsupportedOperationException("Unimplemented method 'getAll'");
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
+          return solicitacao;
+        } else {
+          return null;
         }
-    }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao consultar cliente", e);
+    } 
+  }
 
-    @Override
-    public Solicitacao getById(int id) throws Exception {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        String sql = "SELECT * FROM solicitacao WHERE id = ?";
+  public List<Solicitacao> listar() throws Exception {    
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psListar = connection.prepareStatement(listar);
+      ResultSet rsListar = psListar.executeQuery();
+    ) {
+      List<Solicitacao> solicitacoes = new ArrayList<>();
 
-        try {
-            conn = ConnectionDB.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setLong(1, id);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                Solicitacao solicitacao = new Solicitacao(
-                        rs.getInt("id"),
-                        rs.getString("equipamento"),
-                        rs.getInt("idCategoria"),
-                        rs.getString("descricao"),
-                        rs.getInt("idStatus"),
-                        rs.getInt("idFuncionario"),
-                        rs.getInt("idCliente")
-                );
+      while (rsListar.next()) {
+        Solicitacao solicitacao = new Solicitacao(
+          rsListar.getInt("id"),
+          rsListar.getString("equipamento"),
+          rsListar.getInt("idCategoria"),
+          rsListar.getString("descricao"),
+          rsListar.getInt("idStatus"),
+          rsListar.getInt("idFuncionario"),
+          rsListar.getInt("idCliente")
+        );
 
-                return solicitacao;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new UnsupportedOperationException("Unimplemented method 'getById'");
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
+        solicitacoes.add(solicitacao);
+      }
+      return solicitacoes;
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao listar solicitações", e);
+    } 
+  }
+
+  public List<Solicitacao> listarPorCliente(int idCliente) throws Exception {    
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psListar = connection.prepareStatement(listarPorCliente);
+    ) {
+      psListar.setInt(1, idCliente);
+
+      List<Solicitacao> solicitacoes = new ArrayList<>();
+
+      try (ResultSet rsListar = psListar.executeQuery()) {
+        while (rsListar.next()) {
+          Solicitacao solicitacao = new Solicitacao(
+            rsListar.getInt("id"),
+            rsListar.getString("equipamento"),
+            rsListar.getInt("idCategoria"),
+            rsListar.getString("descricao"),
+            rsListar.getInt("idStatus"),
+            rsListar.getInt("idFuncionario"),
+            rsListar.getInt("idCliente")
+          );
+
+          solicitacoes.add(solicitacao);
         }
+        return solicitacoes;
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao listar solicitações por cliente", e);
+    } 
+  }
 
-    }
+  public List<Solicitacao> listarPorFuncionario(int idFuncionario) throws Exception {    
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psListar = connection.prepareStatement(listarPorFuncionario);
+    ) {
+      psListar.setInt(1, idFuncionario);
 
-    @Override
-    public void update(Solicitacao objeto) throws Exception {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        String sql = "UPDATE solicitacao SET equipamento = ?, idCategoria = ?, descricao = ?, idStatus = ?,  idFuncionario = ?, idCliente = ? WHERE id = ?";
+      List<Solicitacao> solicitacoes = new ArrayList<>();
 
-        try {
-            conn = ConnectionDB.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, objeto.getEquipamento());
-            ps.setLong(2, objeto.getIdCategoria());
-            ps.setString(3, objeto.getDescricao());
-            ps.setInt(4, objeto.getIdStatus());
-            ps.setLong(5, objeto.getIdFuncionario());
-            ps.setLong(6, objeto.getIdCliente());
-            ps.setInt(7, objeto.getId());
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new UnsupportedOperationException("Unimplemented method 'update'");
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
+      try (ResultSet rsListar = psListar.executeQuery()) {
+        while (rsListar.next()) {
+          Solicitacao solicitacao = new Solicitacao(
+            rsListar.getInt("id"),
+            rsListar.getString("equipamento"),
+            rsListar.getInt("idCategoria"),
+            rsListar.getString("descricao"),
+            rsListar.getInt("idStatus"),
+            rsListar.getInt("idFuncionario"),
+            rsListar.getInt("idCliente")
+          );
+
+          solicitacoes.add(solicitacao);
         }
+        return solicitacoes;
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao listar solicitações do funcionário", e);
+    } 
+  }
+
+  public void alterarStatus(Solicitacao solicitacao) throws Exception {
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psAlterarStatus = connection.prepareStatement(alterarStatus);
+    ) {
+      psAlterarStatus.setInt(1, solicitacao.getIdStatus());
+      psAlterarStatus.setInt(2, solicitacao.getId());
+
+      psAlterarStatus.executeUpdate();
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao alterar status da solicitação", e);
     }
+  }
 
-    @Override
-    public void delete(Solicitacao objeto) throws Exception {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        String sql = "DELETE FROM solicitacao WHERE id = ?";
+  public void alterarFuncionario(Solicitacao solicitacao) throws Exception {
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psAlterarFuncionario = connection.prepareStatement(alterarFuncionario);
+    ) {
+      psAlterarFuncionario.setInt(1, solicitacao.getIdFuncionario());
+      psAlterarFuncionario.setInt(2, solicitacao.getId());
 
-        try {
-            conn = ConnectionDB.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setLong(1, objeto.getId());
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new UnsupportedOperationException("Unimplemented method 'delete'");
-        } finally {
-            if (ps != null) {
-                ps.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        }
+      psAlterarFuncionario.executeUpdate();
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao alterar o funcionário da solicitação", e);
     }
-
+  }
 }

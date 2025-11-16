@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 
-import { Funcionario } from '../../shared'; 
+import { Funcionario, FuncionarioResumo } from '../../shared'; 
 
 @Injectable({
   providedIn: 'root'
@@ -57,12 +57,12 @@ export class FuncionarioService {
     )
   }
 
-  buscarPorId(id: number): Observable<Funcionario | null> {
-    return this._httpClient.get<Funcionario>(
-      `${this.BASE_URL}/${id}`, 
+  buscarPorId(id: number): Observable<FuncionarioResumo | null> {
+    return this._httpClient.get<FuncionarioResumo>(
+      `${this.BASE_URL}/id?id=${id}`, 
       this.httpOptions
     ).pipe(
-      map((resposta: HttpResponse<Funcionario>) => {
+      map((resposta: HttpResponse<FuncionarioResumo>) => {
         if(resposta.status == 200){
           return resposta.body;
         } else {
@@ -77,7 +77,7 @@ export class FuncionarioService {
 
   buscarPorUsuario(id: number): Observable<Funcionario | null> {
     return this._httpClient.get<Funcionario>(
-      `${this.BASE_URL}/por-usuario?id=${id}`, 
+      `${this.BASE_URL}/idUsuario?id=${id}`, 
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Funcionario>) => {
@@ -90,7 +90,7 @@ export class FuncionarioService {
       catchError((erro) => {
         return throwError(() => erro);
       })
-    );
+    );   
   }
 
   atualizar(funcionario: Funcionario): Observable<Funcionario | null> {

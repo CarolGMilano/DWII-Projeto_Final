@@ -48,11 +48,11 @@
 
         <div class="flex-col items-center justify-center pt-3">
           <div class="relative group inline-block w-full">
-            <button type="submit" [disabled]="!formLogin.valid" class="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
+            <button type="submit" [disabled]="!formLogin.valid" class="flex justify-center w-full rounded-md bg-[#96A78D] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-[#7B8A6C] hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
               Fazer login
             </button>
             @if (!formLogin.valid) {
-              <div class="absolute right-15 translate-x-2/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 bg-black text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-indigo-400">
+              <div class="absolute right-15 translate-x-2/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-[#7B8A6C]">
                 Preencha o formulário corretamente
               </div>
             }
@@ -60,12 +60,16 @@
         
           <p class="mt-2 text-center text-sm/6 text-gray-500">
             Ainda não tem uma conta?
-            <a [routerLink]="['/cadastro']" class="font-semibold text-indigo-600 hover:text-indigo-500 cursor-pointer">Registre-se agora</a>
+            <a [routerLink]="['/cadastro']" class="font-semibold text-[#96A78D] hover:text-[#7B8A6C] cursor-pointer">Registre-se agora</a>
           </p>  
         </div>
       </div>
     </form>      
   </div>
+
+  @if(loading){
+    <app-elemento-loading></app-elemento-loading>
+  }
   
   <div class="w-2/5 flex items-center justify-center bg-gray-200 m-3 rounded-lg">LOGO</div>
 </div>

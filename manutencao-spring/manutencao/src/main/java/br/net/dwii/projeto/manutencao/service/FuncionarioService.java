@@ -22,7 +22,20 @@ public class FuncionarioService {
   @Autowired
   private UsuarioService usuarioService;
 
-  private void validarFuncionario(Funcionario funcionario) {
+  @Autowired
+  private EmailService emailService;
+
+  private void validarFuncionario(FuncionarioDTO funcionario) {
+    if (funcionario.getNome() == null || funcionario.getNome().isBlank()) {
+      throw new IllegalArgumentException("Nome é obrigatório");
+    }
+    
+    if (funcionario.getEmail() == null || funcionario.getEmail().isBlank()) {
+      throw new IllegalArgumentException("Email é obrigatório");
+    } else if (!funcionario.getEmail().matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
+      throw new IllegalArgumentException("Email inválido");
+    }
+
     if (funcionario.getDataNascimento() == null) {
       throw new IllegalArgumentException("Data de nascimento é obrigatória");
     } else if (funcionario.getDataNascimento().after(new Date(System.currentTimeMillis()))) {
@@ -31,6 +44,7 @@ public class FuncionarioService {
   }
 
   public FuncionarioResumoDTO inserirFuncionario(FuncionarioDTO funcionarioDTO) throws Exception {
+    validarFuncionario(funcionarioDTO);
     
     Usuario usuario = new Usuario(
       -1,
@@ -42,7 +56,7 @@ public class FuncionarioService {
       true
     );
       
-    usuarioService.inserirUsuario(usuario);
+    String senhaGerada = usuarioService.inserirUsuario(usuario);
     
     Funcionario funcionario = new Funcionario(
       -1, 
@@ -50,9 +64,28 @@ public class FuncionarioService {
       funcionarioDTO.getDataNascimento()
     );
       
-    validarFuncionario(funcionario);
-        
     funcionarioDao.inserir(funcionario);
+
+    String mensagem = """
+      Olá, %s!
+
+      Seu cadastro como funcionário foi realizado com sucesso.
+
+      Suas credenciais de acesso ao sistema são:
+      Usuário: %s
+      Senha: %s
+
+      Recomendamos que você altere sua senha no primeiro acesso no painel "Funcionários".
+
+      Atenciosamente,
+      Equipe de Manutenção
+      """.formatted(
+        usuario.getNome(),
+        usuario.getEmail(),
+        senhaGerada
+      );
+
+    emailService.enviarEmail("Acesso de funcionário liberado", mensagem);
 
     return this.consultarFuncionarioResumo(funcionario.getId());
   }
@@ -74,8 +107,9 @@ public class FuncionarioService {
     );
   }
 
-  public FuncionarioResumoDTO consultarPorUsuario(int idUsuario) throws Exception {
-    Funcionario funcionarioEncontrado = funcionarioDao.consultarPorUsuario(idUsuario);
+  public FuncionarioResumoDTO consultarFuncionarioResumoPorUsuario(int idUsuario) throws Exception {
+    int idFuncionario = this.consultarPorUsuario(idUsuario);
+    Funcionario funcionarioEncontrado = funcionarioDao.consultar(idFuncionario);
 
     if(funcionarioEncontrado == null){
       throw new FuncionarioNaoEncontradoException();
@@ -91,7 +125,19 @@ public class FuncionarioService {
     );
   }
 
+  public int consultarPorUsuario(int idUsuario) throws Exception {
+    Funcionario funcionarioEncontrado = funcionarioDao.consultarPorUsuario(idUsuario);
+
+    if(funcionarioEncontrado == null){
+      throw new FuncionarioNaoEncontradoException();
+    }
+
+    return funcionarioEncontrado.getId();
+  }
+
   public FuncionarioResumoDTO alterarFuncionario(FuncionarioDTO funcionarioDTO) throws Exception {
+    validarFuncionario(funcionarioDTO);
+
     Funcionario funcionarioEncontrado = funcionarioDao.consultar(funcionarioDTO.getIdFuncionario());
 
     if (funcionarioEncontrado == null) {

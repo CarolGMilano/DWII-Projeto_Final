@@ -63,7 +63,8 @@ CREATE TABLE solicitacao (
   idCategoria INT NOT NULL,
   descricao VARCHAR(255) NOT NULL,
   idStatus INT NOT NULL, 
-  idFuncionario INT NOT NULL,
+  -- Pois quando a solicitação é adicionada, o id é null.
+  idFuncionario INT NULL, 
   idCliente INT NOT NULL,
   FOREIGN KEY (idCategoria) REFERENCES categoria(id),
   FOREIGN KEY (idStatus) REFERENCES statusSolicitacao(id),
@@ -84,8 +85,10 @@ CREATE TABLE historico (
   idSolicitacao INT NOT NULL,
   dataHora DATETIME NOT NULL,
   idStatus INT NOT NULL,
-  idFuncionario INT NOT NULL,
-  idFuncionarioDestino INT,
+  -- Mesma coisa da solicitação
+  idFuncionario INT NULL,
+  idFuncionarioDestino INT NULL,
+  msgRejeicao VARCHAR(255) NULL,
   FOREIGN KEY (idSolicitacao) REFERENCES solicitacao(id), 
   FOREIGN KEY (idStatus) REFERENCES statusSolicitacao(id), 
   FOREIGN KEY (idFuncionario) REFERENCES funcionario(id),
@@ -122,3 +125,10 @@ INSERT INTO statusSolicitacao (id, descricao) VALUES
 (6, 'Arrumada'),
 (7, 'Paga'),
 (8, 'Finalizada');
+
+INSERT INTO categoria (descricao) VALUES
+('Notebook'),
+('Desktop'),
+('Impressora'),
+('Mouse'),
+('Teclado');

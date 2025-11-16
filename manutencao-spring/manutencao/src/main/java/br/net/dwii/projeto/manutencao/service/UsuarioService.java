@@ -25,6 +25,9 @@ public class UsuarioService {
   @Autowired
   private UsuarioDao usuarioDao;
 
+  @Autowired
+  private EmailService emailService;
+
   /*
    * Salt é um valor aleatório que é concatenado com a senha antes da criptografia
    * para deixar a senha mais segura e garantir hashes diferentes para senhas iguais.
@@ -62,18 +65,6 @@ public class UsuarioService {
     return hashHexa.toString();
   }
 
-  private void validarUsuario(Usuario usuario) {
-    if (usuario.getNome() == null || usuario.getNome().isBlank()) {
-      throw new IllegalArgumentException("Nome é obrigatório");
-    }
-
-    if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
-      throw new IllegalArgumentException("Email é obrigatório");
-    } else if (!usuario.getEmail().matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
-      throw new IllegalArgumentException("Email inválido");
-    }
-  }
-
   public UsuarioLogadoDTO validarLogin(LoginDTO loginDTO) throws Exception {
     Usuario usuario = usuarioDao.consultarPorEmailLogin(loginDTO.getEmail());
 
@@ -82,10 +73,6 @@ public class UsuarioService {
     }
 
     String hashTentativa = gerarHash(loginDTO.getSenha(), usuario.getSalt());
-
-    System.out.println("Senha fornecida: " + loginDTO.getSenha());
-    System.out.println("Hash tentativa: " + hashTentativa);
-    System.out.println("Hash banco: " + usuario.getSenha());
 
     if(!hashTentativa.equals(usuario.getSenha())){
       throw new SenhaIncorretaException();
@@ -97,9 +84,7 @@ public class UsuarioService {
     );
   }
 
-  public void inserirUsuario(Usuario usuario) throws Exception {
-    validarUsuario(usuario);
-
+  public String inserirUsuario(Usuario usuario) throws Exception {
     Usuario usuarioEncontrado = usuarioDao.consultarPorEmail(usuario.getEmail());
 
     if (usuarioEncontrado != null) {
@@ -120,12 +105,10 @@ public class UsuarioService {
 
     usuarioDao.inserir(usuario);
 
-    System.out.println("Senha gerada para teste: " + senhaAleatoria);
+    return senhaAleatoria;
   }
 
   public void alterarUsuario(Usuario usuario, String senha, String novaSenha) throws Exception {
-    validarUsuario(usuario);
-
     Usuario usuarioEncontrado = usuarioDao.consultar(usuario.getId());
 
     if (usuarioEncontrado == null) {
@@ -141,6 +124,23 @@ public class UsuarioService {
     Usuario usuarioAlterado = this.alterarSenha(usuario, senha, novaSenha);
 
     usuarioDao.alterar(usuarioAlterado);
+
+    if(novaSenha != null && !novaSenha.isBlank()){
+      String mensagem = """
+      Olá, %s!
+
+      Sua senha foi alterada com sucesso.
+
+      Caso você não tenha feito essa alteração, entre em contato imediatamente com o suporte.
+
+      Atenciosamente,
+      Equipe de Manutenção
+      """.formatted(
+        usuario.getNome()
+      );
+
+      emailService.enviarEmail("Senha alterada com sucesso", mensagem);
+    }
   }
 
   public Usuario alterarSenha(Usuario usuario, String senha, String novaSenha) throws Exception {

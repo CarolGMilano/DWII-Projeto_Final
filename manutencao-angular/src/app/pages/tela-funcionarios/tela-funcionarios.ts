@@ -1,21 +1,22 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
 
-import { SharedModule, Funcionario, TipoUsuario } from '../../shared';
-import { FuncionarioService } from '../../services';
+import { Funcionario, TipoUsuario, UsuarioLogado } from '../../shared';
+import { FuncionarioService, LoginService } from '../../services';
+import { ElementoLoading } from '../../components';
 
 @Component({
   selector: 'app-tela-funcionarios',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ElementoLoading],
   templateUrl: './tela-funcionarios.html',
   styleUrl: './tela-funcionarios.css'
 })
 export class TelaFuncionarios implements OnInit {
   @ViewChild('formFuncionario') formFuncionario! : NgForm;
 
-  readonly funcionarioService = inject(FuncionarioService);
+  private funcionarioService = inject(FuncionarioService);
+  private loginService = inject(LoginService);
 
   funcionarios: Funcionario[] = [];
 
@@ -29,7 +30,7 @@ export class TelaFuncionarios implements OnInit {
 
   pesquisa: string = '';
 
-  usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
+  usuarioLogado: UsuarioLogado | null = null;
   idFuncionarioLogado: number = -1;
 
   senhaIncorreta: boolean = false;
@@ -39,7 +40,15 @@ export class TelaFuncionarios implements OnInit {
 
   modoFormulario: 'nenhum' | 'adicionar' | 'editar' = 'nenhum';
 
+  dataInvalida: boolean | null = null;
+  dataErroMsg: string | null = null;
+
+  dataNascimentoStr: string = '';
+  loading: boolean = false;
+
   ngOnInit(): void {
+    this.usuarioLogado = this.loginService.usuarioLogado;
+
     this.listarTodos();
 
     if (this.usuarioLogado) {
@@ -48,7 +57,7 @@ export class TelaFuncionarios implements OnInit {
   }
 
   buscarFuncionarioPorUsuario(idUsuario: number): void {
-    this.funcionarioService.buscarPorUsuario(idUsuario).subscribe({
+    this.funcionarioService.buscarPorId(idUsuario).subscribe({
       next: (funcionario) => {
         if (funcionario) {
           this.idFuncionarioLogado = funcionario.id;
@@ -58,7 +67,6 @@ export class TelaFuncionarios implements OnInit {
     });
   }
 
-
   abrirAdicionar() {
     this.funcionario = {
       id: -1,
@@ -67,12 +75,27 @@ export class TelaFuncionarios implements OnInit {
       tipo: TipoUsuario.FUNCIONARIO,
       dataNascimento: new Date()
     };
+
+
+    this.dataNascimentoStr = '';
+
     this.modoFormulario = 'adicionar';
     this.mostrarFormulario = true;
   }
 
   abrirEditar(funcionario: Funcionario) {
-    this.funcionario = { ...funcionario }; 
+    this.funcionario = { ...funcionario };
+
+    if (funcionario.dataNascimento instanceof Date) {
+      const data = funcionario.dataNascimento;
+      const ano = data.getFullYear();
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const dia = String(data.getDate()).padStart(2, '0');
+      this.dataNascimentoStr = `${ano}-${mes}-${dia}`;
+    } else {
+      this.dataNascimentoStr = funcionario.dataNascimento;
+    }
+
     this.modoFormulario = 'editar';
     this.mostrarFormulario = true;
   }
@@ -85,7 +108,6 @@ export class TelaFuncionarios implements OnInit {
   cancelar() {
     if(this.modoFormulario == 'adicionar' || this.modoFormulario == 'editar'){
       this.mostrarFormulario = false;
-      //this.formFuncionario.reset();
     } else {
       this.mostrarPopupExclusao = false;
     }
@@ -101,6 +123,38 @@ export class TelaFuncionarios implements OnInit {
     return this.funcionarios.filter(f =>
       f.nome.toLowerCase().includes(texto)
     );
+  }
+
+  validarData(): void {
+    this.dataInvalida = null;
+    this.dataErroMsg = null;
+
+    if (!this.dataNascimentoStr) {
+      this.dataInvalida = true;
+      this.dataErroMsg = 'Informe a data de nascimento';
+      return;
+    }
+
+    const data = new Date(this.dataNascimentoStr);
+    const hoje = new Date();
+    hoje.setHours(0,0,0,0);
+
+    if (data > hoje) {
+      this.dataInvalida = true;
+      this.dataErroMsg = 'A data não pode ser no futuro';
+      return;
+    }
+
+    const idade = hoje.getFullYear() - data.getFullYear();
+
+    if (idade < 18) {
+      this.dataInvalida = true;
+      this.dataErroMsg = 'O funcionário precisa ter pelo menos 18 anos';
+      return;
+    }
+
+    this.dataInvalida = false;
+    this.dataErroMsg = null;
   }
 
   listarTodos() {
@@ -125,10 +179,15 @@ export class TelaFuncionarios implements OnInit {
   salvar():void {
     this.senhaIncorreta = false;
     if (!this.formFuncionario.form.valid) return;
-
+    
+    this.loading = true;
+    
+    this.funcionario.dataNascimento = new Date(this.dataNascimentoStr + 'T00:00:00');
+    
     if (this.modoFormulario === 'adicionar') {
       this.funcionarioService.inserir(this.funcionario).subscribe({
         next: () => {
+          this.loading = false;
           this.listarTodos();
           this.mostrarFormulario = false;
           this.formFuncionario.reset();
@@ -146,6 +205,7 @@ export class TelaFuncionarios implements OnInit {
     } else {
       this.funcionarioService.atualizar(this.funcionario).subscribe({
         next: () => {
+          this.loading = false;
           this.listarTodos();
           this.mostrarFormulario = false;
           this.formFuncionario.reset();
@@ -163,6 +223,9 @@ export class TelaFuncionarios implements OnInit {
         }
       });
     }
+
+    this.dataInvalida = null;
+    this.dataErroMsg = null;
   }
 
   excluir(){

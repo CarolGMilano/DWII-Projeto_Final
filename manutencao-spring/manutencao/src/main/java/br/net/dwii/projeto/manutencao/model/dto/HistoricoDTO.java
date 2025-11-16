@@ -1,22 +1,24 @@
 package br.net.dwii.projeto.manutencao.model.dto;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class HistoricoDTO {
-  private Date dataHora;
+  private LocalDateTime dataHora;
   private int status;
   private FuncionarioResumoDTO funcionario;
   private FuncionarioResumoDTO funcionarioDestino;
+  private String msgRejeicao;
 
-  public HistoricoDTO(Date dataHora, int status, FuncionarioResumoDTO funcionario, FuncionarioResumoDTO funcionarioDestino) {
+  public HistoricoDTO(LocalDateTime dataHora, int status, FuncionarioResumoDTO funcionario, FuncionarioResumoDTO funcionarioDestino, String msgRejeicao) {
     this.dataHora = dataHora;
     this.status = status;
     this.funcionario = funcionario;
     this.funcionarioDestino = funcionarioDestino;
+    this.msgRejeicao = msgRejeicao;
   }
 
-  public Date getDataHora() { return dataHora; }
-  public void setDataHora(Date dataHora) { this.dataHora = dataHora; }
+  public LocalDateTime getDataHora() { return dataHora; }
+  public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
 
   public int getStatus() { return status; }
   public void setStatus(int status) { this.status = status; }
@@ -26,4 +28,7 @@ public class HistoricoDTO {
 
   public FuncionarioResumoDTO getFuncionarioDestino() { return funcionarioDestino; }
   public void setFuncionarioDestino(FuncionarioResumoDTO funcionarioDestino) { this.funcionarioDestino = funcionarioDestino; }
+
+  public String getMsgRejeicao() { return msgRejeicao; }
+  public void setMsgRejeicao(String msgRejeicao) { this.msgRejeicao = msgRejeicao; }
 }

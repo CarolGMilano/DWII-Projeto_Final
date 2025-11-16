@@ -7,14 +7,12 @@ public class OrcamentoDTO {
   private double valorTotal;
   private Boolean aprovada;
   private String msgRejeicao;
-  private int id;
 
-  public OrcamentoDTO(int id, List<ServicoDTO> servicos, double valorTotal, Boolean aprovada, String msgRejeicao) {
+  public OrcamentoDTO(List<ServicoDTO> servicos, double valorTotal, Boolean aprovada, String msgRejeicao) {
     this.servicos = servicos;
     this.valorTotal = valorTotal;
     this.aprovada = aprovada;
     this.msgRejeicao = msgRejeicao;
-    this.id = id;
   }
 
   public List<ServicoDTO> getServicos() { return servicos; }
@@ -28,12 +26,4 @@ public class OrcamentoDTO {
 
   public String getMsgRejeicao() { return msgRejeicao; }
   public void setMsgRejeicao(String msgRejeicao) { this.msgRejeicao = msgRejeicao; }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }

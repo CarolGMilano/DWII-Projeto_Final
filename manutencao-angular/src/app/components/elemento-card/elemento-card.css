@@ -1,0 +1,19 @@
+.card {
+  position: fixed;
+  bottom: 20px; 
+  left: 50%;
+  transform: translateX(-50%) translateY(100%); 
+  padding: 20px 28px;
+  background-color: #B6CEB4;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.card.show {
+  transform: translateX(-50%) translateY(0); 
+  opacity: 0.95;
+}
