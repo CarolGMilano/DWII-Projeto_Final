@@ -62,7 +62,18 @@ public class SolicitacaoController {
 
       return ResponseEntity.ok(solicitacoes);
     } catch (Exception e){
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar solicitações abertas: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar solicitações: " + e.getMessage());
+    }
+  }
+
+  @GetMapping("/solicitacoes/completas")
+  public ResponseEntity<?> listarCompletas() {
+    try {
+      List<SolicitacaoDTO> solicitacoes = solicitacaoService.listarCompletas();
+
+      return ResponseEntity.ok(solicitacoes);
+    } catch (Exception e){
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar solicitações: " + e.getMessage());
     }
   }
 
@@ -73,7 +84,7 @@ public class SolicitacaoController {
 
       return ResponseEntity.ok(solicitacoes);
     } catch (Exception e){
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar solicitações: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar solicitações por funcionário: " + e.getMessage());
     }
   }
 

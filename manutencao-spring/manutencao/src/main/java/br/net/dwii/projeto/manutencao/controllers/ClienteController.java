@@ -1,4 +1,6 @@
 package br.net.dwii.projeto.manutencao.controllers;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,7 @@ public class ClienteController {
     }
   }
   
+  //Arrumar o navbar (adicionar consulta por usuário ao service)
   @GetMapping("/clientes/id")
   public ResponseEntity<?> consultarClienteResumo(@RequestParam int id){
     try{
@@ -46,6 +49,30 @@ public class ClienteController {
       return ResponseEntity.ok(clienteEncontrado);
     } catch (ClienteNaoEncontradoException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+  }
+
+  @GetMapping("/clientes/idUsuario")
+  public ResponseEntity<?> consultarClienteResumoPorUsuario(@RequestParam int id){
+    try{
+      ClienteResumoDTO clienteEncontrado = clienteService.consultarClienteResumoPorUsuario(id);
+
+      return ResponseEntity.ok(clienteEncontrado);
+    } catch (ClienteNaoEncontradoException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+  }
+
+  @GetMapping("/clientes")
+  public ResponseEntity<?> listar(){
+    try{
+      List<ClienteResumoDTO> clientes = clienteService.listarClientes();
+
+      return ResponseEntity.ok(clientes);
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }

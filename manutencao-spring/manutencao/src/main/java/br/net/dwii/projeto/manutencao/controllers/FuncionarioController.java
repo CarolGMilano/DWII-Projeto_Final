@@ -84,6 +84,19 @@ public class FuncionarioController {
     }
   }
 
+  @GetMapping("/funcionarios/idUsuario")
+  public ResponseEntity<?> consultarPorIdUsuario(@RequestParam int id) {
+    try {
+      FuncionarioResumoDTO funcionarioEncontrado = funcionarioService.consultarFuncionarioResumoPorUsuario(id);
+
+      return ResponseEntity.ok(funcionarioEncontrado);
+    } catch (FuncionarioNaoEncontradoException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e){
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar funcionários: " + e.getMessage());
+    }
+  }
+
   @DeleteMapping("/funcionarios/{id}")
   public ResponseEntity<?> deletar(@PathVariable("id") int id){
     try{
