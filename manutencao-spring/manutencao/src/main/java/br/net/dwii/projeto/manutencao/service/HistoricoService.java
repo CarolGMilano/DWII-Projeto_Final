@@ -38,7 +38,8 @@ public class HistoricoService {
       Timestamp.valueOf(historicoDTO.getDataHora()),
       historicoDTO.getStatus(),
       idFuncionario,
-      idFuncionarioDestino
+      idFuncionarioDestino,
+      historicoDTO.getMsgRejeicao()
     );
 
     historicoDao.inserir(historico);
@@ -64,7 +65,8 @@ public class HistoricoService {
           historico.getDataHora().toLocalDateTime(),
           historico.getIdStatus(),
           funcionario,
-          funcionarioDestino
+          funcionarioDestino,
+          historico.getMsgRejeicao()
         )
       );
     }

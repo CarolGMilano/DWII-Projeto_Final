@@ -87,10 +87,27 @@ public class FuncionarioService {
 
     emailService.enviarEmail("Acesso de funcionário liberado", mensagem);
 
-    return this.consultarFuncionarioResumo(funcionario.getIdUsuario());
+    return this.consultarFuncionarioResumo(funcionario.getId());
   }
 
-  public FuncionarioResumoDTO consultarFuncionarioResumo(int idUsuario) throws Exception {
+  public FuncionarioResumoDTO consultarFuncionarioResumo(int idFuncionario) throws Exception {
+    Funcionario funcionarioEncontrado = funcionarioDao.consultar(idFuncionario);
+
+    if(funcionarioEncontrado == null){
+      throw new FuncionarioNaoEncontradoException();
+    }
+
+    Usuario usuarioEncontrado = usuarioService.consultarUsuario(funcionarioEncontrado.getIdUsuario());
+
+    return new FuncionarioResumoDTO(
+      funcionarioEncontrado.getId(),
+      usuarioEncontrado.getNome(),
+      usuarioEncontrado.getEmail(),
+      funcionarioEncontrado.getDataNascimento()
+    );
+  }
+
+  public FuncionarioResumoDTO consultarFuncionarioResumoPorUsuario(int idUsuario) throws Exception {
     int idFuncionario = this.consultarPorUsuario(idUsuario);
     Funcionario funcionarioEncontrado = funcionarioDao.consultar(idFuncionario);
 

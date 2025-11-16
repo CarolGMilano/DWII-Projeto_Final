@@ -1,5 +1,8 @@
 package br.net.dwii.projeto.manutencao.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -138,7 +141,7 @@ public class ClienteService {
 
     emailService.enviarEmail("Seja bem-vinda(o)!", mensagem);
 
-    return this.consultarClienteResumo(cliente.getIdUsuario());
+    return this.consultarClienteResumo(cliente.getId());
   }
 
   public int consultarIdPorCPF(String cpf) throws  Exception{
@@ -181,7 +184,35 @@ public class ClienteService {
     );
   }
 
-  public ClienteResumoDTO consultarClienteResumo(int idUsuario) throws Exception {
+  public ClienteResumoDTO consultarClienteResumo(int idCliente) throws Exception {
+    Cliente clienteEncontrado = clienteDao.consultar(idCliente);
+
+    if(clienteEncontrado == null){
+      throw new ClienteNaoEncontradoException();
+    }
+
+    Usuario usuarioEncontrado = usuarioService.consultarUsuario(clienteEncontrado.getIdUsuario());
+    Endereco enderecoEncontrado = enderecoService.consultarEndereco(clienteEncontrado.getId());
+
+    EnderecoDTO enderecoDTO = new EnderecoDTO(
+      enderecoEncontrado.getCep(), 
+      enderecoEncontrado.getLogradouro(), 
+      enderecoEncontrado.getNumero(), 
+      enderecoEncontrado.getBairro(), 
+      enderecoEncontrado.getCidade(), 
+      enderecoEncontrado.getEstado()
+    );
+
+    return new ClienteResumoDTO(
+      usuarioEncontrado.getNome(),
+      usuarioEncontrado.getEmail(),
+      clienteEncontrado.getCpf(),
+      clienteEncontrado.getTelefone(),
+      enderecoDTO
+    );
+  }
+
+  public ClienteResumoDTO consultarClienteResumoPorUsuario(int idUsuario) throws Exception {
     int idCliente = this.consultarPorUsuario(idUsuario);
     Cliente clienteEncontrado = clienteDao.consultar(idCliente);
 
@@ -210,13 +241,23 @@ public class ClienteService {
     );
   }
 
-  public int consultarPorUsuario(int idUsuario) throws Exception {
+  public int consultarPorUsuario(int idUsuario) throws Exception { 
     Cliente clienteEncontrado = clienteDao.consultarPorUsuario(idUsuario);
-
+    
     if(clienteEncontrado == null){
       throw new ClienteNaoEncontradoException();
     }
 
     return clienteEncontrado.getId();
+  }
+
+  public List<ClienteResumoDTO> listarClientes() throws Exception {
+    List<ClienteResumoDTO> clientes = new ArrayList<>();
+
+    for (Cliente cliente : clienteDao.listar()) {
+      clientes.add(this.consultarClienteResumoPorUsuario(cliente.getIdUsuario()));
+    }
+
+    return clientes;
   }
 }
