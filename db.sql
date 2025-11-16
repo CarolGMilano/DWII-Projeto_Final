@@ -88,6 +88,7 @@ CREATE TABLE historico (
   -- Mesma coisa da solicitação
   idFuncionario INT NULL,
   idFuncionarioDestino INT NULL,
+  msgRejeicao VARCHAR(255) NULL,
   FOREIGN KEY (idSolicitacao) REFERENCES solicitacao(id), 
   FOREIGN KEY (idStatus) REFERENCES statusSolicitacao(id), 
   FOREIGN KEY (idFuncionario) REFERENCES funcionario(id),
@@ -124,3 +125,10 @@ INSERT INTO statusSolicitacao (id, descricao) VALUES
 (6, 'Arrumada'),
 (7, 'Paga'),
 (8, 'Finalizada');
+
+INSERT INTO categoria (descricao) VALUES
+('Notebook'),
+('Desktop'),
+('Impressora'),
+('Mouse'),
+('Teclado');
