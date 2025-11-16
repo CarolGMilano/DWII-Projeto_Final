@@ -5,4 +5,5 @@ export interface Historico {
   status: number;
   funcionario?: FuncionarioResumo;
   funcionarioDestino?: FuncionarioResumo;
+  msgRejeicao?: String;
 }
