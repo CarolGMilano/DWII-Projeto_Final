@@ -33,7 +33,7 @@ export class Navbar implements OnInit {
     if (!usuario) return;
 
     if (usuario.tipo === this.TipoUsuario.CLIENTE) {
-      this.clienteService.buscarPorId(usuario.id).subscribe({
+      this.clienteService.buscarPorUsuario(usuario.id).subscribe({
         next: (cliente) => {
           if (cliente) {
             this.nome = cliente.nome;
@@ -43,7 +43,7 @@ export class Navbar implements OnInit {
         error: (erro) => console.error('Erro ao buscar cliente:', erro)
       });
     } else if (usuario.tipo === this.TipoUsuario.FUNCIONARIO) {
-      this.funcionarioService.buscarPorId(usuario.id).subscribe({
+      this.funcionarioService.buscarPorUsuario(usuario.id).subscribe({
         next: (funcionario) => {
           if (funcionario) {
             this.nome = funcionario.nome;
