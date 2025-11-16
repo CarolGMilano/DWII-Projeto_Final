@@ -1,188 +1,347 @@
-import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { SolicitacaoModel } from '../../models/Solicitacao';
-import { NovaSolicitacao } from '../../components/nova-solicitacao/nova-solicitacao';
-import { Categoria } from '../../models/Categoria';
-import { EstadoSolicitacao } from '../../models/EnumEstadoSolicitacao';
-import { HistoricoSolicitacao } from '../../models/HistoricoSolicitacao';
-import { NovaSolicitacaoModel } from '../../models/NovaSolicitacao';
-import { Solicitacao } from '../../shared';
+import { catchError, map, Observable, throwError } from 'rxjs';
+
+import { Solicitacao, SolicitacaoResumo, SolicitacaoEntrada, StatusSolicitacao } from '../../shared';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class SolicitacaoService {
-  // private apiUrl = '';
+  private readonly _httpClient = inject(HttpClient)
+  
   BASE_URL = "http://localhost:8080/solicitacoes";
 
-  private httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-    observe: 'response' as const
-  };
-
-  constructor(private http: HttpClient) { }
-
-  getCategorias(): Observable<Categoria[]> {
-    return this.http.get<Categoria[]>(
-      this.BASE_URL + "/categorias", 
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<Categoria[]>) => {
-          return resp.body ?? [];
+  httpOptions = {
+    observe: "response" as "response",
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  }
+  
+  listar(): Observable<SolicitacaoResumo[] | null> {
+    return this._httpClient.get<SolicitacaoResumo[]>(
+      `${this.BASE_URL}`, 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<SolicitacaoResumo[]>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return [];
+        }
       }),
-      catchError((e, c) => {
-        console.error('Erro ao buscar categorias:', e);
-        return of([]);
+      catchError((erro) => {
+        return throwError(() => erro);
       })
     );
   }
 
-  postSolicitacao(novaSolicitacao: NovaSolicitacaoModel): Observable<NovaSolicitacaoModel  | null> {
-    return this.http.post<NovaSolicitacaoModel>(
-      this.BASE_URL, 
-      novaSolicitacao,
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<NovaSolicitacaoModel>) => {
-          if (resp.status === 200 || resp.status === 201) {
-            return resp.body;
-          } else {
-            return null;
-          }
-        }),
-        catchError((err, caught) => {
-          return throwError(() => err);
-        })
-    );
-  }
-
-  getSolicitacoes(): Observable<Solicitacao[]> {
-    return this.http.get<Solicitacao[]>(
-      this.BASE_URL, 
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<Solicitacao[]>) => {
-          return resp.body ?? [];
+  listarCompletas(): Observable<Solicitacao[] | null> {
+    return this._httpClient.get<Solicitacao[]>(
+      `${this.BASE_URL}/completas`, 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao[]>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return [];
+        }
       }),
-      catchError((e, c) => {
-        console.error('Erro ao buscar solicitações:', e);
-        return of([]);
+      catchError((erro) => {
+        return throwError(() => erro);
       })
     );
   }
 
-  getSolicitacao(solicitacao: Solicitacao): Observable<Solicitacao  | null> {
-    return this.http.get<Solicitacao>(
-      this.BASE_URL + "/" + solicitacao.id,
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<Solicitacao>) => {
-          if (resp.status === 200 || resp.status === 201) {
-            return resp.body;
-          } else {
-            return null;
-          }
-        }),
-        catchError((err, caught) => {
-          if(err.status == 404) {
-            return of(null);
-          }
-          else {
-            return throwError(() => err);
-          }
-        })
-      );
+  listarCompletasFinalizados(): Observable<Solicitacao[]> {
+    return this.listarCompletas().pipe(
+      map(lista => (lista ?? []).filter(
+        solicitacao => solicitacao.status === StatusSolicitacao.FINALIZADA
+      ))
+    );
   }
 
-  getHistorico(historico: HistoricoSolicitacao): Observable<HistoricoSolicitacao[]  | null> {
-    return this.http.get<HistoricoSolicitacao[]>(
-      this.BASE_URL + "/historico/" + historico.idSolicitacao,
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<HistoricoSolicitacao[]>) => {
-          if (resp.status === 200 || resp.status === 201) {
-            return resp.body;
-          } else {
-            return null;
-          }
-        }),
-        catchError((err, caught) => {
-          if(err.status == 404) {
-            return of(null);
-          }
-          else {
-            return throwError(() => err);
-          }
-        })
-      );
-  }
+  listarTodasFiltradasResumo(idFuncionario: number): Observable<SolicitacaoResumo[]> {
+    return this.listarCompletas().pipe(
+      map(lista => (lista ?? [])
+        .filter(solicitacao => {
+          if (solicitacao.status === StatusSolicitacao.ABERTA) return false;
 
-  atualizarStatus(solicitacao: Solicitacao, novoEstado: EstadoSolicitacao, motivo?: string): Observable<Solicitacao  | null> {
-    return this.http.put<Solicitacao>(
-      this.BASE_URL + "/" + solicitacao.id + "/estado",
-      { estado: novoEstado, rejOrcamento: motivo },
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<Solicitacao>) => {
-          if (resp.status === 200 || resp.status === 201) {
-            return resp.body;
-          } else {
-            return null;
+          if (solicitacao.status === StatusSolicitacao.REDIRECIONADA) {
+            return solicitacao.funcionario.id === idFuncionario;
           }
-        }),
-        catchError((err, caught) => {
-          if(err.status == 404) {
-            return of(null);
-          }
-          else {
-            return throwError(() => err);
-          }
+          return true; 
         })
-      );
-  }
+        //Tranforma em SolicitacaoResumo
+        .map(solicitacao => {
+          const historicoAbertura = solicitacao.historico.find(h => h.status === StatusSolicitacao.ABERTA);
 
-  pagarServico(solicitacao: Solicitacao): Observable<Solicitacao  | null> {
-    return this.http.put<Solicitacao>(
-      this.BASE_URL + "/" + solicitacao.id,
-      { pago: true },
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<Solicitacao>) => {
-          if (resp.status === 200 || resp.status === 201) {
-            return resp.body;
-          } else {
-            return null;
-          }
-        }),
-        catchError((err, caught) => {
-          if(err.status == 404) {
-            return of(null);
-          }
-          else {
-            return throwError(() => err);
-          }
-        })
-      );
-  }
-
-  enviarOrcamento(solicitacao: Solicitacao, precoTotal: number, descricaoPreco: { descricao: string; preco: number }): Observable<Solicitacao  | null> {
-    this.atualizarStatus(solicitacao, EstadoSolicitacao.ORCADA);
-    return this.http.put<Solicitacao>(
-      this.BASE_URL + "/" + solicitacao.id + "/orcamento",
-      { precoTotal: precoTotal, descricaoPreco: descricaoPreco },
-      this.httpOptions).pipe(
-        map((resp: HttpResponse<Solicitacao>) => {
-          if (resp.status === 200 || resp.status === 201) {
-            return resp.body;
-          } else {
-            return null;
-          }
-        }),
-        catchError((err, caught) => {
-          if(err.status == 404) {
-            return of(null);
-          }
-          else {
-            return throwError(() => err);
-          }
+          return {
+            id: solicitacao.id,
+            descricao: solicitacao.descricao,
+            equipamento: solicitacao.equipamento,
+            status: solicitacao.status,
+            dataAbertura: historicoAbertura ? historicoAbertura.dataHora : null,
+            funcionario: solicitacao.funcionario,
+            cliente: solicitacao.cliente
+          } as SolicitacaoResumo;
         })
       )
-    
+    );
+  }
+
+  filtrarPorDia(dataInicial: string | null, dataFinal: string | null) {
+    const inicio = dataInicial ? new Date(dataInicial).toISOString().split("T")[0] : null;
+    const fim = dataFinal ? new Date(dataFinal).toISOString().split("T")[0] : null;
+
+    return this.listarCompletasFinalizados().pipe(
+      map(lista => (lista ?? []).filter( solicitacao => {
+          const historicoAbertura = solicitacao.historico?.find(historico => historico.status === StatusSolicitacao.FINALIZADA);
+
+          if (!historicoAbertura) return false;
+
+          const dataAbertura = new Date(historicoAbertura?.dataHora).toISOString().split("T")[0];
+          
+          if (!inicio && !fim) return true;
+          if (!inicio && fim) return dataAbertura <= fim;
+          if (inicio && !fim) return dataAbertura >= inicio;
+
+          return dataAbertura >= inicio! && dataAbertura <= fim!;
+        }
+      ))
+    );
+  }
+
+  listarAbertas(): Observable<SolicitacaoResumo[]> {
+    return this.listar().pipe(
+      map(lista => (lista ?? []).filter(
+        solicitacao => solicitacao.status === StatusSolicitacao.ABERTA
+      ))
+    );
+  }
+
+  listarPorCliente(id: number): Observable<SolicitacaoResumo[] | null> {
+    return this._httpClient.get<SolicitacaoResumo[]>(
+      `${this.BASE_URL}/cliente?id=${id}`, 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<SolicitacaoResumo[]>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return [];
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    );
+  }
+
+  listarEmAndamento(idUsuario: number): Observable<SolicitacaoResumo[]> {
+    return this.listarPorCliente(idUsuario).pipe(
+      map(lista => (lista ?? []).filter(
+        solicitacao => solicitacao.status !== StatusSolicitacao.FINALIZADA
+      ))
+    );
+  }
+
+  listarFinalizados(idUsuario: number): Observable<SolicitacaoResumo[]> {
+    return this.listarPorCliente(idUsuario).pipe(
+      map(lista => (lista ?? []).filter(
+        solicitacao => solicitacao.status === StatusSolicitacao.FINALIZADA
+      ))
+    );
+  }
+
+  listarTodosPorFuncionario(id: number): Observable<SolicitacaoResumo[] | null> {
+    return this._httpClient.get<SolicitacaoResumo[]>(
+      `${this.BASE_URL}/funcionario?id=${id}`, 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<SolicitacaoResumo[]>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return [];
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    );
+  }
+
+  buscarPorId(id: number): Observable<Solicitacao | null> {
+    return this._httpClient.get<Solicitacao>(
+      `${this.BASE_URL}/${id}`, 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    );
+  }
+  
+  inserirSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
+    return this._httpClient.post<Solicitacao>(
+      this.BASE_URL, 
+      JSON.stringify(solicitacaoEntrada), 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 201){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    )
+  }
+
+  orcarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
+    return this._httpClient.post<Solicitacao>(
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/orcamento`, 
+      JSON.stringify(solicitacaoEntrada),
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 201){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    )
+  } 
+
+  aprovarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
+    return this._httpClient.put<Solicitacao>(
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/aprovar`, 
+      JSON.stringify(solicitacaoEntrada),
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    )
+  }
+
+  rejeitarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
+    return this._httpClient.put<Solicitacao>(
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/rejeitar`, 
+      JSON.stringify(solicitacaoEntrada),
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    )
+  }
+
+  redirecionarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
+    return this._httpClient.put<Solicitacao>(
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/redirecionar`, 
+      JSON.stringify(solicitacaoEntrada),
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    )
+  }
+
+  arrumarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
+    return this._httpClient.post<Solicitacao>(
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/manutencao`, 
+      JSON.stringify(solicitacaoEntrada),
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 201){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    )
+  } 
+
+  pagarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
+    return this._httpClient.put<Solicitacao>(
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/pagar`, 
+      JSON.stringify(solicitacaoEntrada),
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    )
+  }
+
+  finalizarSolicitacao(solicitacaoEntrada: SolicitacaoEntrada): Observable<Solicitacao | null> {
+    return this._httpClient.put<Solicitacao>(
+      `${this.BASE_URL}/${solicitacaoEntrada.id}/finalizar`, 
+      JSON.stringify(solicitacaoEntrada),
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Solicitacao>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    )
   }
 }
-

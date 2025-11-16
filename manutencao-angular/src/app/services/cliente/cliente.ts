@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 
-import { Cliente } from '../../shared';
+import { Cliente, ClienteResumo } from '../../shared';
 
 @Injectable({
   providedIn: 'root'
@@ -19,26 +19,25 @@ export class ClienteService {
       'Content-Type': 'application/json'
     })
   }
-/*
-  listarTodos(): Observable<Cliente[] | null> {
-    return this._httpClient.get<Cliente[]>(this.BASE_URL, this.httpOptions).pipe(
-      map((resposta: HttpResponse<Cliente[]>) => {
+
+  listarTodos(): Observable<ClienteResumo[] | null> {
+    return this._httpClient.get<ClienteResumo[]>(
+      this.BASE_URL, 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<ClienteResumo[]>) => {
         if(resposta.status == 200){
           return resposta.body;
         } else {
           return [];
         }
-      }), 
-      catchError((erro, caught) => {
-        if(erro.status == 404) {
-          return of([]);
-        } else {
-          return throwError(() => erro);
-        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
       })
     );
   }
-*/
+
   inserir(cliente: Cliente): Observable<Cliente | null> {
     return this._httpClient.post<Cliente>(
       this.BASE_URL, 
@@ -76,9 +75,9 @@ export class ClienteService {
     );   
   }
 
-  /*buscarPorUsuario(id: number): Observable<Cliente | null> {
+  buscarPorUsuario(id: number): Observable<Cliente | null> {
     return this._httpClient.get<Cliente>(
-      `${this.BASE_URL}/por-usuario?id=${id}`, 
+      `${this.BASE_URL}/idUsuario?id=${id}`, 
       this.httpOptions
     ).pipe(
       map((resposta: HttpResponse<Cliente>) => {
@@ -92,5 +91,5 @@ export class ClienteService {
         return throwError(() => erro);
       })
     );   
-  }*/
+  }
 }
