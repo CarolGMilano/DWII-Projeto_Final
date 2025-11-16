@@ -1,4 +1,8 @@
-<div class="p-4 sm:p-8 lg:p-10 bg-white rounded-lg h-full">
+<div class="flex flex-col gap-10 shadow-lg px-10 py-10 bg-white rounded-lg h-full">
+    @if(loading){
+        <app-elemento-loading></app-elemento-loading>
+    }
+    
     <div class="flex justify-between pb-4">
         <h2 class="font-bold text-[22px]">Lista de Solicitações</h2>
         <div>
@@ -9,7 +13,7 @@
         </div>
     </div>
     <hr>
-    <div class="mt-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 text-sm w-full">
+    <div class="mt-6 flex flex-col justify-between items-start gap-4 text-sm w-full">
         <div class="flex justify-between items-center gap-4 text-gray-700">
             <div class="flex items-center gap-2 sm:gap-4">
                 <label class="pr-2">Filtrar por período:</label>
@@ -48,45 +52,53 @@
             <tbody class="divide-y divide-gray-200 bg-white">
                 @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao:startDate:endDate); track item) {
                     <tr>
-                        <td class="px-1 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
-                        <td class="px-6 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
-                        <td class="px-6 py-2 text-sm text-gray-700">Nome do cliente</td>
-                        <td [ngSwitch]="item.estado" class="px-4 py-4 text-sm text-gray-700 flex items-center gap-2">
-                            <div *ngSwitchCase="'ABERTA'" class="w-2 h-2 rounded-[100%] bg-gray-400"></div>
-                            <div *ngSwitchCase="'ORÇADA'" class="w-2 h-2 rounded-[100%] bg-stone-600"></div>
-                            <div *ngSwitchCase="'REJEITADA'" class="w-2 h-2 rounded-[100%] bg-red-400"></div>
-                            <div *ngSwitchCase="'APROVADA'" class="w-2 h-2 rounded-[100%] bg-yellow-400"></div>
-                            <div *ngSwitchCase="'REDIRECIONADA'" class="w-2 h-2 rounded-[100%] bg-purple-400"></div>
-                            <div *ngSwitchCase="'ARRUMADA'" class="w-2 h-2 rounded-[100%] bg-blue-400"></div>
-                            <div *ngSwitchCase="'PAGA'" class="w-2 h-2 rounded-[100%] bg-orange-400"></div>
-                            <div *ngSwitchCase="'FINALIZADA'" class="w-2 h-2 rounded-[100%] bg-green-400"></div>
-                            {{item.estado}}
+                        <td class="px-1 py-2 text-sm text-gray-700">{{ item.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td class="px-6 py-2 text-sm text-gray-700">{{ item.equipamento }}</td>
+                        <td class="px-6 py-2 text-sm text-gray-700">{{ item.cliente.nome }}</td>
+                        <td class="px-4 py-4 text-sm text-gray-700 flex items-center gap-2">
+                            <div class="flex items-center gap-3">
+                                <span class="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold" [style.background-color]="getStatusCor(item.status) "></span>
+                                <span class="text-gray-800 text-sm font-thin">{{ getStatusLabel(item.status) }}</span>
+                            </div>
                         </td>
-                        <td [ngSwitch]="item.estado" class="w-[20%] py-2 rounded-[7px]">
+                        <td class="w-[20%] py-2 rounded-[7px]">
                             <button
-                                *ngSwitchCase="'ABERTA'"
                                 class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                                [routerLink]="['/efetuar-orçamento/:id']">
-                                Efetuar Orçamento
+                                [routerLink]="['/solicitacoes', item.id, 'detalhes']">
+                                Ver detalhes
                             </button>
-                            <button
-                                *ngSwitchCase="'APROVADA'"
-                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                                [routerLink]="['/efetuar-manutencao/:id']">
-                                Efetuar Manutenção
-                            </button>
-                            <button
-                                *ngSwitchCase="'REDIRECIONADA'"
-                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                                [routerLink]="['/efetuar-manutencao/:id']">
-                                Efetuar Manutenção
-                            </button>
-                            <button
-                                *ngSwitchCase="'PAGA'"
-                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                                [routerLink]="['/finalizar-solicitacao/id']">
-                                Finalizar Solicitação
-                            </button>
+
+                            @switch (item.status) {
+                                @case (StatusSolicitacao.APROVADA) {
+                                    @if (item.funcionario.id === idFuncionarioLogado) {
+                                        <button
+                                            class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                            [routerLink]="['/solicitacoes', item.id, 'detalhes']">
+                                            Efetuar Manutenção
+                                        </button>
+                                    }
+                                }
+
+                                @case (StatusSolicitacao.REDIRECIONADA) {
+                                    @if (item.funcionario.id === idFuncionarioLogado) {
+                                        <button
+                                            class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                            [routerLink]="['/solicitacoes', item.id, 'detalhes']">
+                                            Redirecionar Solicitação
+                                        </button>
+                                    }
+                                }
+
+                                @case (StatusSolicitacao.PAGA) {
+                                    @if (item.funcionario.id === idFuncionarioLogado) {
+                                        <button
+                                            class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                            [routerLink]="['/solicitacoes', item.id, 'detalhes']">
+                                            Finalizar Solicitação
+                                        </button>
+                                    }
+                                }
+                            }
                         </td>
                     </tr>
                 } @empty {

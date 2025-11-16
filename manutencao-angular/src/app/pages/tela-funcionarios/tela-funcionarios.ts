@@ -1,21 +1,22 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
 
-import { SharedModule, Funcionario, TipoUsuario } from '../../shared';
-import { FuncionarioService } from '../../services';
+import { Funcionario, TipoUsuario, UsuarioLogado } from '../../shared';
+import { FuncionarioService, LoginService } from '../../services';
+import { ElementoLoading } from '../../components';
 
 @Component({
   selector: 'app-tela-funcionarios',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ElementoLoading],
   templateUrl: './tela-funcionarios.html',
   styleUrl: './tela-funcionarios.css'
 })
 export class TelaFuncionarios implements OnInit {
   @ViewChild('formFuncionario') formFuncionario! : NgForm;
 
-  readonly funcionarioService = inject(FuncionarioService);
+  private funcionarioService = inject(FuncionarioService);
+  private loginService = inject(LoginService);
 
   funcionarios: Funcionario[] = [];
 
@@ -29,7 +30,7 @@ export class TelaFuncionarios implements OnInit {
 
   pesquisa: string = '';
 
-  usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
+  usuarioLogado: UsuarioLogado | null = null;
   idFuncionarioLogado: number = -1;
 
   senhaIncorreta: boolean = false;
@@ -43,8 +44,11 @@ export class TelaFuncionarios implements OnInit {
   dataErroMsg: string | null = null;
 
   dataNascimentoStr: string = '';
+  loading: boolean = false;
 
   ngOnInit(): void {
+    this.usuarioLogado = this.loginService.usuarioLogado;
+
     this.listarTodos();
 
     if (this.usuarioLogado) {
@@ -104,7 +108,6 @@ export class TelaFuncionarios implements OnInit {
   cancelar() {
     if(this.modoFormulario == 'adicionar' || this.modoFormulario == 'editar'){
       this.mostrarFormulario = false;
-      //this.formFuncionario.reset();
     } else {
       this.mostrarPopupExclusao = false;
     }
@@ -176,12 +179,15 @@ export class TelaFuncionarios implements OnInit {
   salvar():void {
     this.senhaIncorreta = false;
     if (!this.formFuncionario.form.valid) return;
-
+    
+    this.loading = true;
+    
     this.funcionario.dataNascimento = new Date(this.dataNascimentoStr + 'T00:00:00');
-
+    
     if (this.modoFormulario === 'adicionar') {
       this.funcionarioService.inserir(this.funcionario).subscribe({
         next: () => {
+          this.loading = false;
           this.listarTodos();
           this.mostrarFormulario = false;
           this.formFuncionario.reset();
@@ -199,6 +205,7 @@ export class TelaFuncionarios implements OnInit {
     } else {
       this.funcionarioService.atualizar(this.funcionario).subscribe({
         next: () => {
+          this.loading = false;
           this.listarTodos();
           this.mostrarFormulario = false;
           this.formFuncionario.reset();

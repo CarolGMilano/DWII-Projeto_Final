@@ -5,10 +5,11 @@ import { FormsModule, NgForm } from '@angular/forms';
 
 import { TipoUsuario, UsuarioStatus, Login } from '../../shared'
 import { LoginService } from '../../services';
+import { ElementoLoading } from '../../components';
 
 @Component({
   selector: 'app-tela-login',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ElementoLoading],
   templateUrl: './tela-login.html',
   styleUrl: './tela-login.css'
 })
@@ -86,8 +87,6 @@ export class TelaLogin implements OnInit {
           this.mensagem = 'Erro inesperado ao efetuar login.';
           this.usuarioStatus = UsuarioStatus.Invalido;
         }
-
-        alert(this.mensagem);
       }
     });
 

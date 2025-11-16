@@ -17,18 +17,19 @@ import {
   SolicitacaoEntrada,
 } from "../../shared";
 
-import { ClienteService, FuncionarioService, LoginService, SolicitacaoFakeService } from '../../services';
+import { ClienteService, FuncionarioService, LoginService, SolicitacaoService } from '../../services';
+import { ElementoLoading } from '../../components';
 
 @Component({
   selector: 'app-tela-visualizar-detalhes',
-  imports: [CommonModule, FormsModule, RouterLink, SharedModule],
+  imports: [CommonModule, FormsModule, RouterLink, SharedModule, ElementoLoading],
   templateUrl: './tela-visualizar-detalhes.html',
   styleUrl: './tela-visualizar-detalhes.css'
 })
 export class TelaVisualizarDetalhes implements OnInit {
   @ViewChild('formManutencao') formManutencao! : NgForm;
 
-  private solicitacaoService = inject(SolicitacaoFakeService);
+  private solicitacaoService = inject(SolicitacaoService);
   private clienteService = inject(ClienteService);
   private funcionarioService = inject(FuncionarioService);
   private loginService = inject(LoginService);
@@ -40,6 +41,8 @@ export class TelaVisualizarDetalhes implements OnInit {
 
   usuarioLogado: UsuarioLogado | null = this.loginService.usuarioLogado;
   funcionarioLogado!: FuncionarioResumo;
+  loading: boolean = false;
+  corDoLoading: string = '';
 
   manutencao: Manutencao = {
     descricao: '',
@@ -87,7 +90,7 @@ export class TelaVisualizarDetalhes implements OnInit {
     });
 
     if (this.usuarioLogado && this.usuarioLogado.id != null) {
-      this.funcionarioService.buscarPorId(this.usuarioLogado.id).subscribe({
+      this.funcionarioService.buscarPorUsuario(this.usuarioLogado.id).subscribe({
         next: (funcionario) => {
           if (funcionario) {
             this.funcionarioLogado = funcionario
@@ -181,6 +184,9 @@ export class TelaVisualizarDetalhes implements OnInit {
   salvarRedirecionamento(){
     if (Number(this.funcionarioDestinoSelecionado) === -1) return;
 
+    this.loading = true;
+    this.corDoLoading = this.getStatusCor(StatusSolicitacao.REDIRECIONADA);
+
     const solicitacaoRedirecionada: SolicitacaoEntrada = {
       id: this.solicitacao.id,
       funcionario: this.funcionarioDestinoSelecionado
@@ -189,11 +195,13 @@ export class TelaVisualizarDetalhes implements OnInit {
     this.solicitacaoService.redirecionarSolicitacao(solicitacaoRedirecionada).subscribe({
       next: (resposta) => {
         if (resposta) {
+          this.loading = false;
           this.solicitacao = resposta;
           this.cancelarRedirecionamento();
         }
       },
       error: (erro) => {
+        this.loading = false;
         alert(`Erro ao redirecionar solicitação: ${erro}`);
       }
     });
@@ -202,6 +210,9 @@ export class TelaVisualizarDetalhes implements OnInit {
   salvarManutencao() {
     if (!this.formManutencao.form.valid) return;
 
+    this.loading = true;
+    this.corDoLoading = this.getStatusCor(StatusSolicitacao.ARRUMADA);
+
     const manutencao: Manutencao = {
       descricao: this.manutencao.descricao,
       orientacao: this.manutencao.orientacao
@@ -209,35 +220,44 @@ export class TelaVisualizarDetalhes implements OnInit {
 
     const solicitacaoArrumada = {
       id: this.solicitacao.id,
-      manutencao: manutencao
+      manutencao: manutencao,
+      funcionario: this.usuarioLogado?.id
     };
 
     this.solicitacaoService.arrumarSolicitacao(solicitacaoArrumada).subscribe({
       next: (resposta) => {
         if (resposta) {
+          this.loading = false;
           this.solicitacao = resposta;
 
           this.cancelarManutencao();
         }
       },
       error: (erro) => {
+        this.loading = false;
         alert('Ocorreu um erro ao salvar a manutenção. Tente novamente.');
       }
     });
   }
 
   finalizarSolicitacao() {
+    this.loading = true;
+    this.corDoLoading = this.getStatusCor(StatusSolicitacao.FINALIZADA);
+
     const solicitacaoFinalizada: SolicitacaoEntrada = {
-      id: this.solicitacao.id
+      id: this.solicitacao.id,
+      funcionario: this.usuarioLogado?.id
     };
 
     this.solicitacaoService.finalizarSolicitacao(solicitacaoFinalizada).subscribe({
       next: (resposta) => {
         if (resposta) {
+          this.loading = false;
           this.solicitacao = resposta;
         }
       },
       error: (erro) => {
+        this.loading = false;
         alert('Ocorreu um erro ao finalizar solicitação. Tente novamente.');
       }
     });

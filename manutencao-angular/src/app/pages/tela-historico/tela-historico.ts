@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule, Solicitacao, SolicitacaoResumo, StatusSolicitacao, StatusSolicitacaoCor, StatusSolicitacaoLabel } from '../../shared';
-import { ClienteService, LoginService, SolicitacaoFakeService } from '../../services';
+import { ClienteService, LoginService, SolicitacaoService } from '../../services';
 
 @Component({
   selector: 'app-tela-historico',
@@ -10,7 +10,7 @@ import { ClienteService, LoginService, SolicitacaoFakeService } from '../../serv
   styleUrl: './tela-historico.css'
 })
 export class TelaHistorico implements OnInit {
-  private solicitacaoService = inject(SolicitacaoFakeService);
+  private solicitacaoService = inject(SolicitacaoService);
   private loginService = inject(LoginService);
 
   mostrarDetalhes: boolean = false;

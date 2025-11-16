@@ -161,7 +161,7 @@
                 autocomplete="address-line1" 
                 [(ngModel)]="cliente.endereco.numero" 
                 [numericos]="''" 
-                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-400" 
+                class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-700 placeholder:text-gray-400 sm:text-sm/6 border border-1 outline-none focus:border-gray-300" 
                 [ngClass]="{
                   'border-gray-300': cep.pristine
                 }"/>
@@ -216,11 +216,11 @@
 
       <div class="flex-col items-center justify-center pt-5">
           <div class="relative group inline-block w-full">
-            <button type="submit" [disabled]="!formCadastro.valid" class="flex justify-center w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
+            <button type="submit" [disabled]="!formCadastro.valid" class="flex justify-center w-full rounded-md bg-[#96A78D] px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-[#7B8A6C] hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-300 ease-in-out">
               Cadastrar
             </button>
             @if (!formCadastro.valid) {
-              <div class="absolute left-100 translate-x-1/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 bg-black text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-indigo-400">
+              <div class="absolute left-100 translate-x-1/2 bottom-full mb-2 z-10 pointer-events-none opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 text-white text-xs rounded py-3 px-2 transition-all duration-300 ease-out bg-[#96A78D]">
                 Preencha o formulário corretamente
               </div>
             }
@@ -228,9 +228,15 @@
 
         <p class="mt-2 text-center text-sm/6 text-gray-500">
           Já tem uma conta?
-          <a [routerLink]="['']" class="font-semibold text-indigo-600 hover:text-indigo-500 cursor-pointer">Fazer login</a>
+          <a [routerLink]="['']" class="font-semibold text-[#96A78D] hover:text-[#7B8A6C] cursor-pointer">Fazer login</a>
         </p>
       </div>
     </form>
   </div>
+
+  <app-elemento-card #card [mensagem]="mensagem" [cor]="corDoCard"></app-elemento-card>
+
+  @if(loading){
+    <app-elemento-loading></app-elemento-loading>
+  }
 </div>

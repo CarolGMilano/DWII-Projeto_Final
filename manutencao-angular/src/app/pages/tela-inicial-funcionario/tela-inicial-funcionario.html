@@ -1,11 +1,11 @@
 <div class="p-4 sm:p-8 lg:p-10 bg-white rounded-lg h-full">
+    @if(loading){
+        <app-elemento-loading></app-elemento-loading>
+    }
+    
     <div class="flex justify-between pb-4">
         <h2 class="font-bold text-[22px]">Solicitações Abertas</h2>
         <div>
-            <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer ml-4"
-                [routerLink]="['/nova-solicitacao']">
-                Nova Solicitação
-            </button>
             <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer ml-4"
                 [routerLink]="['/tela-lista-solicitacoes']">
                 Lista de Solicitações
@@ -49,20 +49,20 @@
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
                 @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao); track item) {
-                @if (item.estado?.toLowerCase() === 'aberta') {
+                
                 <tr>
-                    <td class="px-1 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td class="px-6 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
-                    <td class="px-6 py-2 text-sm text-gray-700">Nome do cliente</td>
+                    <td class="px-1 py-2 text-sm text-gray-700">{{ item.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td class="px-6 py-2 text-sm text-gray-700">{{ item.equipamento }}</td>
+                    <td class="px-6 py-2 text-sm text-gray-700">{{ item.cliente.nome }}</td>
                     <td class="w-[20%] py-2 rounded-[7px]">
                         <button
                             class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/efetuar-orçamento/:id']">
+                            [routerLink]="['/realizar-orcamento', item.id]">
                             Efetuar Orçamento
                         </button>
                     </td>
                 </tr>
-                }
+                
                 }@empty {
                 <tr>
                     <td colspan="4" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
