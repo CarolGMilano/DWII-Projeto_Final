@@ -21,7 +21,7 @@ export class TelaInicialCliente implements OnInit {
 
   mensagem: string = '';
   searchText: string = '';
-  dateField?: string = '';
+  dateField = 'dataAbertura';
   selectedDate?: Date;
   filtroOrdenacao: 'desc' | 'asc' = 'asc';
 

@@ -20,7 +20,7 @@ export class TelaInicialFuncionario implements OnInit {
   solicitacoes: SolicitacaoResumo[] = [];
 
   searchText: string = '';
-  dateField?: string = '';
+  dateField = 'dataAbertura';
   selectedDate?: Date;
   filtroOrdenacao: 'desc' | 'asc' = 'asc';
 

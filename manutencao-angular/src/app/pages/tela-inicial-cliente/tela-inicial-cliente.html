@@ -39,7 +39,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white h-full">
-                @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao); track item) {
+                @for (item of (solicitacoes | filter:searchText:'dataAbertura':selectedDate:filtroOrdenacao); track item) {
                     @if (item.status === StatusSolicitacao.REDIRECIONADA) {
                         {{ verificarArrumada(item.id) }}
                     }

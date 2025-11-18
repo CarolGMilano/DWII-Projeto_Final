@@ -20,7 +20,7 @@ export class TelaListaSolicitacoes implements OnInit {
   solicitacoes: SolicitacaoResumo[] = [];
 
   searchText: string = '';
-  dateField?: string = '';
+  dateField = 'dataAbertura';
   selectedDate?: Date | string;
   filtroOrdenacao: 'desc' | 'asc' = 'asc';
   startDate?: Date;
@@ -46,7 +46,7 @@ export class TelaListaSolicitacoes implements OnInit {
   getStatusLabel(status: number): string {
     return StatusSolicitacaoLabel[status as StatusSolicitacao];
   }
-  
+
   ngOnInit(): void {
     this.usuarioLogado = this.loginService.usuarioLogado;
 
