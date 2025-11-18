@@ -1,58 +1,86 @@
-<div class= "p-10 bg-white rounded-lg h-full">
-    <div class="px-4 sm:px-0">
-        <h2 class="font-bold text-[22px]">Orçamento</h2>
-            <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">Detalhes do equipamento e defeito informado.</p>
+<div class="p-10 bg-white rounded-xl shadow-md h-full space-y-10">
+    <div>
+        <h2 class="font-bold text-2xl text-gray-800">Orçamento</h2>
+        <p class="mt-1 text-gray-500 text-sm">
+            Detalhes do equipamento e defeito informado.
+        </p>
     </div>
+
     @if (solicitacao) {
-        <div class="mt-6 border-t border-gray-100">
-            <dl class="divide-y divide-gray-100">
-                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt class="text-sm/6 font-medium text-gray-900">Descrição do Equipamento</dt>
-                    <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{ solicitacao.equipamento }}</dd>
+        <div class="border border-gray-200 rounded-xl p-6 bg-gray-50">
+            <dl class="divide-y divide-gray-200">
+                
+                <div class="py-4 grid sm:grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-700">Descrição do Equipamento</dt>
+                    <dd class="text-sm text-gray-900 sm:col-span-2">{{ solicitacao.equipamento }}</dd>
                 </div>
-    
-                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt class="text-sm/6 font-medium text-gray-900">Categoria</dt>
-                    <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{ solicitacao.categoria }}</dd>
+
+                <div class="py-4 grid sm:grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-700">Categoria</dt>
+                    <dd class="text-sm text-gray-900 sm:col-span-2">{{ solicitacao.categoria }}</dd>
                 </div>
-    
-                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt class="text-sm/6 font-medium text-gray-900">Defeito Reportado</dt>
-                    <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{ solicitacao.descricao }}</dd>
+
+                <div class="py-4 grid sm:grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-700">Defeito Reportado</dt>
+                    <dd class="text-sm text-gray-900 sm:col-span-2">{{ solicitacao.descricao }}</dd>
                 </div>
+
             </dl>
         </div>
+        
     }
-    <div>
-        <h2 class="font-semibold">Itens do Orçamento</h2>
-        <form [formGroup]="orcamentoForm" (ngSubmit)="enviarOrcamento()">
-            <div formArrayName="itens">
+    <div class="space-y-4">
+        <h2 class="font-semibold text-lg text-gray-800">Itens do Orçamento</h2>
+
+        <form [formGroup]="orcamentoForm" (ngSubmit)="enviarOrcamento()" class="space-y-6">
+            <div formArrayName="itens" class="space-y-3">
                 @for (item of itens.controls; track item; let i = $index) {
-                    <div [formGroupName]="i" class="flex gap-4">
-                        <input formControlName="descricao" placeholder="Descrição do item" />
-                        <input formControlName="preco" type="number" placeholder="Preço" (input)="atualizarTotal()" />
-                        <button type="button" (click)="removerItem(i)" class= "p-2 bg-red-400 text-white rounded-md">Remover</button>
+                    <div [formGroupName]="i"
+                        class="flex flex-col md:flex-row gap-3 items-start md:items-center bg-gray-50 p-4 rounded-lg border">
+
+                        <input formControlName="descricao"
+                            class="w-full border rounded-lg p-2 text-sm"
+                            placeholder="Descrição do item" />
+
+                        <input formControlName="preco" type="number"
+                            class="w-full md:w-40 border rounded-lg p-2 text-sm"
+                            placeholder="Preço"
+                            (input)="atualizarTotal()" />
+
+                        <button type="button"
+                            (click)="removerItem(i)"
+                            class="px-3 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">
+                            Remover
+                        </button>
                     </div>
                 }
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="text" formControlName="novoItemDescricao"
+                       placeholder="Descrição"
+                       class="border rounded-lg p-2 text-sm" />
 
-            <div class="flex gap-4 mt-4">
-                <input type="text" formControlName="novoItemDescricao" placeholder="Descrição" class="border p-2 rounded-md " />
-                <input type="number" formControlName="novoItemPreco" placeholder="Valor" class="border p-2 rounded-md" />
-                <button type="button" (click)="adicionarItem()" class="bg-blue-500 text-white px-4 py-2 cursor-pointer">
+                <input type="number" formControlName="novoItemPreco"
+                       placeholder="Valor"
+                       class="border rounded-lg p-2 text-sm" />
+
+                <button type="button"
+                        (click)="adicionarItem()"
+                        class="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700">
                     Adicionar Item
                 </button>
             </div>
 
-            <div class="mt-4 font-semibold">
-              <p>Total: {{ precototal | currency:'BRL' }}</p>
+            <div class="mt-4 font-semibold text-gray-800 text-lg">
+                <!-- Total: {{ orcamentoForm.get('precoTotal')?.value | moedaBr }} -->
             </div>
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 mt-2 cursor-pointer">
+
+            <button type="submit"
+                    [disabled]="orcamentoForm.invalid"
+                    class="bg-green-600 text-white rounded-lg px-6 py-3 hover:bg-green-700 disabled:opacity-50">
                 Salvar Orçamento
             </button>
+
         </form>
     </div>
 </div>
-
-  
-
