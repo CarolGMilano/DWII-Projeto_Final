@@ -1,15 +1,14 @@
-import { Categoria } from "../../models/Categoria";
-import { ClienteResumo, Funcionario, Historico, Manutencao, Orcamento } from "./index";
+import { ClienteResumo, FuncionarioResumo, Historico, Manutencao, Orcamento } from "./index";
 
 export interface Solicitacao {
   id?: number;
   equipamento: string;
-  categoria: Categoria; //number
+  categoria: number;
   descricao: string;
   status: number;
   historico: Historico[];
   orcamento: Orcamento | null;
   manutencao: Manutencao | null;
-  funcionario: Funcionario;
+  funcionario: FuncionarioResumo;
   cliente: ClienteResumo;
 }

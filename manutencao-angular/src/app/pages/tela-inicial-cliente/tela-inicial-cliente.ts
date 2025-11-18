@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FilterPipe } from '../../pipes/filter-pipe';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MOCK_DATA_SOLICITACOES } from '../../models/mock-data-solicitacoes';
 import { MatIconModule } from '@angular/material/icon';
-import { SolicitacaoService } from '../../services/solicitacao/solicitacao';
-import { NovaSolicitacao } from '../../components/nova-solicitacao/nova-solicitacao';
-import { SolicitacaoModel } from '../../models/Solicitacao';
-import { Solicitacao } from '../../shared';
+
+import { Solicitacao, SolicitacaoResumo, UsuarioLogado, StatusSolicitacao, StatusSolicitacaoLabel, StatusSolicitacaoCor, SolicitacaoEntrada, Orcamento } from '../../shared';
+import { LoginService, SolicitacaoService } from '../../services';
 
 @Component({
   selector: 'app-tela-inicial-cliente',
@@ -19,43 +17,126 @@ import { Solicitacao } from '../../shared';
 })
 
 export class TelaInicialCliente implements OnInit {
-  // solicitacoes = MOCK_DATA_SOLICITACOES;
-  solicitacoes: Solicitacao[] = [];
+  solicitacoes: SolicitacaoResumo[] = [];
+
   mensagem: string = '';
   searchText: string = '';
-  dateField?: string = '';
+  dateField = 'dataAbertura';
   selectedDate?: Date;
   filtroOrdenacao: 'desc' | 'asc' = 'asc';
 
-  // constructor(private http: HttpClient) { }
+  private solicitacaoService = inject(SolicitacaoService);
+  private loginService = inject(LoginService);
 
-  // ngOnInit(): void {
-  //   this.http.get<any[]>('models/mock-data-solicitacoes.json').subscribe(data => {
-  //     this.solicitacoes = data;
-  //   });
-  // }
+  solicitacao!: Solicitacao;
 
-  constructor(private solicitacaoService: SolicitacaoService) {}
+  usuarioLogado: UsuarioLogado | null = null;
 
-  ngOnInit(): void {
-    this.carregarSolicitacoes();
+  mostrarPopupResgate: boolean = false;
+
+  StatusSolicitacaoLabel = StatusSolicitacaoLabel;
+  StatusSolicitacaoCor = StatusSolicitacaoCor;
+  StatusSolicitacao = StatusSolicitacao;
+
+  temArrumada: Record<number, boolean> = {};
+
+  getStatusCor(status: number): string {
+    return StatusSolicitacaoCor[status as StatusSolicitacao];
   }
 
-  carregarSolicitacoes(): Solicitacao[] {
-    this.solicitacaoService.getSolicitacoes().subscribe({
-      next: (data: Solicitacao[] | null) => {
-        if(data == null) {
-          this.solicitacoes = [];
-        }
-        else {
-          this.solicitacoes = data;
+  getStatusLabel(status: number): string {
+    return StatusSolicitacaoLabel[status as StatusSolicitacao];
+  }
+
+  ngOnInit(): void {
+    this.usuarioLogado = this.loginService.usuarioLogado;
+
+    if(this.usuarioLogado){
+      this.carregarSolicitacoes(this.usuarioLogado?.id);
+    }
+  }
+
+  abrirResgate(idSolicitacao: number) {
+    this.buscarSolicitacao(idSolicitacao);
+    
+    this.mostrarPopupResgate = true;
+  }
+
+  resgatarSolicitacao() {
+    const orcamentoAlterado: Orcamento = {
+      servicos: this.solicitacao.orcamento?.servicos,
+      valorTotal: this.solicitacao.orcamento?.valorTotal!,
+      aprovada: true
+    }
+
+    const solicitacaoResgatada: SolicitacaoEntrada = {
+      id: this.solicitacao.id,
+      orcamento: orcamentoAlterado
+    }
+
+    this.solicitacaoService.aprovarSolicitacao(solicitacaoResgatada).subscribe({
+      next: (resposta) => {
+        console.log('Solicitação resgatada com sucesso:', resposta);
+        this.mostrarPopupResgate = false;
+        
+        if(this.usuarioLogado){
+          this.carregarSolicitacoes(this.usuarioLogado?.id);
         }
       },
-      error: (err) => {
-        this.mensagem = "Erro ao carregar solicitações";
-        console.error('Erro ao carregar solicitações', err);
+      error: (erro) => {
+        console.error('Erro ao resgatar solicitação:', erro);
+        alert('Erro ao resgatar solicitação. Tente novamente.');
+      },
+    });
+  }
+
+  cancelarResgate(){
+    this.mostrarPopupResgate = false;
+  }
+
+  carregarSolicitacoes(idUsuario: number) {
+    this.solicitacaoService.listarEmAndamento(idUsuario).subscribe({
+      next: (solicitacoes: SolicitacaoResumo[] | null) => {
+        this.solicitacoes = solicitacoes ?? [];
+      },
+      error: (erro) => {
+        if (erro.status === 500) {
+          alert(`Erro interno: ${erro.error}`);
+        } else {
+          alert('Erro inesperado ao listar solicitações finalizadas do cliente.');
+        }
       }
     });
-    return this.solicitacoes;
+  }
+
+  buscarSolicitacao(idSolicitacao: number): void {
+    this.solicitacaoService.buscarPorId(idSolicitacao).subscribe({
+      next: (solicitacao) => {
+        if (solicitacao) {
+          this.solicitacao = solicitacao;
+        }
+      },
+      error: (erro) => console.error('Erro ao buscar solicitação:', erro)
+    });
+  }
+
+  verificarArrumada(id: number) {
+    if (this.temArrumada[id] !== undefined) return;
+
+    this.solicitacaoService.buscarPorId(id).subscribe({
+      next: (solicitacao) => {
+        if (!solicitacao || !solicitacao.historico) {
+          this.temArrumada[id] = false;
+          return;
+        }
+
+        const podePagar =
+          solicitacao.historico.some(h => h.status === StatusSolicitacao.ARRUMADA) &&
+          !solicitacao.historico.some(h => h.status === StatusSolicitacao.PAGA);
+
+        this.temArrumada[id] = podePagar;
+      },
+      error: () => this.temArrumada[id] = false
+    });
   }
 }

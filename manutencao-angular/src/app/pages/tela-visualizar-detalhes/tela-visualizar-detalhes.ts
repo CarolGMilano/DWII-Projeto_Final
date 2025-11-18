@@ -10,25 +10,26 @@ import {
   StatusSolicitacaoLabel, 
   StatusSolicitacaoCor, 
   Manutencao, 
-  Historico,
   StatusSolicitacaoObservacao,
   Funcionario,
   UsuarioLogado,
+  FuncionarioResumo,
+  SolicitacaoEntrada,
 } from "../../shared";
 
-import { ClienteService, FuncionarioService, LoginService, SolicitacaoFakeService } from '../../services';
-import { forkJoin } from 'rxjs';
+import { ClienteService, FuncionarioService, LoginService, SolicitacaoService } from '../../services';
+import { ElementoLoading } from '../../components';
 
 @Component({
   selector: 'app-tela-visualizar-detalhes',
-  imports: [CommonModule, FormsModule, RouterLink, SharedModule],
+  imports: [CommonModule, FormsModule, RouterLink, SharedModule, ElementoLoading],
   templateUrl: './tela-visualizar-detalhes.html',
   styleUrl: './tela-visualizar-detalhes.css'
 })
 export class TelaVisualizarDetalhes implements OnInit {
   @ViewChild('formManutencao') formManutencao! : NgForm;
 
-  private solicitacaoFakeService = inject(SolicitacaoFakeService);
+  private solicitacaoService = inject(SolicitacaoService);
   private clienteService = inject(ClienteService);
   private funcionarioService = inject(FuncionarioService);
   private loginService = inject(LoginService);
@@ -38,12 +39,14 @@ export class TelaVisualizarDetalhes implements OnInit {
   StatusSolicitacaoObservacao = StatusSolicitacaoObservacao;
   StatusSolicitacao = StatusSolicitacao;
 
-  funcionarioLogado: UsuarioLogado | null = this.loginService.usuarioLogado;
-  
+  usuarioLogado: UsuarioLogado | null = this.loginService.usuarioLogado;
+  funcionarioLogado!: FuncionarioResumo;
+  loading: boolean = false;
+  corDoLoading: string = '';
+
   manutencao: Manutencao = {
-    idSolicitacao: undefined,
     descricao: '',
-    orientacoes: '',
+    orientacao: '',
   };
 
   funcionarios: Funcionario[] = [];
@@ -51,8 +54,6 @@ export class TelaVisualizarDetalhes implements OnInit {
 
   mostrarFormulario: boolean = false;
   mostrarRedirecionamento: boolean = false;
-
-  solicitacoes: Solicitacao[] = [];
 
   private route = inject(ActivatedRoute);
 
@@ -79,9 +80,24 @@ export class TelaVisualizarDetalhes implements OnInit {
       }
     });
 
-    this.solicitacaoFakeService.buscarPorId(this.id).subscribe({
-      next: (solicitacao) => this.solicitacao = solicitacao
+    this.solicitacaoService.buscarPorId(this.id).subscribe({
+      next: (solicitacao) => {
+        if (solicitacao) {
+          this.solicitacao = solicitacao;
+          console.log("solicitacao ", this.solicitacao);
+        }
+      }
     });
+
+    if (this.usuarioLogado && this.usuarioLogado.id != null) {
+      this.funcionarioService.buscarPorUsuario(this.usuarioLogado.id).subscribe({
+        next: (funcionario) => {
+          if (funcionario) {
+            this.funcionarioLogado = funcionario
+          }
+        }
+      });
+    }
   }
 
   get podeFazerManutencao(): boolean {
@@ -92,6 +108,7 @@ export class TelaVisualizarDetalhes implements OnInit {
     const usuarioResponsavel = 
       this.solicitacao.funcionario?.id === this.funcionarioLogado?.id;
 
+    //Como o orçamento pode ser null, tratamos aqui para retornar tudo que não for true como false. 
     const orcamentoAceito = this.solicitacao.orcamento?.aprovada ?? false;
 
     const manutencaoNaoFeita = !this.solicitacao.historico.some(
@@ -167,100 +184,82 @@ export class TelaVisualizarDetalhes implements OnInit {
   salvarRedirecionamento(){
     if (Number(this.funcionarioDestinoSelecionado) === -1) return;
 
-    forkJoin({
-      solicitacao: this.solicitacaoFakeService.buscarPorId(this.id),
-      funcionarioDestino: this.funcionarioService.buscarPorId(Number(this.funcionarioDestinoSelecionado))
-    }).subscribe({
-      next: ({ solicitacao, funcionarioDestino }) => {
-        if (!funcionarioDestino) return;
+    this.loading = true;
+    this.corDoLoading = this.getStatusCor(StatusSolicitacao.REDIRECIONADA);
 
-        const historico: Historico = {
-          dataHora: new Date(),
-          status: StatusSolicitacao.REDIRECIONADA,
-          //Só para sumir o erro, arrumar mais tarde
-          funcionario: this.funcionarioLogado as unknown as Funcionario,
-          funcionarioDestino: funcionarioDestino
-        };
+    const solicitacaoRedirecionada: SolicitacaoEntrada = {
+      id: this.solicitacao.id,
+      funcionario: this.funcionarioDestinoSelecionado
+    };
 
-        //Atualiza a solicitação
-        solicitacao.historico.push(historico);
-        solicitacao.status = historico.status;
-        solicitacao.funcionario = funcionarioDestino;
-
-        this.solicitacaoFakeService.atualizar(solicitacao).subscribe({
-          next: () => {
-            //Atualiza o objeto local
-            this.solicitacao = solicitacao;
-            this.cancelarRedirecionamento();
-          },
-          error: err => console.error('Erro ao atualizar solicitacao', err)
-        });
+    this.solicitacaoService.redirecionarSolicitacao(solicitacaoRedirecionada).subscribe({
+      next: (resposta) => {
+        if (resposta) {
+          this.loading = false;
+          this.solicitacao = resposta;
+          this.cancelarRedirecionamento();
+        }
       },
-      error: err => console.error('Erro ao buscar dados', err)
+      error: (erro) => {
+        this.loading = false;
+        alert(`Erro ao redirecionar solicitação: ${erro}`);
+      }
     });
   }
 
-  salvarManutencao(){
+  salvarManutencao() {
     if (!this.formManutencao.form.valid) return;
 
-    this.solicitacaoFakeService.buscarPorId(this.id).subscribe({
-      next: (solicitacao) => {
-        const manutencao: Manutencao = {
-          idSolicitacao: this.id,
-          descricao: this.manutencao.descricao,
-          orientacoes: this.manutencao.orientacoes
-        };
-        const historico: Historico = {
-          dataHora: new Date(),
-          status: StatusSolicitacao.ARRUMADA,
-          funcionario: this.funcionarioLogado as unknown as Funcionario
-        };
+    this.loading = true;
+    this.corDoLoading = this.getStatusCor(StatusSolicitacao.ARRUMADA);
 
-        solicitacao.historico.push(historico);
-        solicitacao.manutencao = manutencao;
-        solicitacao.status = historico.status;
+    const manutencao: Manutencao = {
+      descricao: this.manutencao.descricao,
+      orientacao: this.manutencao.orientacao
+    } 
 
-        this.solicitacaoFakeService.atualizar(solicitacao).subscribe({
-          next: () => {
-            this.solicitacao = solicitacao;
-            this.cancelarManutencao();
-          },
-          error: (err) => console.error('Erro ao atualizar a solicitação', err)
-        });
+    const solicitacaoArrumada = {
+      id: this.solicitacao.id,
+      manutencao: manutencao,
+      funcionario: this.usuarioLogado?.id
+    };
+
+    this.solicitacaoService.arrumarSolicitacao(solicitacaoArrumada).subscribe({
+      next: (resposta) => {
+        if (resposta) {
+          this.loading = false;
+          this.solicitacao = resposta;
+
+          this.cancelarManutencao();
+        }
       },
-      error: (err) => console.error('Erro ao buscar a solicitação', err)
+      error: (erro) => {
+        this.loading = false;
+        alert('Ocorreu um erro ao salvar a manutenção. Tente novamente.');
+      }
     });
   }
 
   finalizarSolicitacao() {
-    this.solicitacaoFakeService.buscarPorId(this.id).subscribe({
-      next: (solicitacao) => {
-        const historico: Historico = {
-          dataHora: new Date(),
-          status: StatusSolicitacao.FINALIZADA,
-          funcionario: this.funcionarioLogado as unknown as Funcionario
-        };
+    this.loading = true;
+    this.corDoLoading = this.getStatusCor(StatusSolicitacao.FINALIZADA);
 
-        solicitacao.historico.push(historico);
-        solicitacao.status = historico.status;
+    const solicitacaoFinalizada: SolicitacaoEntrada = {
+      id: this.solicitacao.id,
+      funcionario: this.usuarioLogado?.id
+    };
 
-        this.solicitacaoFakeService.atualizar(solicitacao).subscribe({
-          next: () => {
-            this.solicitacao = solicitacao;
-          },
-          error: (err) => console.error('Erro ao atualizar solicitação', err)
-        });
+    this.solicitacaoService.finalizarSolicitacao(solicitacaoFinalizada).subscribe({
+      next: (resposta) => {
+        if (resposta) {
+          this.loading = false;
+          this.solicitacao = resposta;
+        }
       },
-      error: (err) => console.error('Erro ao buscar solicitação', err)
-    });
-  }
-
-  listarTodos(): void {
-    this.solicitacaoFakeService.listarTodos().subscribe({
-      next: (solicitacoes) => {
-        this.solicitacoes = solicitacoes;
-      },
-      error: (err) => console.error('Erro ao listar solicitações', err)
+      error: (erro) => {
+        this.loading = false;
+        alert('Ocorreu um erro ao finalizar solicitação. Tente novamente.');
+      }
     });
   }
 }

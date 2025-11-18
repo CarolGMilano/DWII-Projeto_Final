@@ -3,6 +3,7 @@ package br.net.dwii.projeto.manutencao.model.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,123 +14,60 @@ import br.net.dwii.projeto.manutencao.model.Servico;
 
 @Repository
 public class ServicoDao {
+  private final String inserir = "INSERT INTO servico (idOrcamento, descricao, preco) VALUES (?, ?, ?)";
+  private final String listar = "SELECT id, idOrcamento, descricao, preco FROM servico WHERE idOrcamento = ?";
 
-    public void add(Servico servico) throws Exception {
-        String sql = "INSERT INTO servico (idOrcamento, descricao, preco) VALUES (?, ?, ?)";
+  public void inserir(Servico servico) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psInserir = connection.prepareStatement(inserir, Statement.RETURN_GENERATED_KEYS);
+    ) {
+      psInserir.setInt(1, servico.getIdOrcamento());
+      psInserir.setString(2, servico.getDescricao());
+      psInserir.setDouble(3, servico.getPreco());
+      
+      psInserir.executeUpdate();
 
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+      try(ResultSet rsInserir = psInserir.getGeneratedKeys()){
+        if(rsInserir.next()){
+          int id = rsInserir.getInt(1);
 
-            ps.setInt(1, servico.getIdOrcamento());
-            ps.setString(2, servico.getDescricao());
-            ps.setDouble(3, servico.getPreco());
-
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao inserir serviço: " + e.getMessage());
+          servico.setId(id);
         }
-    }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao inserir serviço", e);
+    } 
+  }
 
-    public List<Servico> getByOrcamentoId(int idOrcamento) throws Exception {
-        String sql = "SELECT * FROM servico WHERE idOrcamento = ?";
-        List<Servico> servicos = new ArrayList<>();
+  public List<Servico> listar(int idOrcamento) throws Exception {    
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psListar = connection.prepareStatement(listar);
+    ) {
+      psListar.setInt(1, idOrcamento);
 
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+      List<Servico> servicos = new ArrayList<>();
 
-            ps.setInt(1, idOrcamento);
-            ResultSet rs = ps.executeQuery();
+      try (ResultSet rsListar = psListar.executeQuery()) {
+        while (rsListar.next()) {
+          Servico servico = new Servico(
+            rsListar.getInt("id"),
+            rsListar.getInt("idOrcamento"),
+            rsListar.getString("descricao"),
+            rsListar.getDouble("preco")
+          );
 
-            while (rs.next()) {
-                Servico s = new Servico(
-                    rs.getInt("id"),
-                    rs.getInt("idOrcamento"),
-                    rs.getString("descricao"),
-                    rs.getDouble("preco")
-                );
-                servicos.add(s);
-            }
-
-            rs.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao buscar serviços: " + e.getMessage());
+          servicos.add(servico);
         }
-
         return servicos;
-    }
-
-    public Servico getById(int id) throws Exception {
-        String sql = "SELECT * FROM servico WHERE id = ?";
-        Servico servico = null;
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                servico = new Servico(
-                    rs.getInt("id"),
-                    rs.getInt("idOrcamento"),
-                    rs.getString("descricao"),
-                    rs.getDouble("preco")
-                );
-            }
-
-            rs.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao buscar serviço por ID: " + e.getMessage());
-        }
-
-        return servico;
-    }
-
-    public void update(Servico servico) throws Exception {
-        String sql = "UPDATE servico SET descricao = ?, preco = ? WHERE id = ?";
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, servico.getDescricao());
-            ps.setDouble(2, servico.getPreco());
-            ps.setInt(3, servico.getId());
-
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao atualizar serviço: " + e.getMessage());
-        }
-    }
-
-    public void delete(int id) throws Exception {
-        String sql = "DELETE FROM servico WHERE id = ?";
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao deletar serviço: " + e.getMessage());
-        }
-    }
-
-    public void deleteByOrcamentoId(int idOrcamento) throws Exception {
-        String sql = "DELETE FROM servico WHERE idOrcamento = ?";
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, idOrcamento);
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao deletar serviços do orçamento: " + e.getMessage());
-        }
-    }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao listar serviços", e);
+    } 
+  }
 }

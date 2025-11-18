@@ -6,6 +6,10 @@ public class ClienteResumoDTO {
   private String cpf;
   private String telefone;
   private EnderecoDTO endereco;
+
+  public ClienteResumoDTO (){
+    
+  }
   
   public ClienteResumoDTO(String nome, String cpf, String telefone, EnderecoDTO endereco) {
     this.nome = nome;

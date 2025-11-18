@@ -13,6 +13,7 @@ import br.net.dwii.projeto.manutencao.model.Manutencao;
 @Repository
 public class ManutencaoDao {
   private final String inserir = "INSERT INTO manutencao (idSolicitacao, descricao, orientacao) VALUES (?, ?, ?)";
+  private final String consultar = "SELECT id, idSolicitacao, descricao, orientacao FROM  manutencao WHERE idSolicitacao = ?";
 
   public void inserir(Manutencao manutencao) throws Exception {
     try (
@@ -36,6 +37,34 @@ public class ManutencaoDao {
     catch (Exception e) {
       e.printStackTrace();
       throw new Exception("Erro ao inserir manutenção", e);
+    } 
+  }
+
+  public Manutencao consultar(int idSolicitacao) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psConsultar = connection.prepareStatement(consultar);
+    ) {
+      psConsultar.setInt(1, idSolicitacao);
+
+      try(ResultSet rsConsultar = psConsultar.executeQuery()){
+        if (rsConsultar.next()) {
+          Manutencao manutencao = new Manutencao(
+            rsConsultar.getInt("id"),
+            rsConsultar.getInt("idSolicitacao"),
+            rsConsultar.getString("descricao"),
+            rsConsultar.getString("orientacao")
+          );
+
+          return manutencao;
+        } else {
+          return null;
+        }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao consultar manutenção", e);
     } 
   }
 }

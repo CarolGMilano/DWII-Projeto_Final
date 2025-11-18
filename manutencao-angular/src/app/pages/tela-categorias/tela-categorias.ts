@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Categoria } from '../../models/Categoria';
+import { Categoria } from '../../shared/models/Categoria';
 import { CategoriaService } from '../../services/categoria/categoria';
 
 @Component({
@@ -22,14 +22,11 @@ export class TelaCategorias implements OnInit {
   private categoriaService = inject(CategoriaService);
 
   categoriaForm = new FormGroup({
-    nome: new FormControl('', Validators.required)
+    descricao: new FormControl('', Validators.required)
   });
 
   ngOnInit(): void {
-    this.categoriaService.categorias.subscribe({
-      next: (dados) => this.categorias = dados,
-      error: (err) => console.error('Erro ao carregar categorias:', err)
-    });
+    this.listarTodos();
   }
 
   abrirAdicionar() {
@@ -41,7 +38,7 @@ export class TelaCategorias implements OnInit {
 
   abrirEditar(categoria: Categoria) {
     this.categoriaSelecionada = categoria;
-    this.categoriaForm.patchValue({ nome: categoria.nome });
+    this.categoriaForm.patchValue({ descricao: categoria.descricao });
     this.modoFormulario = 'editar';
     this.mostrarFormulario = true;
   }
@@ -61,10 +58,10 @@ export class TelaCategorias implements OnInit {
   salvar() {
     if (this.categoriaForm.invalid) return;
 
-    const nome = this.categoriaForm.get('nome')?.value ?? '';
+    const nome = this.categoriaForm.get('descricao')?.value ?? '';
     const novaCategoria: Categoria = {
       id: this.categoriaSelecionada?.id,
-      nome: ''
+      descricao: ''
     };
 
     if (this.modoFormulario === 'adicionar') {
@@ -73,7 +70,7 @@ export class TelaCategorias implements OnInit {
         this.cancelar();
       });
     } else if (this.modoFormulario === 'editar' && novaCategoria.id) {
-      this.categoriaService.putCategoria(novaCategoria.id, novaCategoria.nome).subscribe(() => {
+      this.categoriaService.putCategoria(novaCategoria.id, novaCategoria.descricao).subscribe(() => {
         this.onSubmit.emit(novaCategoria);
         this.cancelar();
       });
@@ -85,6 +82,25 @@ export class TelaCategorias implements OnInit {
 
     this.categoriaService.deleteCategoria(this.categoriaSelecionada.id).subscribe(() => {
       this.cancelar();
+    });
+  }
+
+  listarTodos() {
+    this.categoriaService.listar().subscribe({
+      next: (categorias: Categoria[] | null) => {
+        if(categorias == null){
+          this.categorias = [];
+        } else {
+          this.categorias = categorias;
+        }
+      },
+      error: (erro) => {
+        if (erro.status === 500) {
+          alert(`Erro interno: ${erro.error}`);
+        } else {
+          alert('Erro inesperado ao listar categorias.');
+        }
+      }
     });
   }
 }

@@ -5,16 +5,18 @@ import { Router, RouterLink } from '@angular/router';
 
 import { SharedModule, CepStatus, Cliente, Endereco, TipoUsuario } from '../../shared';
 import { EnderecoService, ClienteService } from '../../services';
+import { ElementoLoading, ElementoCard } from '../../components';
 
 @Component({
   selector: 'app-tela-cadastro',
-  imports: [CommonModule, FormsModule, RouterLink, SharedModule],
+  imports: [CommonModule, FormsModule, RouterLink, SharedModule, ElementoLoading, ElementoCard],
   templateUrl: './tela-cadastro.html',
   styleUrl: './tela-cadastro.css'
 })
 
 export class TelaCadastro {
   @ViewChild('formCadastro') formCadastro! : NgForm;
+  @ViewChild('card') card!: ElementoCard; 
   
   readonly _jsonEnderecoService = inject(EnderecoService);
   readonly clienteService = inject(ClienteService);
@@ -42,6 +44,10 @@ export class TelaCadastro {
 
   cepStatus: CepStatus = CepStatus.Vazio;
   status = CepStatus;
+  
+  loading: boolean = false;
+  mensagem: string = '';
+  corDoCard: string = '';
 
   limpaEndereco() {
     this.endereco.logradouro = '';
@@ -92,6 +98,8 @@ export class TelaCadastro {
   salvar(){
     if (!this.formCadastro.form.valid) return;
 
+    this.loading = true;
+
     const cliente: Cliente = {
       id: -1,
       nome: this.cliente.nome,
@@ -111,17 +119,31 @@ export class TelaCadastro {
 
     this.clienteService.inserir(cliente).subscribe({
       next: (resposta) => {
-        alert('Cliente cadastrado com sucesso!');
+        this.loading = false;
 
-        this.router.navigate(['']);
+        this.mensagem = 'Cadastro realizado com sucesso!'
+        this.corDoCard = "#B6CEB4";
+        this.card.exibir(4000, () => this.router.navigate(['']));
       },
       error: (erro) => {
         if (erro.status === 409) {
-          alert(`Conflito: ${erro.error}`);
+          this.loading = false;
+
+          this.mensagem = `Conflito: ${erro.error}`;
+          this.corDoCard = "#C70003";
+          this.card.exibir();
         } else if (erro.status === 500) {
-          alert(`Erro interno: ${erro.error}`);
+          this.loading = false;
+
+          this.mensagem = `Erro interno: ${erro.error}`;
+          this.corDoCard = "#C70003";
+          this.card.exibir();
         } else {
-          alert('Erro inesperado ao cadastrar cliente.');
+          this.loading = false;
+
+          this.mensagem = `Erro inesperado ao cadastrar cliente.`;
+          this.corDoCard = "#C70003";
+          this.card.exibir();
         }
       }
     });

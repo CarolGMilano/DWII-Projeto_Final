@@ -1,10 +1,8 @@
 import { Servico } from "./Servico";
 
 export interface Orcamento {
-  id?: number;//
-  idSolicitacao?: number;//
-  servico?: Servico[];
+  servicos?: Servico[];
   valorTotal: number;
-  aprovada: boolean;
+  aprovada?: boolean;
   msgRejeicao?: string
 }

@@ -1,15 +1,24 @@
 import { Routes } from '@angular/router';
-import { TelaCadastro, TelaLogin, TelaFuncionarios, GerarRelatorio, TelaVisualizarDetalhes, TelaHistorico } from './pages/index';
-import { TelaInicialCliente } from './pages/tela-inicial-cliente/tela-inicial-cliente';
-import { TelaInicialFuncionario } from './pages/tela-inicial-funcionario/tela-inicial-funcionario';
-import { NovaSolicitacao } from './components/nova-solicitacao/nova-solicitacao';
-import { VisualizarOrcamento } from './components/visualizar-orcamento/visualizar-orcamento';
-import { PagarServico } from './components/pagar-servico/pagar-servico';
-import { VisualizarServico } from './components/visualizar-servico/visualizar-servico';
-import { TelaCategorias } from './pages/tela-categorias/tela-categorias';
+import { 
+  TelaCadastro, 
+  TelaLogin, 
+
+  TelaInicialCliente,
+  TelaHistorico, 
+  NovaSolicitacao,
+  VisualizarOrcamento,
+  PagarServico,
+  VisualizarServico,
+
+  TelaInicialFuncionario,
+  TelaListaSolicitacoes,
+  TelaCategorias,
+  RealizarOrcamento,
+  TelaFuncionarios, 
+  TelaVisualizarDetalhes, 
+  GerarRelatorio
+} from './pages/index';
 import { ClienteFuncionarioLayout } from './layout';
-import { TelaListaSolicitacoes } from './pages/tela-lista-solicitacoes/tela-lista-solicitacoes';
-import { RealizarOrcamento } from './components/realizar-orcamento/realizar-orcamento';
 import { authGuard } from './auth/auth-guard';
 import { TipoUsuario } from './shared';
 

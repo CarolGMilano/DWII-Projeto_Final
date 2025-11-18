@@ -1,50 +1,86 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FilterPipe } from '../../pipes/filter-pipe';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MOCK_DATA_SOLICITACOES } from '../../models/mock-data-solicitacoes';
 import { MatIconModule } from '@angular/material/icon';
-import { SolicitacaoService } from '../../services';
+
+import { SolicitacaoService, LoginService, FuncionarioService } from '../../services';
+import { SolicitacaoResumo, UsuarioLogado, StatusSolicitacao, StatusSolicitacaoCor, StatusSolicitacaoLabel } from '../../shared';
+import { ElementoLoading } from '../../components';
 
 @Component({
   selector: 'app-tela-lista-solicitacoes',
-  imports: [CommonModule, FilterPipe, FormsModule, RouterModule, MatIconModule],
+  imports: [CommonModule, FilterPipe, FormsModule, RouterModule, MatIconModule, ElementoLoading],
   templateUrl: './tela-lista-solicitacoes.html',
   styleUrl: './tela-lista-solicitacoes.css'
 })
 export class TelaListaSolicitacoes implements OnInit {
-  // solicitacoes = MOCK_DATA_SOLICITACOES;
-  solicitacoes: any[] = [];
+  solicitacoes: SolicitacaoResumo[] = [];
+
   searchText: string = '';
-  dateField?: string = '';
+  dateField = 'dataAbertura';
   selectedDate?: Date | string;
   filtroOrdenacao: 'desc' | 'asc' = 'asc';
   startDate?: Date;
   endDate?: Date;
 
-  // constructor(private http: HttpClient) { }
+  private solicitacaoService = inject(SolicitacaoService);
+  private loginService = inject(LoginService);
+  private funcionarioService = inject(FuncionarioService);
 
-  // ngOnInit(): void {
-  //   this.http.get<any[]>('models/mock-data-solicitacoes.json').subscribe(data => {
-  //     this.solicitacoes = data;
-  //   });
-  // }
+  usuarioLogado: UsuarioLogado | null = null;
+  idFuncionarioLogado: number = -1;
 
-  constructor(private solicitacaoService: SolicitacaoService) { }
+  StatusSolicitacaoLabel = StatusSolicitacaoLabel;
+  StatusSolicitacaoCor = StatusSolicitacaoCor;
+  StatusSolicitacao = StatusSolicitacao;
 
-  ngOnInit(): void {
-    this.carregarSolicitacoes();
+  loading: boolean = false;
+
+  getStatusCor(status: number): string {
+    return StatusSolicitacaoCor[status as StatusSolicitacao];
   }
 
-  carregarSolicitacoes() {
-    this.solicitacaoService.getSolicitacoes().subscribe({
-      next: (data) => {
-        this.solicitacoes = data;
+  getStatusLabel(status: number): string {
+    return StatusSolicitacaoLabel[status as StatusSolicitacao];
+  }
+
+  ngOnInit(): void {
+    this.usuarioLogado = this.loginService.usuarioLogado;
+
+    if (this.usuarioLogado) {
+      this.buscarFuncionarioPorUsuario(this.usuarioLogado.id);
+    }
+  }
+
+  buscarFuncionarioPorUsuario(idUsuario: number): void {
+    this.loading = true;
+
+    this.funcionarioService.buscarPorUsuario(idUsuario).subscribe({
+      next: (funcionario) => {
+        if (funcionario) {
+          this.idFuncionarioLogado = funcionario.id;
+          this.carregarSolicitacoes(this.idFuncionarioLogado);
+        }
       },
-      error: (err) => {
-        console.error('Erro ao carregar solicitações', err);
+      error: (erro) => console.error('Erro ao buscar funcionário:', erro)
+    });
+  }
+
+  carregarSolicitacoes(idFuncionarioLogado: number): void {
+    this.solicitacaoService.listarTodasFiltradasResumo(idFuncionarioLogado).subscribe({
+      next: (solicitacoes: SolicitacaoResumo[] | null) => {
+        this.solicitacoes = solicitacoes ?? [];
+        this.loading = false;
+      },
+      error: (erro) => {
+        if (erro.status === 500) {
+          alert(`Erro interno: ${erro.error}`);
+        } else {
+          alert('Erro inesperado ao listar solicitações.');
+        }
       }
     });
   }

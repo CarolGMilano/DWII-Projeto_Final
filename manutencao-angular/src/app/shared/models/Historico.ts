@@ -1,10 +1,9 @@
-import { Funcionario } from "./index";
+import { FuncionarioResumo } from "./index";
 
 export interface Historico {
-  id?: number; //
-  idSolicitacao?: number; //
   dataHora: Date;
   status: number;
-  funcionario?: Funcionario;
-  funcionarioDestino?: Funcionario;
+  funcionario?: FuncionarioResumo;
+  funcionarioDestino?: FuncionarioResumo;
+  msgRejeicao?: String;
 }

@@ -1,0 +1,70 @@
+.frame {
+  position: absolute; 
+  top: 0%;
+  left: 25%;
+  width: 120px;   
+  height: 120px;
+  margin: 0;     
+  overflow: hidden;
+  border-radius: 5px;
+  z-index: 10;    
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;   
+  height: 60px;
+}
+
+.circle-max, .circle-med, .circle-min {
+  border-radius: 50%;
+  position: absolute;
+}
+
+.circle-max { top: 0; left: 0; width: 60px; height: 60px; z-index: 1; animation: circle-max 2s alternate infinite; box-shadow: rgba(0,0,0,0.8) 4px 10px 20px -4px; }
+.circle-med { top: 10px; left: 10px; width: 40px; height: 40px; z-index: 2; animation: circle-med 2s alternate infinite; box-shadow: rgba(0,0,0,0.8) 3px 7px 15px -3px; }
+.circle-min { top: 20px; left: 20px; width: 20px; height: 20px; z-index: 3; animation: circle-min 2s alternate infinite; box-shadow: rgba(0,0,0,0.8) 2px 5px 10px -2px; }
+
+
+@keyframes circle-max {
+	0% {
+		transform: scale(0);
+ 	}
+ 	100% {
+ 		transform: scale(1);
+ 	}
+}
+
+@keyframes circle-med {
+	0% {
+		transform: scale(0);
+ 	}
+	30% {
+		transform: scale(0);
+ 	}
+	100% {
+ 		transform: scale(1);
+ 	}
+}
+
+@keyframes circle-min {
+	0% {
+		transform: scale(0);
+ 	}
+ 	60% {
+ 		transform: scale(0);
+ 	}
+	100% {
+ 		transform: scale(1);
+ 	}
+}

@@ -2,16 +2,16 @@ package br.net.dwii.projeto.manutencao.model.dto;
 
 public class ManutencaoDTO {
   private String descricao;
-  private String orientacoes;
+  private String orientacao;
 
-  public ManutencaoDTO(String descricao, String orientacoes) {
+  public ManutencaoDTO(String descricao, String orientacao) {
     this.descricao = descricao;
-    this.orientacoes = orientacoes;
+    this.orientacao = orientacao;
   }
 
   public String getDescricao() { return descricao; }
   public void setDescricao(String descricao) { this.descricao = descricao; }
 
-  public String getOrientacoes() { return orientacoes; }
-  public void setOrientacoes(String orientacoes) { this.orientacoes = orientacoes; }
+  public String getOrientacao() { return orientacao; }
+  public void setOrientacao(String orientacao) { this.orientacao = orientacao; }
 }

@@ -39,40 +39,90 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white h-full">
-                @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao); track item) {
-                <tr>
-                    <td class="px-4 py-2 text-sm text-gray-700">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td class="px-4 py-2 text-sm text-gray-700">{{ item.descricao }}</td>
-                    <td class="px-4 py-2 text-sm text-gray-700">{{item.estado}}</td>
-                    <td [ngSwitch]="item.estado" class="w-[30%] py-2 rounded-[7px]">
-                        <button
-                            class="bg-gray-200 w-[30%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/visualizar-servico/:id']">
-                            Visualizar
-                        </button>
-                        <button *ngSwitchCase="'ORÇADA'"
-                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/visualizar-orcamento/:id']">
-                            Aprovar/Rejeitar Serviço
-                        </button>
-                        <button *ngSwitchCase="'REJEITADA'"
-                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/']">
-                            Resgatar Serviço
-                        </button>
-                        <button *ngSwitchCase="'ARRUMADA'"
-                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/pagar-servico/:id']">
-                            Pagar Serviço
-                        </button>
-                    </td>
-                </tr>
+                @for (item of (solicitacoes | filter:searchText:'dataAbertura':selectedDate:filtroOrdenacao); track item) {
+                    @if (item.status === StatusSolicitacao.REDIRECIONADA) {
+                        {{ verificarArrumada(item.id) }}
+                    }
+
+                    <tr>
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ item.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">{{ item.equipamento }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-700">
+                            <div class="flex items-center gap-3">
+                                <span class="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold" [style.background-color]="getStatusCor(item.status) "></span>
+                                <span class="text-gray-800 text-sm font-thin">{{ getStatusLabel(item.status) }}</span>
+                            </div>
+                        </td>
+
+                        <td class="w-[30%] py-2 rounded-[7px]">
+                            <button
+                                class="bg-gray-200 w-[30%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/visualizar-servico', item.id]">
+                                Visualizar
+                            </button>
+
+                            @switch (item.status) { 
+                                @case (StatusSolicitacao.ORCADA) {
+                                    <button
+                                        class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                        [routerLink]="['/visualizar-orcamento', item.id]">
+                                        Aprovar/Rejeitar Serviço
+                                    </button>
+                                } 
+
+                                @case (StatusSolicitacao.REJEITADA) {
+                                    <button
+                                        (click)="abrirResgate(item.id)"
+                                        class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer">
+                                        Resgatar Serviço
+                                    </button>
+                                } 
+
+                                @case (StatusSolicitacao.ARRUMADA) {
+                                    <button 
+                                        class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                        [routerLink]="['/pagar-servico', item.id]">
+                                        Pagar Serviço
+                                    </button>
+                                } 
+
+                                @case(StatusSolicitacao.REDIRECIONADA) {
+                                    @if (temArrumada[item.id]) {
+                                        <button 
+                                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                            [routerLink]="['/pagar-servico', item.id]">
+                                            Pagar Serviço
+                                        </button>
+                                    }
+                                }
+                            }
+                        </td>
+                    </tr>
                 } @empty {
-                <tr>
-                    <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
-                </tr>
+                    <tr>
+                        <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
+                    </tr>
                 }
             </tbody>
         </table>
     </div>
+
+    @if(mostrarPopupResgate) {
+        <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+            <div class="flex flex-col gap-6 items-center p-5 bg-white rounded-lg shadow-xl w-full max-w-md">
+                <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="#748873"><path d="M482.77-216.92 579.08-313l-96.31-96.08L457.69-384 513-328.69q-46.46.23-82.58-10.93-36.11-11.15-57.88-32.92-22.31-22.31-33.58-50.61-11.27-28.31-11.27-56.62 0-17 3.73-34T342.38-546l-27.07-24q-11.62 21.15-17.31 43.83-5.69 22.68-5.69 46.17 0 35.65 13.84 70.36 13.85 34.72 40.93 62.18 27.07 27.46 71.15 40.81 44.08 13.34 90.54 13.57L457.69-242l25.08 25.08ZM645.46-390q11.62-21.15 17.31-43.83 5.69-22.68 5.69-46.17 0-35.53-13.73-70.59t-41.19-62.18q-26.69-27.46-71.04-40.69-44.34-13.23-90.5-13.23L503.08-718 478-743.08 381.69-647 478-550.92 503.08-576l-55.54-55.54q46.23 0 82.69 11.27t58.23 33.1q21.76 21.82 33.19 50.19 11.43 28.38 11.43 56.75 0 17-3.73 34T618.38-414l27.08 24ZM480.13-120q-74.67 0-140.41-28.34-65.73-28.34-114.36-76.92-48.63-48.58-76.99-114.26Q120-405.19 120-479.87q0-74.67 28.34-140.41 28.34-65.73 76.92-114.36 48.58-48.63 114.26-76.99Q405.19-840 479.87-840q74.67 0 140.41 28.34 65.73 28.34 114.36 76.92 48.63 48.58 76.99 114.26Q840-554.81 840-480.13q0 74.67-28.34 140.41-28.34 65.73-76.92 114.36-48.58 48.63-114.26 76.99Q554.81-120 480.13-120Z"/></svg>
+
+                <div class="flex flex-col gap-2 text-center">
+                    <p class="text-base font-bold text-gray-900">Tem certeza de que deseja resgatar?</p>
+                    <p class="text-sm text-gray-900">O orçamento foi realizado no valor de <span class="font-bold">{{ solicitacao.orcamento?.valorTotal | currency: 'BRL' }}</span>.</p>
+                    <p class="text-sm text-gray-900">Deseja confirmar o resgate?</p>
+
+                    <div class="flex gap-10 justify-center items-center mt-4">
+                        <button type="button" class="rounded-md px-8 py-2 text-sm font-base bg-[#748873] text-white hover:bg-[#727D73] hover:cursor-pointer" (click)="resgatarSolicitacao()">Resgatar</button>
+                        <button type="button" class="rounded-md px-8 py-2 text-sm font-base text-black hover:bg-gray-100 hover:cursor-pointer hover:text-gray-600" (click)="cancelarResgate()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>

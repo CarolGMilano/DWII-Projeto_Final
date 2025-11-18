@@ -3,8 +3,7 @@ package br.net.dwii.projeto.manutencao.model.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Statement;
 
 import org.springframework.stereotype.Repository;
 
@@ -12,133 +11,97 @@ import br.net.dwii.projeto.manutencao.connection.ConnectionDB;
 import br.net.dwii.projeto.manutencao.model.Orcamento;
 
 @Repository
-public class OrcamentoDao implements DaoI<Orcamento> {
+public class OrcamentoDao {
+  private final String inserir = "INSERT INTO orcamento (idSolicitacao, valorTotal, aprovada, msgRejeicao) VALUES (?, ?, ?, ?)";
+  private final String consultarPorSolicitacao = "SELECT id, idSolicitacao, valorTotal, aprovada, msgRejeicao FROM orcamento WHERE idSolicitacao = ?";
+  private final String alterarAprovacao = "UPDATE orcamento SET aprovada = ?, msgRejeicao = ? WHERE id = ?";
 
-    @Override
-    public void add(Orcamento orcamento) throws Exception {
-        String sql = "INSERT INTO orcamento (idSolicitacao, valorTotal, aprovada, msgRejeicao) VALUES (?, ?, ?, ?)";
+  public void inserir(Orcamento orcamento) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psInserir = connection.prepareStatement(inserir, Statement.RETURN_GENERATED_KEYS);
+    ) {
+          System.out.println("entrei");
+      psInserir.setInt(1, orcamento.getIdSolicitacao());
+      psInserir.setDouble(2, orcamento.getValorTotal());
 
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+      if (orcamento.getAprovado() != null) {
+        psInserir.setBoolean(3, orcamento.getAprovado());
+      } else {
+        psInserir.setNull(3, java.sql.Types.BOOLEAN);
+      }
 
-            ps.setInt(1, orcamento.getIdSolicitacao());
-            ps.setDouble(2, orcamento.getValorTotal());
+      if (orcamento.getMsgRejeicao() != null) {
+        psInserir.setString(4, orcamento.getMsgRejeicao());
+      } else {
+        psInserir.setNull(4, java.sql.Types.VARCHAR);
+      }
 
-            if (orcamento.getAprovado() != null)
-                ps.setBoolean(3, orcamento.getAprovado());
-            else
-                ps.setNull(3, java.sql.Types.BOOLEAN);
+      psInserir.executeUpdate();
 
-            ps.setString(4, orcamento.getMsgRejeicao());
-            ps.executeUpdate();
+      try(ResultSet rsInserir = psInserir.getGeneratedKeys()){
+        if(rsInserir.next()){
+          int id = rsInserir.getInt(1);
 
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    orcamento.setId(rs.getInt(1));
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao adicionar orçamento: " + e.getMessage());
+          orcamento.setId(id);
         }
-    }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao inserir orçamento", e);
+    } 
+  }
+  
+  public Orcamento consultar(int idSolicitacao) throws Exception {
+    try (
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psConsultarPorSolicitacao = connection.prepareStatement(consultarPorSolicitacao);
+    ) {
+      psConsultarPorSolicitacao.setInt(1, idSolicitacao);
 
-    @Override
-    public List<Orcamento> getAll() throws Exception {
-        String sql = "SELECT * FROM orcamento";
-        List<Orcamento> orcamentos = new ArrayList<>();
+      try(ResultSet rsConsultarPorSolicitacao = psConsultarPorSolicitacao.executeQuery()){
+        if (rsConsultarPorSolicitacao.next()) {
+          Boolean aprovada = rsConsultarPorSolicitacao.getBoolean("aprovada");
 
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+          if (rsConsultarPorSolicitacao.wasNull()) {
+            aprovada = null;
+          }
 
-            while (rs.next()) {
-                Orcamento o = new Orcamento(
-                    rs.getInt("id"),
-                    rs.getInt("idSolicitacao"),
-                    rs.getDouble("valorTotal"),
-                    rs.getObject("aprovada") != null ? rs.getBoolean("aprovada") : null,
-                    rs.getString("msgRejeicao")
-                );
-                orcamentos.add(o);
-            }
+          Orcamento orcamento = new Orcamento(
+            rsConsultarPorSolicitacao.getInt("id"), 
+            rsConsultarPorSolicitacao.getInt("idSolicitacao"), 
+            rsConsultarPorSolicitacao.getDouble("valorTotal"), 
+            aprovada, 
+            rsConsultarPorSolicitacao.getString("msgRejeicao")
+          );
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao buscar orçamentos: " + e.getMessage());
+          return orcamento;
+        } else {
+          return null;
         }
+      }
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao consultar orçamento", e);
+    } 
+  }
 
-        return orcamentos;
+  public void alterarAprovacao(Orcamento orcamento) throws Exception {
+    try(
+      Connection connection = ConnectionDB.getConnection();
+      PreparedStatement psAlterarAprovacao = connection.prepareStatement(alterarAprovacao);
+    ) {
+      psAlterarAprovacao.setBoolean(1, orcamento.getAprovado());
+      psAlterarAprovacao.setString(2, orcamento.getMsgRejeicao());
+      psAlterarAprovacao.setInt(3, orcamento.getId());
+
+      psAlterarAprovacao.executeUpdate();
+    } 
+    catch (Exception e) {
+      e.printStackTrace();
+      throw new Exception("Erro ao alterar aprovação do orçamento", e);
     }
-
-    @Override
-    public Orcamento getById(int id) throws Exception {
-        String sql = "SELECT * FROM orcamento WHERE id = ?";
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new Orcamento(
-                        rs.getInt("id"),
-                        rs.getInt("idSolicitacao"),
-                        rs.getDouble("valorTotal"),
-                        rs.getObject("aprovada") != null ? rs.getBoolean("aprovada") : null,
-                        rs.getString("msgRejeicao")
-                    );
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao buscar orçamento por ID: " + e.getMessage());
-        }
-
-        return null;
-    }
-
-    @Override
-    public void update(Orcamento orcamento) throws Exception {
-        String sql = "UPDATE orcamento SET idSolicitacao = ?, valorTotal = ?, aprovada = ?, msgRejeicao = ? WHERE id = ?";
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, orcamento.getIdSolicitacao());
-            ps.setDouble(2, orcamento.getValorTotal());
-
-            if (orcamento.getAprovado() != null)
-                ps.setBoolean(3, orcamento.getAprovado());
-            else
-                ps.setNull(3, java.sql.Types.BOOLEAN);
-
-            ps.setString(4, orcamento.getMsgRejeicao());
-            ps.setInt(5, orcamento.getId());
-
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao atualizar orçamento: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void delete(Orcamento orcamento) throws Exception {
-        String sql = "DELETE FROM orcamento WHERE id = ?";
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, orcamento.getId());
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao excluir orçamento: " + e.getMessage());
-        }
-    }
+  }
 }
