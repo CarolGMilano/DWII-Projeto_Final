@@ -9,7 +9,7 @@ export class FilterPipe implements PipeTransform {
   transform(
     items: any[],
     searchText: string,
-    dateField: string = 'data',
+    dateField = 'dataAbertura',
     selectedDate?: string | Date,
     selectedOrder: 'desc' | 'asc' = 'asc',
     startDate?: string | Date,

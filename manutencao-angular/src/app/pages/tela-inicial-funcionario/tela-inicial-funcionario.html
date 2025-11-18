@@ -48,7 +48,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-                @for (item of (solicitacoes | filter:searchText:'data':selectedDate:filtroOrdenacao); track item) {
+                @for (item of (solicitacoes | filter:searchText:'dataAbertura':selectedDate:filtroOrdenacao); track item) {
                 
                 <tr>
                     <td class="px-1 py-2 text-sm text-gray-700">{{ item.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
