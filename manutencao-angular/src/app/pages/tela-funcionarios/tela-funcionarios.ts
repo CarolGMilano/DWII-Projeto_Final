@@ -57,7 +57,7 @@ export class TelaFuncionarios implements OnInit {
   }
 
   buscarFuncionarioPorUsuario(idUsuario: number): void {
-    this.funcionarioService.buscarPorId(idUsuario).subscribe({
+    this.funcionarioService.buscarPorUsuario(idUsuario).subscribe({
       next: (funcionario) => {
         if (funcionario) {
           this.idFuncionarioLogado = funcionario.id;

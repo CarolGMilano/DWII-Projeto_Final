@@ -17,7 +17,7 @@ import {
   SolicitacaoEntrada,
 } from "../../shared";
 
-import { ClienteService, FuncionarioService, LoginService, SolicitacaoService } from '../../services';
+import { CategoriaService, ClienteService, FuncionarioService, LoginService, SolicitacaoService } from '../../services';
 import { ElementoLoading } from '../../components';
 
 @Component({
@@ -30,9 +30,9 @@ export class TelaVisualizarDetalhes implements OnInit {
   @ViewChild('formManutencao') formManutencao! : NgForm;
 
   private solicitacaoService = inject(SolicitacaoService);
-  private clienteService = inject(ClienteService);
   private funcionarioService = inject(FuncionarioService);
   private loginService = inject(LoginService);
+  private categoriaService = inject(CategoriaService);
 
   StatusSolicitacaoLabel = StatusSolicitacaoLabel;
   StatusSolicitacaoCor = StatusSolicitacaoCor;
@@ -59,6 +59,7 @@ export class TelaVisualizarDetalhes implements OnInit {
 
   id!: number;
   solicitacao!: Solicitacao;
+  categoriaDescricao!: String;
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -84,6 +85,8 @@ export class TelaVisualizarDetalhes implements OnInit {
       next: (solicitacao) => {
         if (solicitacao) {
           this.solicitacao = solicitacao;
+
+          this.buscarNomeCategoria(solicitacao.categoria);
           console.log("solicitacao ", this.solicitacao);
         }
       }
@@ -98,6 +101,16 @@ export class TelaVisualizarDetalhes implements OnInit {
         }
       });
     }
+  }
+
+  buscarNomeCategoria(idCategoria: number) {
+    this.categoriaService.buscarPorId(idCategoria).subscribe({
+      next: (categoria) => {
+        if (categoria) {
+          this.categoriaDescricao = categoria.descricao;
+        }
+      }
+    })
   }
 
   get podeFazerManutencao(): boolean {

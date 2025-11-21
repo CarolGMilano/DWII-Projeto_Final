@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-10 shadow-lg px-10 py-10 bg-white rounded-lg h-full">
   <div class="flex flex-col gap-10">
-    <h2 class="text-gray-800 font-bold text-3xl">Histórico</h2>
+    <h2 class="text-gray-800 font-bold text-2xl">Histórico</h2>
   </div>
 
     <div class=" overflow-x-auto max-h-132 overflow-y-auto">
@@ -19,31 +19,35 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        @for (solicitacao of solicitacoes; track solicitacao.id){
-          <tr class="hover:bg-gray-50 transition-colors">
-            <td class="px-12 py-2 text-sm text-gray-500">{{ solicitacao.id }}</td>
-            <td class="px-4 py-2 text-sm text-gray-500">{{ solicitacao.equipamento }}</td>
-            <td class="px-4 py-2 text-sm text-gray-500">{{ solicitacao.dataAbertura | date: 'dd/MM/yyyy' }}</td>
-            <td class="px-12 py-2 space-x-4">
-              <button type="button" class="px-1 py-1 rounded-full group hover:bg-gray-100 hover:cursor-pointer" (click)="abrirModalDetalhes(solicitacao)"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  width="24px"
-                  viewBox="0 -960 960 960"
-                  class="stroke-gray-500 fill-current text-gray-500 group-hover:stroke-gray-700 group-hover:text-gray-700 transition-colors"
-                >
-                  <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-134 0-244.5-72T61-462q-5-9-7.5-18.5T51-500q0-10 2.5-19.5T61-538q64-118 174.5-190T480-800q134 0 244.5 72T899-538q5 9 7.5 18.5T909-500q0 10-2.5 19.5T899-462q-64 118-174.5 190T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
-                </svg>
-              </button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
-          </tr>
-        }
+          @if(loading){
+            <app-elemento-loading></app-elemento-loading>
+          } @else {
+            @for (solicitacao of solicitacoes; track solicitacao.id){
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-12 py-2 text-sm text-gray-500">{{ solicitacao.id }}</td>
+                <td class="px-4 py-2 text-sm text-gray-500">{{ solicitacao.equipamento }}</td>
+                <td class="px-4 py-2 text-sm text-gray-500">{{ solicitacao.dataAbertura | date: 'dd/MM/yyyy' }}</td>
+                <td class="px-12 py-2 space-x-4">
+                  <button type="button" class="px-1 py-1 rounded-full group hover:bg-gray-100 hover:cursor-pointer" (click)="abrirModalDetalhes(solicitacao)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      width="24px"
+                      viewBox="0 -960 960 960"
+                      class="stroke-gray-500 fill-current text-gray-500 group-hover:stroke-gray-700 group-hover:text-gray-700 transition-colors"
+                    >
+                      <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-134 0-244.5-72T61-462q-5-9-7.5-18.5T51-500q0-10 2.5-19.5T61-538q64-118 174.5-190T480-800q134 0 244.5 72T899-538q5 9 7.5 18.5T909-500q0 10-2.5 19.5T899-462q-64 118-174.5 190T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
+              </tr>
+            }
+          }
       </tbody>
     </table>
   </div>

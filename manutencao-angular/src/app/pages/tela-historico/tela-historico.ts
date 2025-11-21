@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule, Solicitacao, SolicitacaoResumo, StatusSolicitacao, StatusSolicitacaoCor, StatusSolicitacaoLabel } from '../../shared';
 import { ClienteService, LoginService, SolicitacaoService } from '../../services';
+import { ElementoLoading } from '../../components';
 
 @Component({
   selector: 'app-tela-historico',
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, ElementoLoading],
   templateUrl: './tela-historico.html',
   styleUrl: './tela-historico.css'
 })
@@ -19,6 +20,8 @@ export class TelaHistorico implements OnInit {
 
   solicitacoes: SolicitacaoResumo[] = [];
   solicitacao!: Solicitacao;
+
+  loading: boolean = false;
 
   ngOnInit(): void {
     const usuarioLogado = this.loginService.usuarioLogado;
@@ -63,14 +66,20 @@ export class TelaHistorico implements OnInit {
   }
 
   listarFinalizados(idUsuario: number) {
+    this.loading = true;
+
     this.solicitacaoService.listarFinalizados(idUsuario).subscribe({
       next: (solicitacoes: SolicitacaoResumo[] | null) => {
         this.solicitacoes = solicitacoes ?? [];
+
+        this.loading = false;
       },
       error: (erro) => {
         if (erro.status === 500) {
+          this.loading = false;
           alert(`Erro interno: ${erro.error}`);
         } else {
+          this.loading = false;
           alert('Erro inesperado ao listar solicitações finalizadas do cliente.');
         }
       }

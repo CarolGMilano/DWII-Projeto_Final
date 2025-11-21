@@ -75,8 +75,8 @@
                 <!-- Total: {{ orcamentoForm.get('precoTotal')?.value | moedaBr }} -->
             </div>
 
+            <!-- Aqui, seria interessante colocar uma validação apenas para se o "itens" estiver vazio, pois como a cada adição ele apaga os campos, sempre será formulário inválido. --> 
             <button type="submit"
-                    [disabled]="orcamentoForm.invalid"
                     class="bg-green-600 text-white rounded-lg px-6 py-3 hover:bg-green-700 disabled:opacity-50">
                 Salvar Orçamento
             </button>
