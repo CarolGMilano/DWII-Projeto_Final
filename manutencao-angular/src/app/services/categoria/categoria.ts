@@ -41,6 +41,24 @@ export class CategoriaService {
       })
     );
   }
+
+  buscarPorId(id: number): Observable<Categoria | null> {
+    return this._httpClient.get<Categoria>(
+      `${this.BASE_URL}/${id}`, 
+      this.httpOptions
+    ).pipe(
+      map((resposta: HttpResponse<Categoria>) => {
+        if(resposta.status == 200){
+          return resposta.body;
+        } else {
+          return null;
+        }
+      }),
+      catchError((erro) => {
+        return throwError(() => erro);
+      })
+    );   
+  }
   
   /*
   get categorias(): Observable<Categoria[]> {

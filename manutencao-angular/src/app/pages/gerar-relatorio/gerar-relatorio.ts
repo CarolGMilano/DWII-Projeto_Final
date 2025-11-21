@@ -4,8 +4,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ClienteResumo, Funcionario, Solicitacao, SolicitacaoResumo, StatusSolicitacao } from '../../shared';
-import { ClienteService, FuncionarioService, SolicitacaoService } from '../../services';
+import { Categoria, ClienteResumo, Funcionario, Solicitacao, SolicitacaoResumo, StatusSolicitacao } from '../../shared';
+import { CategoriaService, ClienteService, FuncionarioService, SolicitacaoService } from '../../services';
 import { ElementoLoading, ElementoLoadingCard } from '../../components';
 
 @Component({
@@ -19,6 +19,7 @@ export class GerarRelatorio implements OnInit {
   private solicitacaoService = inject(SolicitacaoService);
   private clienteService = inject(ClienteService);
   private funcionarioService = inject(FuncionarioService);
+  private categoriaService = inject(CategoriaService);
 
   solicitacoes!: Solicitacao[];
 
@@ -47,10 +48,23 @@ export class GerarRelatorio implements OnInit {
 
   receitaPorCategoria: { categoria: string, valor: number }[] = [];
 
+  categorias!: Categoria[];
+
   ngOnInit(): void {
     this.listarClientes();
     this.listarFuncionarios();
     this.listarSolicitacoes();
+    this.buscarCategorias();
+  }
+
+  buscarCategorias() {
+    this.categoriaService.listar().subscribe({
+      next: (categorias) => {
+        if (categorias) {
+          this.categorias = categorias;
+        }
+      }
+    })
   }
 
   //Como o valor pode mudar, um getter é melhor para printar.
@@ -232,8 +246,9 @@ export class GerarRelatorio implements OnInit {
 
       if (!historicoAbertura) return acumulador;
 
-      const dia = new Date(historicoAbertura?.dataHora).toISOString().split("T")[0];
-
+      const data = new Date(historicoAbertura.dataHora);
+      const dia = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
+      
       if (!acumulador[dia]) {
         acumulador[dia] = {
           lista: [],
@@ -259,7 +274,6 @@ export class GerarRelatorio implements OnInit {
         };
       }
       
-
       acumulador[categoria].lista.push(solicitacao);
       acumulador[categoria].total += solicitacao.orcamento?.valorTotal ?? 0;
 
