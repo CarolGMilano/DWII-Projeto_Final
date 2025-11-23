@@ -1,4 +1,4 @@
-<div class="flex min-h-screen bg-white">
+<div class="flex h-screen bg-white">
   <div class="flex justify-center items-center w-3/5 bg-white px-30 max-w-full">
     <form #formLogin="ngForm" (ngSubmit)="logar()">
       <div>
@@ -71,5 +71,7 @@
     <app-elemento-loading></app-elemento-loading>
   }
   
-  <div class="w-2/5 flex items-center justify-center bg-gray-200 m-3 rounded-lg">LOGO</div>
+  <div class="w-2/5 flex items-center justify-center overflow-hidden h-full object-contain">
+      <img src="/manutencao.png" class="">
+  </div>
 </div>

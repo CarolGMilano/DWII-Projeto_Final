@@ -61,8 +61,6 @@ export class NovaSolicitacao implements OnInit {
 
     this.solicitacaoService.inserirSolicitacao(novaSolicitacao).subscribe({
       next: (resposta) => {
-        console.log('Solicitação criada com sucesso:', resposta);
-
         this.router.navigate(['/tela-inicial-cliente']);
       },
       error: (erro) => {

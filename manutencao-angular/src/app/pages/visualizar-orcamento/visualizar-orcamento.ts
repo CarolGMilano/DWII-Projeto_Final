@@ -75,11 +75,9 @@ export class VisualizarOrcamento implements OnInit{
 
     this.solicitacaoService.aprovarSolicitacao(solicitacaoAprovada).subscribe({
       next: (resposta) => {
-        console.log('Solicitação aprovada com sucesso:', resposta);
         this.mostrarModalAprovacao();
       },
       error: (erro) => {
-        console.error('Erro ao aprovar solicitação:', erro);
         alert('Erro ao aprovar solicitação. Tente novamente.');
       },
     });
@@ -100,8 +98,6 @@ export class VisualizarOrcamento implements OnInit{
 
     this.solicitacaoService.rejeitarSolicitacao(solicitacaoAprovada).subscribe({
       next: (resposta) => {
-        console.log('Solicitação rejeitada com sucesso:', resposta);
-
         this.modalRecusar.nativeElement.close();
         this.router.navigate(['/tela-inicial-cliente']);
       },
@@ -111,31 +107,4 @@ export class VisualizarOrcamento implements OnInit{
       },
     });
   }
-
-
-/*
-  //finalizar ainda justificativa de rej por conta do back
-  enviarRejeicao(modal: HTMLDialogElement, form: NgForm) {
-    if (!this.justificativa.trim()) {
-      alert('Por favor, informe o motivo da rejeição.');
-      return;
-    }
-
-    this.dadosService.atualizarStatus(this.solicitacao, EstadoSolicitacao.REJEITADA, this.justificativa).subscribe({
-      next: (res) => {
-        this.solicitacao = res;
-        modal.close();
-      },
-      error: (err) => console.error('Erro ao rejeitar solicitação:', err)
-    });
-  }
-
-  enviarAprovacao() : void {
-    this.dadosService.atualizarStatus(this.solicitacao, EstadoSolicitacao.APROVADA).subscribe({
-      next: (res) => {
-        this.solicitacao = res;
-      },
-      error: (err) => console.error('Erro ao aprovar solicitação:', err)
-    });
-  }*/
 }

@@ -115,8 +115,6 @@ export class RealizarOrcamento implements OnInit {
 
     this.solicitacaoService.orcarSolicitacao(solicitacaoOrcada).subscribe({
       next: (resposta) => {
-        console.log('Solicitação orçada com sucesso:', resposta);
-
         this.router.navigate(['/tela-lista-solicitacoes']);
       },
       error: (erro) => {
