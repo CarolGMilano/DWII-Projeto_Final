@@ -2,8 +2,8 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 
-import { Funcionario, TipoUsuario, UsuarioLogado } from '../../shared';
-import { FuncionarioService, LoginService } from '../../services';
+import { Funcionario, Solicitacao, SolicitacaoResumo, TipoUsuario, UsuarioLogado } from '../../shared';
+import { FuncionarioService, LoginService, SolicitacaoService } from '../../services';
 import { ElementoLoading } from '../../components';
 
 @Component({
@@ -17,6 +17,7 @@ export class TelaFuncionarios implements OnInit {
 
   private funcionarioService = inject(FuncionarioService);
   private loginService = inject(LoginService);
+  private solicitacaoService = inject(SolicitacaoService);
 
   funcionarios: Funcionario[] = [];
 
@@ -45,6 +46,9 @@ export class TelaFuncionarios implements OnInit {
 
   dataNascimentoStr: string = '';
   loading: boolean = false;
+  loadingExclusao: boolean = false;
+
+  temSolicitacoes!: boolean;
 
   ngOnInit(): void {
     this.usuarioLogado = this.loginService.usuarioLogado;
@@ -64,6 +68,31 @@ export class TelaFuncionarios implements OnInit {
         }
       },
       error: (erro) => console.error('Erro ao buscar funcionário:', erro)
+    });
+  }
+
+  listarTodosPorFuncionario(id: number){
+    this.loadingExclusao = true;
+    
+    this.solicitacaoService.listarTodosPorFuncionario(id).subscribe({
+      next: (solicitacoes) => {
+        if(solicitacoes?.length == 0){
+          this.temSolicitacoes = false;
+          this.loadingExclusao = false;
+        } else {
+          this.temSolicitacoes = true;
+          this.loadingExclusao = false;
+        }
+      },
+      error: (erro) => {
+        if (erro.status === 500) {
+          alert(`Erro interno: ${erro.error}`);
+          this.loadingExclusao = false;
+        } else {
+          alert('Erro inesperado ao listar solicitações do funcionário.');
+          this.loadingExclusao = false;
+        }
+      }
     });
   }
 
@@ -103,6 +132,9 @@ export class TelaFuncionarios implements OnInit {
   abrirExcluir(funcionario: Funcionario) {
     this.funcionario = { ...funcionario };
     this.mostrarPopupExclusao = true;
+
+    
+    this.listarTodosPorFuncionario(this.funcionario.id);
   }
 
   cancelar() {
