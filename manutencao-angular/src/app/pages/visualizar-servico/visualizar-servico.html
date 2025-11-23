@@ -1,78 +1,86 @@
-<div class="bg-white rounded-lg h-full p-15 ">
-  <div class="px-4 sm:px-0">
-    <h3 class="font-bold text-[22px]">Dados da Solicitação</h3>
-    <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">Detalhes da solicitação.</p>
-  </div>
-  <div class="mt-6 border-t border-gray-100">
-      <dl class="divide-y divide-gray-100">
-          <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">Número da solicitação</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.id}}</dd>
-          </div>
-  
-          <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">Categoria</dt>
-              <dd class="text-sm text-gray-700 sm:col-span-2">{{solicitacao.categoria}}</dd>
-          </div>
-  
-          <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">Descrição do Equipamento</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.equipamento}}</dd>
-          </div>
-  
-          <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">Defeito do defeito</dt>
-              <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.descricao}}</dd>
-          </div>
-  
-          <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt class="text-sm/6 font-medium text-gray-900">Status atual</dt>
-              <div class="flex items-center gap-3">
-                  <span class="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold" [style.background-color]="getStatusCor(solicitacao.status) "></span>
-                  <span class="text-gray-800 text-sm font-thin">{{ getStatusLabel(solicitacao.status) }}</span>
-              </div>
-          </div>
-      </dl>
-  </div>
-  
-  <div class="px-4 sm:px-0">
-    <h3 class="text-base font-semibold text-gray-900">Histórico da Solicitação</h3>
-    <p class="mt-1 max-w-2xl text-sm text-gray-500">Todos os passos e alterações feitas no serviço.</p>
-  </div>
-  
-  <div class="mt-6 overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200 rounded-lg">
-      <thead class="bg-gray-50">
-        <tr>
-          <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora</th>
-          <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Funcionário</th>
-          <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Status</th>
-          <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Observação</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200 bg-white">
-      @for (passo of solicitacao.historico; track i; let i = $index;) {
-        <tr>
-          <td class="px-4 py-2 text-sm text-gray-700">{{passo.dataHora | date:'dd/MM/yyyy HH:mm' }}</td>
 
-          @if(passo.funcionarioDestino != null){
-            <td class="px-4 py-2 text-sm text-gray-700">{{passo.funcionarioDestino.nome}}</td>
-          } @else if (passo.funcionario != null) {
-            <td class="px-4 py-2 text-sm text-gray-700">{{passo.funcionario.nome}}</td>
-          } @else {
-            <td class="px-4 py-2 text-sm text-gray-700"> - </td>
-          }
-
-          <td class="px-4 py-2 text-sm text-gray-700">
-            <div class="flex items-center gap-3">
-              <span class="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold" [style.background-color]="getStatusCor(passo.status) "></span>
-              <span class="text-gray-800 text-sm font-thin">{{ getStatusLabel(passo.status) }}</span>
+<div class="flex flex-col gap-3 w-full h-full">
+  <a class="flex justify-center items-center p-2 bg-white rounded-lg shadow-lg w-12 hover:bg-gray-50" [routerLink]="['/tela-inicial-cliente']" >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="stroke-gray-800" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15 19L8 12L15 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+  <div class="bg-white rounded-lg h-full p-15 ">
+    <div class="px-4 sm:px-0">
+      <h3 class="font-bold text-[22px]">Dados da Solicitação</h3>
+      <p class="mt-1 max-w-2xl text-sm/6 text-gray-500">Detalhes da solicitação.</p>
+    </div>
+    <div class="mt-6 border-t border-gray-100">
+        <dl class="divide-y divide-gray-100">
+            <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Número da solicitação</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.id}}</dd>
             </div>
-          </td>
-          <td class="px-4 py-2 text-sm text-gray-700">{{ getStatusObservacao(passo.status) }}</td>
-        </tr>
-      }
-      </tbody>
-    </table>
+    
+            <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Categoria</dt>
+                <dd class="text-sm text-gray-700 sm:col-span-2">{{solicitacao.categoria}}</dd>
+            </div>
+    
+            <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Descrição do Equipamento</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.equipamento}}</dd>
+            </div>
+    
+            <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Defeito do defeito</dt>
+                <dd class="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.descricao}}</dd>
+            </div>
+    
+            <div class="px-2 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm/6 font-medium text-gray-900">Status atual</dt>
+                <div class="flex items-center gap-3">
+                    <span class="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold" [style.background-color]="getStatusCor(solicitacao.status) "></span>
+                    <span class="text-gray-800 text-sm font-thin">{{ getStatusLabel(solicitacao.status) }}</span>
+                </div>
+            </div>
+        </dl>
+    </div>
+    
+    <div class="px-4 sm:px-0">
+      <h3 class="text-base font-semibold text-gray-900">Histórico da Solicitação</h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Todos os passos e alterações feitas no serviço.</p>
+    </div>
+    
+    <div class="mt-6 overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 rounded-lg">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Data/Hora</th>
+            <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Funcionário</th>
+            <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Status</th>
+            <th scope="col" class="px-4 py-2 text-left text-sm font-semibold text-gray-900">Observação</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 bg-white">
+        @for (passo of solicitacao.historico; track i; let i = $index;) {
+          <tr>
+            <td class="px-4 py-2 text-sm text-gray-700">{{passo.dataHora | date:'dd/MM/yyyy HH:mm' }}</td>
+  
+            @if(passo.funcionarioDestino != null){
+              <td class="px-4 py-2 text-sm text-gray-700">{{passo.funcionarioDestino.nome}}</td>
+            } @else if (passo.funcionario != null) {
+              <td class="px-4 py-2 text-sm text-gray-700">{{passo.funcionario.nome}}</td>
+            } @else {
+              <td class="px-4 py-2 text-sm text-gray-700"> - </td>
+            }
+  
+            <td class="px-4 py-2 text-sm text-gray-700">
+              <div class="flex items-center gap-3">
+                <span class="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold" [style.background-color]="getStatusCor(passo.status) "></span>
+                <span class="text-gray-800 text-sm font-thin">{{ getStatusLabel(passo.status) }}</span>
+              </div>
+            </td>
+            <td class="px-4 py-2 text-sm text-gray-700">{{ getStatusObservacao(passo.status) }}</td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

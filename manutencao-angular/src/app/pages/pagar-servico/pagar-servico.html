@@ -1,51 +1,58 @@
-<div class="p-10 bg-white rounded-lg h-full">
-  <div class="px-4 sm:px-0">
-    <h2 class="font-bold text-[22px]">Dados do Serviço</h2>
-    <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalhes do equipamento e de pagamento.</p>
-  </div>
-
-  <div class="mt-6 border-t border-gray-100">
-    <dl class="divide-y divide-gray-100">
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 flex flex-col">
-        <dt class="text-sm font-medium text-gray-900">Descrição do Equipamento</dt>
-        <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.equipamento}}</dd>
-      </div>
-
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium text-gray-900">Categoria</dt>
-        <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.categoria}}</dd>
-      </div>
-
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium text-gray-900">Descrição do defeito</dt>
-        <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.descricao}}</dd>
-      </div>
-
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium text-gray-900">Descrição do preço</dt>
-        <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
-          <ul class="list-disc pl-5">
-            @for (item of solicitacao.orcamento?.servicos; track item.descricao) {
-              <li>{{item.descricao}} - {{item.preco | moedaBr}}</li>
-            }
-          </ul>
-        </dd>
-      </div>
-
-      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="text-sm font-medium text-gray-900">Valor à pagar</dt>
-        <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 font-semibold">{{solicitacao.orcamento?.valorTotal | currency:'BRL'}}</dd>
-      </div>
-    </dl>
-  </div>
-
-  <div class="flex space-x-3 mt-4">
-    <button 
-      (click)="pagarSolicitacao()"
-      class="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1 transition cursor-pointer"
-    >
-      Pagar serviço
-    </button>
+<div class="flex flex-col gap-3 w-full h-full">
+  <a class="flex justify-center items-center p-2 bg-white rounded-lg shadow-lg w-12 hover:bg-gray-50" [routerLink]="['/tela-inicial-cliente']" >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="stroke-gray-800" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15 19L8 12L15 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+  <div class="p-10 bg-white rounded-lg h-full">
+    <div class="px-4 sm:px-0">
+      <h2 class="font-bold text-[22px]">Dados do Serviço</h2>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Detalhes do equipamento e de pagamento.</p>
+    </div>
+  
+    <div class="mt-6 border-t border-gray-100">
+      <dl class="divide-y divide-gray-100">
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 flex flex-col">
+          <dt class="text-sm font-medium text-gray-900">Descrição do Equipamento</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.equipamento}}</dd>
+        </div>
+  
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium text-gray-900">Categoria</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.categoria}}</dd>
+        </div>
+  
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium text-gray-900">Descrição do defeito</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{{solicitacao.descricao}}</dd>
+        </div>
+  
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium text-gray-900">Descrição do preço</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+            <ul class="list-disc pl-5">
+              @for (item of solicitacao.orcamento?.servicos; track item.descricao) {
+                <li>{{item.descricao}} - {{item.preco | moedaBr}}</li>
+              }
+            </ul>
+          </dd>
+        </div>
+  
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium text-gray-900">Valor à pagar</dt>
+          <dd class="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0 font-semibold">{{solicitacao.orcamento?.valorTotal | currency:'BRL'}}</dd>
+        </div>
+      </dl>
+    </div>
+  
+    <div class="flex space-x-3 mt-4">
+      <button 
+        (click)="pagarSolicitacao()"
+        class="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1 transition cursor-pointer"
+      >
+        Pagar serviço
+      </button>
+    </div>
   </div>
 </div>
 

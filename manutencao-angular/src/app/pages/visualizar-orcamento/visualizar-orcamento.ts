@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-visualizar-orcamento',
-  imports: [FormsModule, ReactiveFormsModule, RouterModule, RouterLink, MoedaBrPipe, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, RouterModule, RouterLink, CommonModule],
   templateUrl: './visualizar-orcamento.html',
   styleUrl: './visualizar-orcamento.css'
 })
@@ -54,7 +54,7 @@ export class VisualizarOrcamento implements OnInit{
 
   closeModal(modal: HTMLDialogElement) {
     modal.close();
-    this.router.navigate(['']);
+    this.router.navigate([]);
   }
 
   aoSubmitRecusar() {
