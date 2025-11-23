@@ -215,10 +215,10 @@ public class SolicitacaoService {
     return solicitacoesDTO;
   }
 
-  public List<SolicitacaoResumoDTO> listarPorFuncionario(int idUsuario) throws Exception {
-    int idFuncionario = funcionarioService.consultarPorUsuario(idUsuario); 
+  public List<SolicitacaoResumoDTO> listarPorFuncionario(int id) throws Exception {
+    FuncionarioResumoDTO idFuncionario = funcionarioService.consultarFuncionarioResumo(id); 
     
-    List<Solicitacao> solicitacoes = solicitacaoDao.listarPorFuncionario(idFuncionario);
+    List<Solicitacao> solicitacoes = solicitacaoDao.listarPorFuncionario(idFuncionario.getId());
     List<SolicitacaoResumoDTO> solicitacoesResumoDTO = new ArrayList<>();
 
     for (Solicitacao solicitacao : solicitacoes) {

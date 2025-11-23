@@ -46,7 +46,10 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        @for (funcionario of funcionariosFiltrados; track funcionario.id){
+        @if(loading){
+          <app-elemento-loading></app-elemento-loading>
+        } @else {
+          @for (funcionario of funcionariosFiltrados; track funcionario.id){
         <tr class="hover:bg-gray-50 transition-colors">
           <td class="px-12 py-2 text-sm text-gray-500">{{ funcionario.nome }}</td>
           <td class="px-4 py-2 text-sm text-gray-500">{{ funcionario.email }}</td>
@@ -81,10 +84,11 @@
             }
           </td>
         </tr>
-        } @empty {
-        <tr>
-          <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhum funcionário encontrado.</td>
-        </tr>
+          } @empty {
+          <tr>
+            <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhum funcionário encontrado.</td>
+          </tr>
+          }
         }
       </tbody>
     </table>
@@ -223,34 +227,47 @@
   }
 
   @if(mostrarPopupExclusao) {
-  <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-    <div class="flex flex-col gap-6 items-center p-5 bg-white rounded-lg shadow-xl w-full max-w-md">
-      <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M12 9V11M12 15H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 16L13.7321 4C12.9623 2.66667 11.0378 2.66667 10.268 4L3.33978 16C2.56998 17.3333 3.53223 19 5.07183 19Z"
-          stroke="#C70003" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
+    <div class="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      @if(loadingExclusao){
+        <app-elemento-loading></app-elemento-loading>
+      } @else {
+        <div class="flex flex-col gap-6 items-center p-5 bg-white rounded-lg shadow-xl w-full max-w-md">
+          @if(temSolicitacoes){
+            <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="#DED473"><path d="M124.63-140q-8.55 0-15.05-4.02t-10.12-10.6q-3.84-6.06-4.23-13.64-.38-7.59 4.17-15.21l355.89-613.56q4.48-7.12 10.79-10.62 6.3-3.5 13.92-3.5t13.92 3.5q6.31 3.5 10.79 10.62L860.6-183.47q4.55 7.62 4.17 15.21-.39 7.58-4.23 13.64-3.62 6.58-10.12 10.6-6.5 4.02-15.05 4.02H124.63Zm28.6-45.39h653.54L480-749.23 153.23-185.39Zm329.8-60.07q10.7 0 17.76-7.24 7.06-7.24 7.06-17.94 0-10.71-7.24-17.76-7.24-7.06-17.95-7.06-10.7 0-17.76 7.24-7.05 7.24-7.05 17.94 0 10.7 7.24 17.76 7.24 7.06 17.94 7.06Zm.01-97.92q9.73 0 16.11-6.53 6.39-6.52 6.39-16.17v-172.46q0-9.64-6.58-16.17-6.58-6.52-16.31-6.52-9.73 0-16.11 6.52-6.39 6.53-6.39 16.17v172.46q0 9.65 6.58 16.17 6.58 6.53 16.31 6.53ZM480-467.31Z"/></svg>
 
-      <div class="flex flex-col gap-2 text-center">
-        <p class="text-base font-bold text-gray-900">Tem certeza de que deseja excluir?</p>
-        <p class="text-sm text-gray-900">Esta ação é <span class="font-bold">permanente</span> e <span
-            class="font-bold">não poderá ser desfeita</span>. Todas as informações do funcionário serão removidas do
-          sistema.</p>
-
-        <div class="flex gap-10 justify-center items-center mt-4">
-          <button type="button"
-            class="rounded-md px-8 py-2 text-sm font-base bg-[#C70003] text-white hover:bg-red-400 hover:cursor-pointer"
-            (click)="excluir()">Excluir</button>
-          <button type="button"
-            class="rounded-md px-8 py-2 text-sm font-base text-black hover:bg-gray-100 hover:cursor-pointer hover:text-gray-600"
-            (click)="cancelar()">Cancelar</button>
+            <div class="flex flex-col gap-2 text-center">
+              <p class="text-base font-bold text-gray-900">Não é possível excluir {{ funcionario.nome }}</p>
+              <p class="text-sm text-gray-900">
+                 O funcionário é responsável por uma ou mais solicitações. <span class="font-semibold">Redirecione</span> essas solicitações para outro funcionário antes de excluir <span class="font-semibold">{{ funcionario.nome }}</span> do sistema.
+              </p>
+      
+              <div class="flex gap-10 justify-center items-center mt-4">
+                <button type="button"
+                  class="rounded-md px-8 py-2 text-sm font-base text-black hover:bg-gray-100 hover:cursor-pointer hover:text-gray-600"
+                  (click)="cancelar()">Entendi</button>
+              </div>
+            </div>
+          } @else {      
+            <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="#C70003"><path d="M536.46-536.46Zm-84.77 84.77ZM480-160q55.62 0 107.62-18.19 52-18.19 93.76-54.12-43.3-33.61-94.55-50.65Q535.59-300 479.99-300q-55.61 0-107.61 16.27t-93.76 51.42q41.76 35.93 93.76 54.12Q424.38-160 480-160Zm90.62-341.08-28.54-28.54q8.84-10.3 13.38-23.66Q560-566.64 560-580q0-32.69-23.65-56.35Q512.69-660 480-660q-13.36 0-26.72 4.54t-23.66 13.38l-28.54-28.54q16.37-14.69 36.61-22.03 20.25-7.35 42.65-7.35 49.97 0 84.81 34.85Q600-630.31 600-580.34q0 22.4-7.35 42.65-7.34 20.24-22.03 36.61Zm214.15 214.16-29.54-29.54q22-37.77 33.39-78.77Q800-436.23 800-480q0-134-93-227t-227-93q-43.77 0-84.77 11.38-41 11.39-78.77 33.39l-29.54-29.54q43.62-27.38 92.56-41.31Q428.43-840 480-840q74.7 0 140.4 28.35t114.3 76.95q48.6 48.6 76.95 114.3Q840-554.7 840-480q0 51.57-13.92 100.52-13.93 48.94-41.31 92.56ZM479.7-120q-74.52 0-140.07-28.42-65.55-28.43-114.21-77-48.66-48.58-77.04-114.25Q120-405.34 120-480q0-61.31 19.58-118.85 19.57-57.53 58.5-105.23L75.46-827.69 104-856.23 872.92-87.31l-28.54 28.54-617.3-616.31q-32.77 42.39-49.93 91.85Q160-533.77 160-480q0 61.9 22.46 118.37 22.46 56.48 65.39 101.01Q299.54-297 358.28-318.5 417.03-340 480-340q53.38 0 104.08 16.46 50.69 16.46 95.92 44.31l54.54 54.54q-50.85 51.61-116.92 78.15Q551.54-120 479.7-120Z"/></svg>
+      
+            <div class="flex flex-col gap-2 text-center">
+              <p class="text-base font-bold text-gray-900">Tem certeza de que deseja excluir?</p>
+              <p class="text-sm text-gray-900">Esta ação é <span class="font-bold">permanente</span> e <span
+                  class="font-bold">não poderá ser desfeita</span>. Todas as informações do funcionário serão removidas do
+                sistema.</p>
+      
+              <div class="flex gap-10 justify-center items-center mt-4">
+                <button type="button"
+                  class="rounded-md px-8 py-2 text-sm font-base bg-[#C70003] text-white hover:bg-red-400 hover:cursor-pointer"
+                  (click)="excluir()">Excluir</button>
+                <button type="button"
+                  class="rounded-md px-8 py-2 text-sm font-base text-black hover:bg-gray-100 hover:cursor-pointer hover:text-gray-600"
+                  (click)="cancelar()">Cancelar</button>
+              </div>
+            </div>
+          } 
         </div>
-      </div>
+      }
     </div>
-  </div>
-  }
-
-  @if(loading){
-  <app-elemento-loading></app-elemento-loading>
   }
 </div>
