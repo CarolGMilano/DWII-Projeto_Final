@@ -19,7 +19,7 @@ public class SolicitacaoDao {
   private final String alterarStatus = "UPDATE solicitacao SET idStatus = ? WHERE id = ?";
   private final String alterarFuncionario = "UPDATE solicitacao SET idFuncionario = ? WHERE id = ?";
   private final String listar = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao";
-  private final String listarPorFuncionario = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idFuncionario = ?";
+  private final String listarPorFuncionario = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idFuncionario = ? AND idStatus != 8";
   private final String listarPorCliente = "SELECT id, equipamento, idCategoria, descricao, idStatus, idFuncionario, idCliente FROM solicitacao WHERE idCliente = ?";
 
   public void inserir(Solicitacao solicitacao) throws Exception {
