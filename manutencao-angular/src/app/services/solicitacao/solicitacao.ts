@@ -93,17 +93,25 @@ export class SolicitacaoService {
     );
   }
 
-  filtrarPorDia(dataInicial: string | null, dataFinal: string | null) {
-    const inicio = dataInicial ? new Date(dataInicial).toISOString().split("T")[0] : null;
-    const fim = dataFinal ? new Date(dataFinal).toISOString().split("T")[0] : null;
+  formatarData(data: Date): string {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, '0');
+    
+    return `${ano}-${mes}-${dia}`;
+  }
 
+  filtrarPorDia(dataInicial: string | null, dataFinal: string | null) {
+    const inicio = dataInicial ;
+    const fim = dataFinal ;
+    
     return this.listarCompletasFinalizados().pipe(
       map(lista => (lista ?? []).filter( solicitacao => {
-          const historicoAbertura = solicitacao.historico?.find(historico => historico.status === StatusSolicitacao.FINALIZADA);
-
-          if (!historicoAbertura) return false;
-
-          const dataAbertura = new Date(historicoAbertura?.dataHora).toISOString().split("T")[0];
+        const historicoAbertura = solicitacao.historico?.find(historico => historico.status === StatusSolicitacao.FINALIZADA);
+        
+        if (!historicoAbertura) return false;
+        
+        const dataAbertura = this.formatarData(new Date(historicoAbertura.dataHora));
           
           if (!inicio && !fim) return true;
           if (!inicio && fim) return dataAbertura <= fim;
