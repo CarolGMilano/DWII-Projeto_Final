@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MoedaBrPipe } from '../../pipes/moeda/moeda-pipe-pipe';
 
 import { Solicitacao, SolicitacaoEntrada } from '../../shared';
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pagar-servico',
-  imports: [MoedaBrPipe, CommonModule],
+  imports: [MoedaBrPipe, CommonModule, RouterLink],
   templateUrl: './pagar-servico.html',
   styleUrl: './pagar-servico.css'
 })

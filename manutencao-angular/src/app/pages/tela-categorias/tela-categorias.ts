@@ -36,12 +36,21 @@ export class TelaCategorias implements OnInit {
     this.mostrarFormulario = true;
   }
 
-  abrirEditar(categoria: Categoria) {
-    this.categoriaSelecionada = categoria;
-    this.categoriaForm.patchValue({ descricao: categoria.descricao });
-    this.modoFormulario = 'editar';
-    this.mostrarFormulario = true;
-  }
+ abrirEditar(categoria: Categoria) {
+  this.categoriaSelecionada = categoria;
+  this.categoriaService.buscarPorId(categoria.id!).subscribe({
+    next: (cat) => {
+      this.categoriaForm.patchValue({
+        descricao: cat.descricao
+      });
+    },
+    error: () => alert("Erro ao buscar categoria.")
+  });
+
+  this.modoFormulario = 'editar';
+  this.mostrarFormulario = true;
+}
+
 
   abrirExcluir(categoria: Categoria) {
     this.categoriaSelecionada = categoria;
@@ -56,34 +65,37 @@ export class TelaCategorias implements OnInit {
   }
 
   salvar() {
-    if (this.categoriaForm.invalid) return;
+  if (this.categoriaForm.invalid) return;
 
-    const nome = this.categoriaForm.get('descricao')?.value ?? '';
-    const novaCategoria: Categoria = {
-      id: this.categoriaSelecionada?.id,
-      descricao: ''
-    };
+  const nome = this.categoriaForm.get('descricao')?.value ?? '';
+  const novaCategoria: Categoria = {
+    id: this.categoriaSelecionada?.id,
+    descricao: nome
+  };
 
-    if (this.modoFormulario === 'adicionar') {
-      this.categoriaService.postCategoria(novaCategoria).subscribe(() => {
-        this.onSubmit.emit(novaCategoria);
-        this.cancelar();
-      });
-    } else if (this.modoFormulario === 'editar' && novaCategoria.id) {
-      this.categoriaService.putCategoria(novaCategoria.id, novaCategoria.descricao).subscribe(() => {
-        this.onSubmit.emit(novaCategoria);
-        this.cancelar();
-      });
-    }
-  }
-
-  excluir() {
-    if (!this.categoriaSelecionada?.id) return;
-
-    this.categoriaService.deleteCategoria(this.categoriaSelecionada.id).subscribe(() => {
+  if (this.modoFormulario === 'adicionar') {
+    this.categoriaService.criar(novaCategoria).subscribe(() => {
+      this.onSubmit.emit(novaCategoria);
       this.cancelar();
+      this.listarTodos(); 
+    });
+  } else if (this.modoFormulario === 'editar' && novaCategoria.id) {
+    this.categoriaService.atualizar(novaCategoria.id, novaCategoria).subscribe(() => {
+      this.onSubmit.emit(novaCategoria);
+      this.cancelar();
+      this.listarTodos(); 
     });
   }
+}
+
+excluir() {
+  if (!this.categoriaSelecionada?.id) return;
+
+  this.categoriaService.deletar(this.categoriaSelecionada.id).subscribe(() => {
+    this.cancelar();
+    this.listarTodos(); 
+  });
+}
 
   listarTodos() {
     this.categoriaService.listar().subscribe({

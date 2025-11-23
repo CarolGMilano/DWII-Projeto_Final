@@ -9,7 +9,7 @@ import { LoginService, SolicitacaoService, CategoriaService } from '../../servic
 
 @Component({
   selector: 'app-nova-solicitacao',
-  imports: [ReactiveFormsModule, MatIconModule, VoltarTela],
+  imports: [ReactiveFormsModule, MatIconModule, RouterLink],
   templateUrl: './nova-solicitacao.html',
   styleUrl: './nova-solicitacao.css'
 })
@@ -61,8 +61,6 @@ export class NovaSolicitacao implements OnInit {
 
     this.solicitacaoService.inserirSolicitacao(novaSolicitacao).subscribe({
       next: (resposta) => {
-        console.log('Solicitação criada com sucesso:', resposta);
-
         this.router.navigate(['/tela-inicial-cliente']);
       },
       error: (erro) => {

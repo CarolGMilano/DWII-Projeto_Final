@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { SolicitacaoService } from '../../services';
 import { Solicitacao, StatusSolicitacao, StatusSolicitacaoLabel, StatusSolicitacaoCor, StatusSolicitacaoObservacao } from '../../shared';
@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-visualizar-servico',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './visualizar-servico.html',
   styleUrl: './visualizar-servico.css'
 })

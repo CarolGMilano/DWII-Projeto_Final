@@ -16,16 +16,16 @@ import { ElementoLoading } from '../../components';
 
 export class TelaLogin implements OnInit {
   @ViewChild('formLogin') formLogin! : NgForm;
-
+  
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   readonly loginService = inject(LoginService);
-
+  
   login: Login = {
     email: '',
     senha: ''
   }
-
+  
   usuarioStatus: UsuarioStatus = UsuarioStatus.Nenhum;
   status = UsuarioStatus;
 

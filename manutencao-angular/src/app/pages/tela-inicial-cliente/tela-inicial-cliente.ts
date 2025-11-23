@@ -76,7 +76,6 @@ export class TelaInicialCliente implements OnInit {
 
     this.solicitacaoService.aprovarSolicitacao(solicitacaoResgatada).subscribe({
       next: (resposta) => {
-        console.log('Solicitação resgatada com sucesso:', resposta);
         this.mostrarPopupResgate = false;
         
         if(this.usuarioLogado){

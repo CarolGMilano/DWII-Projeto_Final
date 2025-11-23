@@ -87,7 +87,6 @@ export class TelaVisualizarDetalhes implements OnInit {
           this.solicitacao = solicitacao;
 
           this.buscarNomeCategoria(solicitacao.categoria);
-          console.log("solicitacao ", this.solicitacao);
         }
       }
     });
@@ -127,9 +126,6 @@ export class TelaVisualizarDetalhes implements OnInit {
     const manutencaoNaoFeita = !this.solicitacao.historico.some(
       h => h.status === StatusSolicitacao.ARRUMADA
     );
-
-    console.log(this.solicitacao.funcionario?.id, this.funcionarioLogado?.id)
-
     return statusValido && usuarioResponsavel && orcamentoAceito && manutencaoNaoFeita;
   }
 
