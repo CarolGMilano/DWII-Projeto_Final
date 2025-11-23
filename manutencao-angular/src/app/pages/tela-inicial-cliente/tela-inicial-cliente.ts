@@ -8,10 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { Solicitacao, SolicitacaoResumo, UsuarioLogado, StatusSolicitacao, StatusSolicitacaoLabel, StatusSolicitacaoCor, SolicitacaoEntrada, Orcamento } from '../../shared';
 import { LoginService, SolicitacaoService } from '../../services';
+import { ElementoLoading } from '../../components';
 
 @Component({
   selector: 'app-tela-inicial-cliente',
-  imports: [CommonModule, FilterPipe, FormsModule, RouterModule, MatIconModule],
+  imports: [CommonModule, FilterPipe, FormsModule, RouterModule, MatIconModule, ElementoLoading],
   templateUrl: './tela-inicial-cliente.html',
   styleUrl: './tela-inicial-cliente.css'
 })
@@ -39,6 +40,8 @@ export class TelaInicialCliente implements OnInit {
   StatusSolicitacao = StatusSolicitacao;
 
   temArrumada: Record<number, boolean> = {};
+
+  loading: boolean = false;
 
   getStatusCor(status: number): string {
     return StatusSolicitacaoCor[status as StatusSolicitacao];
@@ -94,15 +97,20 @@ export class TelaInicialCliente implements OnInit {
   }
 
   carregarSolicitacoes(idUsuario: number) {
+    this.loading = true;
+
     this.solicitacaoService.listarEmAndamento(idUsuario).subscribe({
       next: (solicitacoes: SolicitacaoResumo[] | null) => {
         this.solicitacoes = solicitacoes ?? [];
+        this.loading = false;
       },
       error: (erro) => {
         if (erro.status === 500) {
           alert(`Erro interno: ${erro.error}`);
+          this.loading = false;
         } else {
           alert('Erro inesperado ao listar solicitações finalizadas do cliente.');
+          this.loading = false;
         }
       }
     });

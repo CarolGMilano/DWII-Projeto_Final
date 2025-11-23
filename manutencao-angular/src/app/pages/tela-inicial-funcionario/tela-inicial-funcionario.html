@@ -1,9 +1,6 @@
-<div class="p-4 sm:p-8 lg:p-10 bg-white rounded-lg h-full">
-    @if(loading){
-        <app-elemento-loading></app-elemento-loading>
-    }
-    
-    <div class="flex justify-between pb-4">
+<div class="flex flex-col gap-6 shadow-lg px-10 py-10 bg-white rounded-lg h-full">
+  
+    <div class="flex justify-between">
         <h2 class="font-bold text-[22px]">Solicitações Abertas</h2>
         <div>
             <button class="bg-gray-200 p-2 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer ml-4"
@@ -12,26 +9,33 @@
             </button>
         </div>
     </div>
-    <hr>
     <div class="mt-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 text-sm w-full">
-        <div class="flex justify-between items-center gap-4 text-gray-700">
+        <div class="flex justify-between items-center gap-15 text-gray-700">
             <div class="flex items-center gap-2 sm:gap-4">
-                <label>Filtrar por data:</label>
+                <label class="text-sm text-gray-700 font-semibold">Filtrar por data:</label>
                 <input type="date" [(ngModel)]="selectedDate"
-                    class="bg-gray-200 text-sm pl-2 pr-2 pt-0.5 pb-0.5 cursor-pointer rounded-md outline-0 w-full sm:w-auto opacity-[90%] hover:opacity-[100%]" />
+                    class="bg-gray-100 text-sm p-2 cursor-pointer rounded-md outline-0 hover:bg-gray-200 text-gray-600" />
             </div>
-            <label class="pl-6">Ordenar:</label>
-            <div class="flex items-center bg-gray-200 pt-0.5 pb-0.5 pl-2 pr-2 rounded-md outline-0 cursor-pointer w-full sm:w-auto opacity-[90%] hover:opacity-[100%]">
-                <select [(ngModel)]="filtroOrdenacao" class="flex items-center text-sm w-32 cursor-pointer outline-0 opacity-[90%] hover:opacity-[100%]">
+
+            <div class="flex items-center gap-2 sm:gap-4">
+                <label class="text-sm text-gray-700 font-semibold">Ordenar:</label>
+  
+                <select [(ngModel)]="filtroOrdenacao" class="w-full text-sm cursor-pointer outline-none bg-white border border-gray-300 rounded-md py-2 px-4 hover:border-gray-400">
                     <option value="desc">Mais recentes</option>
                     <option value="asc">Mais antigos</option>
                 </select>
             </div>
         </div>
 
-        <div class="border-b-1 flex items-center">
-            <mat-icon style="font-size: 20px; width: 20px; height: 20px;">search</mat-icon>
-            <input type="search" class="p-1 w-[300px] outline-0" placeholder="Pesquisar" [(ngModel)]="searchText">
+        <div class="relative w-100">
+          <div class="absolute left-3 top-4.5 -translate-y-1/2 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                    d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+            </svg>
+          </div>
+
+            <input type="search" class="w-full rounded-md bg-white px-10 py-2 text-sm font-light text-gray-900 placeholder:text-gray-400 border border-gray-300 outline-none focus:border-gray-500" placeholder="Pesquisar" [(ngModel)]="searchText">
         </div>
     </div>
 
@@ -48,27 +52,35 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-                @for (item of (solicitacoes | filter:searchText:'dataAbertura':selectedDate:filtroOrdenacao); track item) {
-                
-                <tr>
-                    <td class="px-1 py-2 text-sm text-gray-700">{{ item.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td class="px-6 py-2 text-sm text-gray-700">{{ item.equipamento }}</td>
-                    <td class="px-6 py-2 text-sm text-gray-700">{{ item.cliente.nome }}</td>
-                    <td class="w-[20%] py-2 rounded-[7px]">
-                        <button
-                            class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                            [routerLink]="['/realizar-orcamento', item.id]">
-                            Efetuar Orçamento
-                        </button>
-                    </td>
-                </tr>
-                
-                }@empty {
-                <tr>
-                    <td colspan="4" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
-                </tr>
+                 @if(loading){
+                    <app-elemento-loading></app-elemento-loading>
+                } @else {
+                    @for (item of (solicitacoes | filter:searchText:'dataAbertura':selectedDate:filtroOrdenacao); track item) {
+                    
+                    <tr>
+                        <td class="px-1 py-2 text-sm text-gray-700">{{ item.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td class="px-6 py-2 text-sm text-gray-700">{{ item.equipamento | slice:0:30 }}{{ item.equipamento.length > 30 ? '...' : '' }}</td>
+                        <td class="px-6 py-2 text-sm text-gray-700">{{ item.cliente.nome }}</td>
+                        <td class="w-[20%] py-2 rounded-[7px]">
+                            <button
+                                class="bg-gray-200 text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                [routerLink]="['/realizar-orcamento', item.id]">
+                                Efetuar Orçamento
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    }@empty {
+                    <tr>
+                        <td colspan="4" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
+                    </tr>
+                    }
                 }
             </tbody>
         </table>
     </div>
+
+     @if(loading){
+        <app-elemento-loading></app-elemento-loading>
+    }
 </div>
