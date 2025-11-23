@@ -1,4 +1,4 @@
-<div class="p-10 bg-white rounded-lg shadow-lg h-full space-y-10"> 
+<div class="p-10 bg-white rounded-lg shadow-lg h-full space-y-5"> 
     <div>
         <h2 class="font-bold text-2xl text-gray-800">Orçamento</h2>
         <p class="mt-1 text-sm text-gray-600">
@@ -37,15 +37,14 @@
         </div>
     }
 
-    <div class="space-y-4">
-
+    <div class="flex flex-col gap-4">
         <h2 class="font-semibold text-lg text-gray-800">Itens do Orçamento</h2>
 
         <form [formGroup]="orcamentoForm"
               (ngSubmit)="enviarOrcamento()"
-              class="space-y-8">
+              class="flex flex-col gap-6">
 
-            <div formArrayName="itens" class="space-y-4">
+            <div formArrayName="itens" class="space-y-4 overflow-x-auto max-h-30 overflow-y-auto">
                 @for (item of itens.controls; track item; let i = $index) {
                     <div [formGroupName]="i"
                         class="flex flex-col md:flex-row gap-4 items-start md:items-center 
@@ -85,15 +84,16 @@
                 </button>
             </div>
 
-            <div class="mt-4 font-semibold text-gray-800 text-xl">
-                Total: {{ orcamentoForm.get('precoTotal')?.value | currency:'BRL' }}
+            <div class="flex justify-between ">
+                <div class="mt-4 font-semibold text-gray-800 text-xl">
+                    Total: {{ orcamentoForm.get('precoTotal')?.value | currency:'BRL' }}
+                </div>
+    
+                <button type="submit"
+                    class="bg-gray-800 text-white rounded-md px-6 py-3 hover:bg-gray-700 disabled:opacity-50">
+                    Salvar Orçamento
+                </button>
             </div>
-
-            <button type="submit"
-                class="bg-gray-800 text-white rounded-md px-6 py-3 hover:bg-gray-700 disabled:opacity-50">
-                Salvar Orçamento
-            </button>
-
         </form>
     </div>
 </div>

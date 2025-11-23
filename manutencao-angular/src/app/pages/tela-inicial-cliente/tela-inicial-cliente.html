@@ -39,69 +39,73 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white h-full">
-                @for (item of (solicitacoes | filter:searchText:'dataAbertura':selectedDate:filtroOrdenacao); track item) {
-                    @if (item.status === StatusSolicitacao.REDIRECIONADA) {
-                        {{ verificarArrumada(item.id) }}
-                    }
+                @if(loading){
+                    <app-elemento-loading></app-elemento-loading>
+                } @else {
+                    @for (item of (solicitacoes | filter:searchText:'dataAbertura':selectedDate:filtroOrdenacao); track item) {
+                        @if (item.status === StatusSolicitacao.REDIRECIONADA) {
+                            {{ verificarArrumada(item.id) }}
+                        }
 
-                    <tr>
-                        <td class="px-4 py-2 text-sm text-gray-700">{{ item.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">{{ item.equipamento }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-700">
-                            <div class="flex items-center gap-3">
-                                <span class="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold" [style.background-color]="getStatusCor(item.status) "></span>
-                                <span class="text-gray-800 text-sm font-thin">{{ getStatusLabel(item.status) }}</span>
-                            </div>
-                        </td>
+                        <tr>
+                            <td class="px-4 py-2 text-sm text-gray-700">{{ item.dataAbertura | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td class="px-4 py-2 text-sm text-gray-700">{{ item.equipamento | slice:0:30 }}{{ item.equipamento.length > 30 ? '...' : '' }}</td>
+                            <td class="px-4 py-2 text-sm text-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-bold" [style.background-color]="getStatusCor(item.status) "></span>
+                                    <span class="text-gray-800 text-sm font-thin">{{ getStatusLabel(item.status) }}</span>
+                                </div>
+                            </td>
 
-                        <td class="w-[30%] py-2 rounded-[7px]">
-                            <button
-                                class="bg-gray-200 w-[30%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                                [routerLink]="['/visualizar-servico', item.id]">
-                                Visualizar
-                            </button>
+                            <td class="w-[30%] py-2 rounded-[7px]">
+                                <button
+                                    class="bg-gray-200 w-[30%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                    [routerLink]="['/visualizar-servico', item.id]">
+                                    Visualizar
+                                </button>
 
-                            @switch (item.status) { 
-                                @case (StatusSolicitacao.ORCADA) {
-                                    <button
-                                        class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                                        [routerLink]="['/visualizar-orcamento', item.id]">
-                                        Aprovar/Rejeitar Serviço
-                                    </button>
-                                } 
+                                @switch (item.status) { 
+                                    @case (StatusSolicitacao.ORCADA) {
+                                        <button
+                                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                            [routerLink]="['/visualizar-orcamento', item.id]">
+                                            Aprovar/Rejeitar Serviço
+                                        </button>
+                                    } 
 
-                                @case (StatusSolicitacao.REJEITADA) {
-                                    <button
-                                        (click)="abrirResgate(item.id)"
-                                        class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer">
-                                        Resgatar Serviço
-                                    </button>
-                                } 
+                                    @case (StatusSolicitacao.REJEITADA) {
+                                        <button
+                                            (click)="abrirResgate(item.id)"
+                                            class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer">
+                                            Resgatar Serviço
+                                        </button>
+                                    } 
 
-                                @case (StatusSolicitacao.ARRUMADA) {
-                                    <button 
-                                        class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
-                                        [routerLink]="['/pagar-servico', item.id]">
-                                        Pagar Serviço
-                                    </button>
-                                } 
-
-                                @case(StatusSolicitacao.REDIRECIONADA) {
-                                    @if (temArrumada[item.id]) {
+                                    @case (StatusSolicitacao.ARRUMADA) {
                                         <button 
                                             class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
                                             [routerLink]="['/pagar-servico', item.id]">
                                             Pagar Serviço
                                         </button>
+                                    } 
+
+                                    @case(StatusSolicitacao.REDIRECIONADA) {
+                                        @if (temArrumada[item.id]) {
+                                            <button 
+                                                class="bg-gray-200 w-[60%] text-sm pl-6 pr-6 m-1 pt-0.5 pb-0.5 rounded-[7px] opacity-[70%] hover:opacity-[100%] cursor-pointer"
+                                                [routerLink]="['/pagar-servico', item.id]">
+                                                Pagar Serviço
+                                            </button>
+                                        }
                                     }
                                 }
-                            }
-                        </td>
-                    </tr>
-                } @empty {
-                    <tr>
-                        <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
-                    </tr>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="5" class="px-4 py-2 text-center text-gray-500">Nenhuma solicitação encontrada.</td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>

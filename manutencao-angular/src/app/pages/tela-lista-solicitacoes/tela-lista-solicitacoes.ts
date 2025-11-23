@@ -26,6 +26,8 @@ export class TelaListaSolicitacoes implements OnInit {
   startDate?: Date;
   endDate?: Date;
 
+  filtroDataAtivo: 'hoje' | 'todas' | 'periodo' | null = null;
+
   private solicitacaoService = inject(SolicitacaoService);
   private loginService = inject(LoginService);
   private funcionarioService = inject(FuncionarioService);
@@ -94,11 +96,15 @@ export class TelaListaSolicitacoes implements OnInit {
     this.selectedDate = `${yyyy}-${mm}-${dd}`;
     this.startDate = undefined;
     this.endDate = undefined;
+
+    this.filtroDataAtivo = 'hoje';
   }
 
   limparFiltroData() {
     this.selectedDate = undefined;
     this.startDate = undefined;
     this.endDate = undefined;
+
+    this.filtroDataAtivo = 'todas';
   }
 }
