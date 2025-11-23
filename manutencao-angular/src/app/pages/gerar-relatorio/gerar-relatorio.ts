@@ -45,6 +45,7 @@ export class GerarRelatorio implements OnInit {
   dataFinal: string = '';
 
   receitaTotal: number = 0;
+  receitaTotalFiltrada: number = 0;
 
   receitaPorCategoria: { categoria: string, valor: number }[] = [];
 
@@ -190,10 +191,10 @@ export class GerarRelatorio implements OnInit {
 
         this.solicitacoesAgrupadas = this.agruparPorDia(this.solicitacoes);
 
-        this.receitaTotal = 0;
+        this.receitaTotalFiltrada = 0;
 
         for (const solicitacao of this.solicitacoes) {
-          this.receitaTotal += solicitacao.orcamento?.valorTotal ?? 0;
+          this.receitaTotalFiltrada += solicitacao.orcamento?.valorTotal ?? 0;
         }
 
         this.loading = false;
@@ -219,10 +220,10 @@ export class GerarRelatorio implements OnInit {
 
         this.solicitacoesAgrupadas = this.agruparPorCategoria(this.solicitacoes);
 
-        this.receitaTotal = 0;
+        this.receitaTotalFiltrada = 0;
 
         for (const solicitacao of this.solicitacoes) {
-          this.receitaTotal += solicitacao.orcamento?.valorTotal ?? 0;
+          this.receitaTotalFiltrada += solicitacao.orcamento?.valorTotal ?? 0;
         }
         this.loading = false;
       },
@@ -240,6 +241,14 @@ export class GerarRelatorio implements OnInit {
     return this.solicitacoes;
   }
 
+  formatarData(data: Date): string {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, '0');
+    
+    return `${ano}-${mes}-${dia}`;
+  }
+
   agruparPorDia(lista: Solicitacao[]) {
     return lista.reduce((acumulador, solicitacao) => {
       const historicoAbertura = solicitacao.historico?.find(historico => historico.status === StatusSolicitacao.FINALIZADA);
@@ -247,7 +256,7 @@ export class GerarRelatorio implements OnInit {
       if (!historicoAbertura) return acumulador;
 
       const data = new Date(historicoAbertura.dataHora);
-      const dia = `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
+      const dia = this.formatarData(data);
       
       if (!acumulador[dia]) {
         acumulador[dia] = {
@@ -313,7 +322,7 @@ export class GerarRelatorio implements OnInit {
       vertical += 4;
     });
 
-    doc.text(`Total: R$ ${this.receitaTotal}`, 10, vertical + 10);
+    doc.text(`Total: R$ ${this.receitaTotalFiltrada}`, 10, vertical + 10);
     doc.save('relatorio-receita.pdf');
   }
 
@@ -338,7 +347,7 @@ export class GerarRelatorio implements OnInit {
       vertical += 4;
     });
 
-    doc.text(`Total: R$ ${this.receitaTotal}`, 10, vertical + 10);
+    doc.text(`Total: R$ ${this.receitaTotalFiltrada}`, 10, vertical + 10);
 
     doc.save('relatorio-categoria.pdf');
   }
