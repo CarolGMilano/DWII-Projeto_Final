@@ -6,6 +6,24 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 export class FilterPipe implements PipeTransform {
 
+  private normalize(dateInput: any): Date {
+    if (!dateInput) return new Date(NaN);
+
+    if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+      const [y, m, d] = dateInput.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(dateInput)) {
+      const [y, m, d] = dateInput.substring(0, 10).split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    const d = new Date(dateInput);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+
   transform(
     items: any[],
     searchText: string,
@@ -35,33 +53,25 @@ export class FilterPipe implements PipeTransform {
       }
 
       if (hasDate) {
-        let filterDate: Date;
+        const filterDate = this.normalize(selectedDate);
+        const rawItemDate = new Date(item?.[dateField]);
 
-        if (typeof selectedDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(selectedDate)) {
-          const [y, m, d] = selectedDate.split('-').map(Number);
-          filterDate = new Date(y, m - 1, d);
-        } else {
-          filterDate = new Date(selectedDate as any);
-        }
+        if (isNaN(rawItemDate.getTime())) return false;
 
-        const itemDate = new Date(item?.[dateField]);
+        const itemDate = this.normalize(rawItemDate);
 
-        if (isNaN(itemDate.getTime())) return false;
-
-        const sameDay =
-          itemDate.getFullYear() === filterDate.getFullYear() &&
-          itemDate.getMonth() === filterDate.getMonth() &&
-          itemDate.getDate() === filterDate.getDate();
-
-        matchesDate = sameDay;
+        matchesDate =
+          itemDate.getTime() === filterDate.getTime();
       }
 
       if (hasRange) {
-        const start = new Date(startDate as any);
-        const end = new Date(endDate as any);
-        const itemDate = new Date(item?.[dateField]);
+        const start = this.normalize(startDate);
+        const end = this.normalize(endDate);
+        const rawItemDate = new Date(item?.[dateField]);
 
-        if (isNaN(itemDate.getTime())) return false;
+        if (isNaN(rawItemDate.getTime())) return false;
+
+        const itemDate = this.normalize(rawItemDate);
 
         matchesDate = itemDate >= start && itemDate <= end;
       }
@@ -72,8 +82,11 @@ export class FilterPipe implements PipeTransform {
 
     if (dateField) {
       filtered = filtered.sort((a, b) => {
-        const dateA = new Date(a[dateField]).getTime();
-        const dateB = new Date(b[dateField]).getTime();
+        const dA = new Date(a[dateField]).getTime();
+        const dB = new Date(b[dateField]).getTime();
+
+        const dateA = this.normalize(dA).getTime();
+        const dateB = this.normalize(dB).getTime();
 
         return selectedOrder === 'asc' ? dateA - dateB : dateB - dateA;
       });
