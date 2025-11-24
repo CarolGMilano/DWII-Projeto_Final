@@ -54,7 +54,7 @@ export class VisualizarOrcamento implements OnInit{
 
   closeModal(modal: HTMLDialogElement) {
     modal.close();
-    this.router.navigate([]);
+    this.router.navigate(['']);
   }
 
   aoSubmitRecusar() {
